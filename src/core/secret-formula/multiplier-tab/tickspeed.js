@@ -9,6 +9,9 @@ export const tickspeed = {
     name: "Total Tickspeed",
     displayOverride: () => {
       const tickRate = Tickspeed.perSecond;
+      if (tickRate.eq(0)) {
+        return "not unlocked yet";
+      }
       const activeDims = MultiplierTabHelper.activeDimCount("AD");
       const dimString = MultiplierTabHelper.pluralizeDimensions(activeDims);
       return `${format(tickRate, 2, 2)}/sec on ${formatInt(activeDims)} ${dimString}
@@ -18,9 +21,7 @@ export const tickspeed = {
     // due to the multiplier tab splitting up entries logarithmically
     fakeValue: DC.E100,
     multValue: () => Tickspeed.perSecond.pow(MultiplierTabHelper.activeDimCount("AD")),
-    // No point in showing this breakdown at all unless both components are nonzero; however they will always be nonzero
-    // due to the way the calculation works, so we have to manually hide it here
-    isActive: () => Tickspeed.perSecond.gt(1) && effectiveBaseGalaxies() > 0,
+    isActive: () => Achievement(11).isUnlocked,
     dilationEffect: () => (Effarig.isRunning ? Effarig.tickDilation : 1),
     overlay: ["<i class='fa-solid fa-clock' />"],
     icon: MultiplierTabIcons.TICKSPEED,
@@ -37,7 +38,7 @@ export const tickspeed = {
       return `${format(val, 2, 2)}/sec`;
     },
     multValue: () => new Decimal.pow10(100 * MultiplierTabHelper.decomposeTickspeed().base),
-    isActive: () => [36, 45, 66, 83].some(a => Achievement(a).canBeApplied),
+    isActive: () => true,
     icon: MultiplierTabIcons.ACHIEVEMENT,
   },
   upgrades: {

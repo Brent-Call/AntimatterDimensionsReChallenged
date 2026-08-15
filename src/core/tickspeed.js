@@ -141,6 +141,10 @@ export const Tickspeed = {
   },
 
   get current() {
+    if (!Achievement(11).isEffectActive) {
+      //Set tickspeed to 0 if the player doesn't have the Achievement:
+      return Decimal.MAX_VALUE;
+    }
     const tickspeed = Effarig.isRunning
       ? Effarig.tickspeed
       : this.baseValue.powEffectOf(DilationUpgrade.tickspeedPower);
@@ -166,6 +170,10 @@ export const Tickspeed = {
   },
 
   get baseValue() {
+    if (!Achievement(11).isEffectActive) {
+      //Set tickspeed to 0 if the player doesn't have the Achievement:
+      return Decimal.MAX_VALUE;
+    }
     return DC.E3.timesEffectsOf(
       Achievement(36),
       Achievement(45),
@@ -183,6 +191,10 @@ export const Tickspeed = {
   },
 
   get perSecond() {
+    if (!Achievement(11).isEffectActive) {
+      //Set tickspeed to 0 if the player doesn't have the Achievement:
+      return DC.D0;
+    }
     return Decimal.divide(1000, this.current);
   },
 

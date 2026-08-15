@@ -165,6 +165,7 @@ export const Achievements = {
   },
 
   _power: new Lazy(() => {
+    //TODO: ah, okay, we can work with this - new achievement 12
     const unlockedRows = Achievements.allRows
       .countWhere(row => row.every(ach => ach.isUnlocked));
     const basePower = Math.pow(1.25, unlockedRows) * Math.pow(1.03, Achievements.effectiveCount);

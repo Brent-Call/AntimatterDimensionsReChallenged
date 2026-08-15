@@ -6,30 +6,35 @@ export const normalAchievements = [
     name: "You gotta start somewhere",
     description: "Buy a 1st Antimatter Dimension.",
     checkEvent: GAME_EVENT.ACHIEVEMENT_EVENT_OTHER,
+    reward: "Unlock tickspeed. The default speed is one tick per second.",
   },
   {
     id: 12,
     name: "100 antimatter is a lot",
     description: "Buy a 2nd Antimatter Dimension.",
     checkEvent: GAME_EVENT.ACHIEVEMENT_EVENT_OTHER,
+    reward: "WIP - Unlock the Achievement Multiplier mechanic & apply it to all Antimatter Dimensions.",
   },
   {
     id: 13,
     name: "Half life 3 CONFIRMED",
     description: "Buy a 3rd Antimatter Dimension.",
     checkEvent: GAME_EVENT.ACHIEVEMENT_EVENT_OTHER,
+    reward: "WIP - Multiply starting tickspeed by 1.05",
   },
   {
     id: 14,
     name: "L4D: Left 4 Dimensions",
     description: "Buy a 4th Antimatter Dimension.",
     checkEvent: GAME_EVENT.ACHIEVEMENT_EVENT_OTHER,
+    reward: "WIP - Multiply starting tickspeed by 1.05",
   },
   {
     id: 15,
     name: "5 Dimension Antimatter Punch",
     description: "Buy a 5th Antimatter Dimension.",
     checkEvent: GAME_EVENT.ACHIEVEMENT_EVENT_OTHER,
+    reward: "WIP - Multiplier to first 4 Antimatter Dimensions of 1.25",
   },
   {
     id: 16,
@@ -40,12 +45,14 @@ export const normalAchievements = [
         : "Buy a 6th Antimatter Dimension.";
     },
     checkEvent: GAME_EVENT.ACHIEVEMENT_EVENT_OTHER,
+    reward: "WIP - Unlock Autobuyers for Antimatter Dimensions 1-4",
   },
   {
     id: 17,
     name: "Not a luck related achievement",
     description: "Buy a 7th Antimatter Dimension.",
     checkEvent: GAME_EVENT.ACHIEVEMENT_EVENT_OTHER,
+    reward: "WIP - Unlock Autobuyer for Tickspeed Upgrades",
   },
   {
     id: 18,
@@ -56,6 +63,7 @@ export const normalAchievements = [
         : "Buy an 8th Antimatter Dimension.";
     },
     checkEvent: GAME_EVENT.ACHIEVEMENT_EVENT_OTHER,
+    reward: "WIP - Unlock Autobuyers for Antimatter Dimensions 5~8",
   },
   {
     id: 21,

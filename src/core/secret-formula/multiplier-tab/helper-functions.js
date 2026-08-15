@@ -93,9 +93,11 @@ export const MultiplierTabHelper = {
     // Normalize the sum by splitting tickspeed and galaxies across what's leftover besides the base value. These three
     // values must be scaled so that they sum to 1 and none are negative
     let factor = (1 - baseFrac) / (tickFrac + galFrac);
-    // The actual base tickspeed calculation multiplies things in a different order, which can lead to precision issues
-    // when no tickspeed upgrades have been bought if we don't explicitly set this to zero
-    if (Tickspeed.totalUpgrades === 0) factor = 0;
+    //If the player has no tickspeed upgrades, then ALL of their tickspeed is coming from Achievement rewards.
+    if (Tickspeed.totalUpgrades === 0) {
+      factor = 0;
+      baseFrac = 1;
+    }
     return {
       base: baseFrac,
       tickspeed: tickFrac * factor,
