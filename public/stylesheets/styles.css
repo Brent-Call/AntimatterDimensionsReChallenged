@@ -2174,6 +2174,10 @@ br {
   top: -1.95rem;
 }
 
+.l-hint-text--infinity-upgrade {
+  top: -0.25rem;
+}
+
 .l-hint-text--reality-upgrade {
   top: -1.7rem;
   font-size: 1.25rem;

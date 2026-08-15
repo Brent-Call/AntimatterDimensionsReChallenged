@@ -2,6 +2,7 @@
 import CostDisplay from "@/components/CostDisplay";
 import DescriptionDisplay from "@/components/DescriptionDisplay";
 import EffectDisplay from "@/components/EffectDisplay";
+import HintText from "@/components/HintText";
 
 export default {
   name: "InfinityUpgradeButton",
@@ -9,6 +10,7 @@ export default {
     DescriptionDisplay,
     EffectDisplay,
     CostDisplay,
+    HintText,
   },
   props: {
     upgrade: {
@@ -33,6 +35,9 @@ export default {
     };
   },
   computed: {
+    hintText() {
+      return this.upgrade.id;
+    },
     isBasedOnInfinities() {
       return /(18|27|36|45)Mult/u.test(this.upgrade.id) || this.upgrade.id === "infinitiedMult";
     },
@@ -108,6 +113,12 @@ export default {
     @mouseleave="showingCharged = false"
     @click="upgrade.purchase()"
   >
+    <HintText
+      type="studies"
+      class="l-hint-text--infinity-upgrade"
+    >
+      {{ hintText }}
+    </HintText>
     <span :class="{ 'o-pelle-disabled': isUseless }">
       <DescriptionDisplay
         :config="config"
@@ -137,5 +148,7 @@ export default {
 </template>
 
 <style scoped>
-
+button {
+  position: relative;
+}
 </style>

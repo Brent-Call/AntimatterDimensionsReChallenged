@@ -26,32 +26,7 @@ export default {
   },
   computed: {
     grid() {
-      return [
-        [
-          InfinityUpgrade.totalTimeMult,
-          InfinityUpgrade.dim18mult,
-          InfinityUpgrade.dim36mult,
-          InfinityUpgrade.resetBoost
-        ],
-        [
-          InfinityUpgrade.buy10Mult,
-          InfinityUpgrade.dim27mult,
-          InfinityUpgrade.dim45mult,
-          InfinityUpgrade.galaxyBoost
-        ],
-        [
-          InfinityUpgrade.thisInfinityTimeMult,
-          InfinityUpgrade.unspentIPMult,
-          InfinityUpgrade.dimboostMult,
-          InfinityUpgrade.ipGen
-        ],
-        [
-          InfinityUpgrade.skipReset1,
-          InfinityUpgrade.skipReset2,
-          InfinityUpgrade.skipReset3,
-          InfinityUpgrade.skipResetGalaxy
-        ]
-      ];
+      return InfinityUpgradesNew.columns
     },
     allColumnUpgrades() {
       return this.grid.flat();
@@ -99,19 +74,27 @@ export default {
       return classObject;
     },
     getColumnColor(location) {
+      if (!location) {
+        console.log("this location doesn't exist");
+        return "transparent";
+      }
       if (location.isCharged) return "var(--color-teresa--base)";
       if (location.isBought) return "var(--color-infinity)";
       return "transparent";
     },
     setStyleOfColumnBg() {
-      this.styleOfColumnBg = this.grid.map(col => ({
-        background:
-          `linear-gradient(to bottom,
-          ${this.getColumnColor(col[0])} 15%,
-          ${this.getColumnColor(col[1])} 35% 40%,
-          ${this.getColumnColor(col[2])} 60% 65%,
-          ${this.getColumnColor(col[3])} 85% 100%`
-      }));
+      this.styleOfColumnBg = this.grid.map(col => {
+        //Okay, this currently allows columns of less than 4 elements, but in the future I'll want to allow columns of more than 4 elements, too
+        let bgColors = col.map(this.getColumnColor);
+        return {
+          background:
+            `linear-gradient(to bottom,
+            ${bgColors[0] || "transparent"} 15%,
+            ${bgColors[1] || "transparent"} 35% 40%,
+            ${bgColors[2] || "transparent"} 60% 65%,
+            ${bgColors[3] || "transparent"} 85% 100%`
+        };
+      });
     },
   }
 };

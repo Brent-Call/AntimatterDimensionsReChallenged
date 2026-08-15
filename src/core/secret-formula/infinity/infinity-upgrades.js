@@ -7,6 +7,42 @@ function chargedDimInfinityMult() {
   return 1 + Math.log10(Math.max(1, Currency.infinitiesTotal.value.pLog10())) * Math.sqrt(Ra.pets.teresa.level) / 150;
 }
 
+//I want to see if I can do them in columns... hmmm...
+//I want to simply specify the columns in an array & have their IDs & dependencies dynamically generated.
+//I want to have an effectTarget behavior that lets me specify which dimensions are targeted
+
+
+//Column 1--Production multipliers on specific Antimatter Dimensions.
+const columnOne = [{
+  cost: 1,
+  description: "1st and 8th Antimatter Dimensions gain a multiplier based on Infinities",
+  effect: () => dimInfinityMult(),
+  effectTarget: [1, 8],
+  formatEffect: value => formatX(value, 1, 1),
+}, {
+  cost: 1,
+  description: "2nd and 7th Antimatter Dimensions gain a multiplier based on Infinities",
+  effect: () => dimInfinityMult(),
+  effectTarget: [2, 7],
+  formatEffect: value => formatX(value, 1, 1)
+}];
+//Column 2--Production multipliers on all Antimatter Dimensions.
+const columnTwo = [{
+  cost: 1,
+  description: "Antimatter Dimensions gain a multiplier based on time played",
+  effect: () => Math.pow(Time.totalTimePlayed.totalMinutes / 2, 0.15),
+  effectTarget: "all",
+  formatEffect: value => formatX(value, 2, 2)
+}];
+//Column 3--Things dealing with Galaxies or Dimension Boosts.
+const columnThree = [];
+//Column 4--Quality-of-life improvements.  These ones are typically disabled during Challenges.
+const columnFour = [];
+
+export const infinityUpgradesNew = {
+  columns: [ columnOne, columnTwo, columnThree, columnFour ]
+};
+
 export const infinityUpgrades = {
   totalTimeMult: {
     id: "timeMult",

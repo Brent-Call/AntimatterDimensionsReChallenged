@@ -24,39 +24,13 @@ export default {
       project in 2016, it was expanded upon by a large team of developers and testers from then on.
       <br>
       <br>
-      The game has unfolding gameplay and multiple prestige layers. The "How to Play" button contains useful
-      information about progressing.
+      Antimatter Dimensions: ReChallenged is a modification of the game which places greater emphasis on grindy challenge mechanics.
     </div>
     <div class="l-socials">
       <InformationModalButton
-        name="GitHub repository"
+        name="Base game GitHub repository"
         icon="fa-brands fa-github"
         link="https://github.com/IvarK/AntimatterDimensionsSourceCode"
-      />
-      <InformationModalButton
-        name="r/AntimatterDimensions"
-        icon="fa-brands fa-reddit-alien"
-        link="https://www.reddit.com/r/AntimatterDimensions/"
-      />
-      <InformationModalButton
-        name="Antimatter Dimensions Discord Server"
-        icon="fa-brands fa-discord"
-        link="https://discord.gg/ST9NaXa"
-      />
-      <InformationModalButton
-        name="Antimatter Dimensions on Google Play"
-        icon="fa-brands fa-google-play"
-        link="https://play.google.com/store/apps/details?id=kajfosz.antimatterdimensions"
-      />
-      <InformationModalButton
-        name="Antimatter Dimensions on App Store"
-        icon="fa-brands fa-app-store-ios"
-        link="https://apps.apple.com/us/app/antimatter-dimensions/id6738206800"
-      />
-      <InformationModalButton
-        name="Antimatter Dimensions on Steam"
-        icon="fa-brands fa-steam"
-        link="https://store.steampowered.com/app/1399720/Antimatter_Dimensions/"
       />
       <InformationModalButton
         name="Credits"

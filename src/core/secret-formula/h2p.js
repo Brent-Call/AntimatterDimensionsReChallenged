@@ -17,6 +17,22 @@ export const h2p = {
    */
   tabs: [
     {
+      name: "AD: ReChallenged",
+      info: () => `
+Hello!  This is Antimatter Dimensions: ReChallenged.
+<br>
+<br>
+Everything is a work in progress at the moment.
+<br>
+<br>
+This is a modification of the original game, Antimatter Dimensions, where a greater emphasis is placed on Challenge
+mechanics and Achievements.
+`,
+      isUnlocked: () => true,
+      tags: ["this", "mod"],
+      tab: ""
+    },
+    {
       name: "This Modal",
       info: () => `
 Welcome to the How to Play!

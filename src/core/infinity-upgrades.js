@@ -213,3 +213,19 @@ export const InfinityUpgrade = mapGameDataToObject(
     ? new InfinityIPMultUpgrade(config)
     : new InfinityUpgradeState(config))
 );
+
+export const InfinityUpgradesNew = function() { //Custom logic mimicking mapGameDataToObject
+  var retVal = { columns: [], all: []};
+
+  GameDatabase.infinity.upgradesNew.columns.forEach(( column, columnIndex ) => {
+    retVal.columns.push([]); //Add a new column, an empty array
+    //Each column is an array of Infinity Upgrades
+    column.forEach((config, rowIndex) => {
+      config.id = (rowIndex + 1).toFixed() + (columnIndex + 1).toFixed(); //Dynamically generate IDs for these upgrades based on position
+      //TODO: unlock requirement of having previous upgrade purchased.
+      retVal.columns[columnIndex].push(new InfinityUpgradeState(config));
+      retVal.all.push(retVal.columns[columnIndex][rowIndex]);
+    });
+  });
+  return retVal;
+}();
