@@ -78,12 +78,7 @@ export const MultiplierTabHelper = {
     galFrac *= 3;
 
     // Calculate what proportion base tickspeed takes out of the entire tickspeed multiplier
-    const base = DC.D1.dividedByEffectsOf(
-      Achievement(36),
-      Achievement(45),
-      Achievement(66),
-      Achievement(83)
-    );
+    const base = Achievements.getBaseTickspeed();
     let baseFrac = base.log10() / Tickspeed.perSecond.log10();
 
     // We want to make sure to zero out components in some edge cases

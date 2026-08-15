@@ -29,13 +29,7 @@ export const tickspeed = {
   base: {
     name: "Base Tickspeed from Achievements",
     displayOverride: () => {
-      const val = DC.D1.dividedByEffectsOf(
-        Achievement(36),
-        Achievement(45),
-        Achievement(66),
-        Achievement(83)
-      );
-      return `${format(val, 2, 2)}/sec`;
+      return `${format(Achievements.getBaseTickspeed(), 2, 2)}/sec`;
     },
     multValue: () => new Decimal.pow10(100 * MultiplierTabHelper.decomposeTickspeed().base),
     isActive: () => true,

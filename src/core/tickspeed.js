@@ -174,13 +174,7 @@ export const Tickspeed = {
       //Set tickspeed to 0 if the player doesn't have the Achievement:
       return Decimal.MAX_VALUE;
     }
-    return DC.E3.timesEffectsOf(
-      Achievement(36),
-      Achievement(45),
-      Achievement(66),
-      Achievement(83)
-    )
-      .times(getTickSpeedMultiplier().pow(this.totalUpgrades));
+    return DC.E3.divide(Achievements.getBaseTickspeed()).times(getTickSpeedMultiplier().pow(this.totalUpgrades));
   },
 
   get totalUpgrades() {

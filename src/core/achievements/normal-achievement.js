@@ -1,4 +1,5 @@
 import { GameMechanicState } from "../game-mechanics";
+import { DC } from "../constants";
 
 import { SteamRuntime } from "@/steam";
 
@@ -176,6 +177,26 @@ export const Achievements = {
   get power() {
     if (Pelle.isDisabled("achievementMult")) return 1;
     return Achievements._power.value;
+  },
+
+  /**
+   * Calculates the "base Tickspeed from Achievements" which is used in a few other places in the game.
+   * Note that a value of 0 means "Tickspeed as a mechanic isn't unlocked yet,"
+   * a value of 1 means "1 tick per second,"
+   * a value of 100 means "100 ticks per second," etc.
+   * @returns {Decimal}
+   */
+  getBaseTickspeed() {
+    if (!Achievement(11).isEffectActive) {
+      //Set tickspeed to 0 if the player doesn't have the Achievement:
+      return DC.D0;
+    }
+    return DC.D1.dividedByEffectsOf(
+            Achievement(36),
+            Achievement(45),
+            Achievement(66),
+            Achievement(83)
+          );
   },
 
   updateSteamStatus() {
