@@ -31,6 +31,7 @@ export default {
   },
   computed: {
     isDoomed: () => Pelle.isDoomed,
+    isUnlocked: () => Achievement(12).isEffectActive,
     rows: () => Achievements.allRows,
     renderedRows() {
       return this.rows.filter((_, i) => this.renderedRowIndices.includes(i));
@@ -147,13 +148,10 @@ export default {
       <span v-if="isDoomed">
         All Achievement multipliers have been disabled<SwapAchievementImagesButton />
       </span>
-      <span v-else>
+      <span v-else-if="isUnlocked">
         Achievements provide a multiplier to<SwapAchievementImagesButton />
         <div v-html="boostText" />
       </span>
-    </div>
-    <div class="c-achievements-tab__header">
-      Achievements with a <i class="fas fa-star" /> icon also give an additional reward.
     </div>
     <div
       v-if="showAutoAchieve"

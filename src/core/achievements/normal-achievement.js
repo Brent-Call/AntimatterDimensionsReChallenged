@@ -166,7 +166,11 @@ export const Achievements = {
   },
 
   _power: new Lazy(() => {
-    //TODO: ah, okay, we can work with this - new achievement 12
+    if (!Achievement(12).isEffectActive) {
+      //Achievement Multiplier not unlocked yet:
+      return 1;
+    }
+    //Else, we have unlocked the Achievement Multiplier:
     const unlockedRows = Achievements.allRows
       .countWhere(row => row.every(ach => ach.isUnlocked));
     const basePower = Math.pow(1.25, unlockedRows) * Math.pow(1.03, Achievements.effectiveCount);
@@ -191,12 +195,14 @@ export const Achievements = {
       //Set tickspeed to 0 if the player doesn't have the Achievement:
       return DC.D0;
     }
+    //Else, tickspeed as a mechanic is unlocked & is boosted by certain Achievements:
     return DC.D1.dividedByEffectsOf(
-            Achievement(36),
-            Achievement(45),
-            Achievement(66),
-            Achievement(83)
-          );
+      Achievement(13), Achievement(14), //×1.05 each
+      Achievement(36),
+      Achievement(45),
+      Achievement(66),
+      Achievement(83)
+    );
   },
 
   updateSteamStatus() {

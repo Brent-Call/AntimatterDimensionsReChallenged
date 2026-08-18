@@ -115,6 +115,7 @@ export const MultiplierTabHelper = {
         return dimStr === "ID1";
       case 34:
         return dimStr.substr(0, 2) === "AD" && Number(dimStr.charAt(2)) !== 8;
+      case 15:
       case 64:
         return dimStr.substr(0, 2) === "AD" && Number(dimStr.charAt(2)) <= 4;
       default:

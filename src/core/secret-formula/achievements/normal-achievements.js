@@ -1,5 +1,8 @@
 import { DC } from "../../constants";
 
+//The plan for Antimatter Dimensions ReChallenged is for EVERY Achievement in the entire game to have a reward.
+//Kind of like AD: Rewarded.
+
 export const normalAchievements = [
   {
     id: 11,
@@ -13,28 +16,33 @@ export const normalAchievements = [
     name: "100 antimatter is a lot",
     description: "Buy a 2nd Antimatter Dimension.",
     checkEvent: GAME_EVENT.ACHIEVEMENT_EVENT_OTHER,
-    reward: "WIP - Unlock the Achievement Multiplier mechanic & apply it to all Antimatter Dimensions.",
+    get reward() { return `Unlock the Achievement Multiplier. All Antimatter Dimensions get a multiplier of
+      ${formatX(1.03, 2, 2)} for each completed Achievement and
+      ${formatX(1.25, 2, 2)} for each fully completed row of Achievements.`; },
   },
   {
     id: 13,
     name: "Half life 3 CONFIRMED",
     description: "Buy a 3rd Antimatter Dimension.",
     checkEvent: GAME_EVENT.ACHIEVEMENT_EVENT_OTHER,
-    reward: "WIP - Multiply starting tickspeed by 1.05",
+    get reward() { return `Multiply starting tickspeed by ${formatX(1.1, 2, 2)}.`; },
+    effect: 1 / 1.1
   },
   {
     id: 14,
     name: "L4D: Left 4 Dimensions",
     description: "Buy a 4th Antimatter Dimension.",
     checkEvent: GAME_EVENT.ACHIEVEMENT_EVENT_OTHER,
-    reward: "WIP - Multiply starting tickspeed by 1.05",
+    get reward() { return `Multiply starting tickspeed by ${formatX(1.1, 2, 2)}.`; },
+    effect: 1 / 1.1
   },
   {
     id: 15,
     name: "5 Dimension Antimatter Punch",
     description: "Buy a 5th Antimatter Dimension.",
     checkEvent: GAME_EVENT.ACHIEVEMENT_EVENT_OTHER,
-    reward: "WIP - Multiplier to first 4 Antimatter Dimensions of 1.25",
+    get reward() { return `Antimatter Dimensions 1-4 are ${formatPercents(0.25)} stronger.`; },
+    effect: 1.25
   },
   {
     id: 16,

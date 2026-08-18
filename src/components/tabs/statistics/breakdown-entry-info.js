@@ -84,8 +84,8 @@ export class BreakdownEntryInfo {
   }
 
   get isVisible() {
-    if (this.name === "Base Tickspeed from Achievements") {
-      //Kinda hacky, but I want this one to always be visible.
+    if (this.name === "Base Tickspeed from Achievements" || this.name === "Total Tickspeed") {
+      //Kinda hacky, but I want these ones to always be visible.
       return true;
     }
     return this.isActive && (this.pow !== 1 || this.mult.neq(1));
