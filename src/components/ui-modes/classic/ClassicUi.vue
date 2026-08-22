@@ -1,7 +1,6 @@
 <script>
 import BigCrunchButton from "../BigCrunchButton";
 import GameHeader from "../GameHeader";
-import NewsTicker from "../NewsTicker";
 
 
 import ClassicSubtabBar from "./ClassicSubtabBar";
@@ -15,7 +14,6 @@ export default {
     GameHeader,
     ClassicSubtabBar,
     ClassicTabBar,
-    NewsTicker,
     InfinityPointsHeader,
     EternityPointsHeader,
     BigCrunchButton
@@ -29,16 +27,12 @@ export default {
   },
   computed: {
     tab: () => Tabs.current,
-    news() {
-      return this.$viewModel.news;
-    }
   },
   methods: {
     update() {
       const crunchButtonVisible = !player.break && Player.canCrunch;
       this.bigCrunch = crunchButtonVisible && Time.bestInfinityRealTime.totalMinutes > 1;
-      // This only exists to force a key-swap after pressing the button to start a new game; the news ticker can break
-      // if it isn't redrawn
+      // This only exists to force a key-swap after pressing the button to start a new game
       this.newGameKey = Pelle.isDoomed;
     }
   },
@@ -58,10 +52,6 @@ export default {
     >
     <BigCrunchButton />
     <template v-if="!bigCrunch">
-      <NewsTicker
-        v-if="news"
-        class="l-old-ui__news-bar"
-      />
       <GameHeader class="l-old-ui__header" />
       <ClassicTabBar />
       <component

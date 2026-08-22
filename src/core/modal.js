@@ -31,7 +31,6 @@ import GlyphDisplayOptionsModal from "@/components/modals/options/glyph-appearan
 import HiddenTabsModal from "@/components/modals/options/hidden-tabs/HiddenTabsModal";
 import HotkeysModal from "@/components/modals/options/HotkeysModal";
 import InfoDisplayOptionsModal from "@/components/modals/options/InfoDisplayOptionsModal";
-import NewsOptionsModal from "@/components/modals/options/NewsOptionsModal";
 import NotationModal from "@/components/modals/options/NotationModal";
 import PreferredTreeModal from "@/components/modals/options/PreferredTreeModal";
 import SingleGlyphAppearanceModal from "@/components/modals/options/glyph-appearance/SingleGlyphAppearanceModal";
@@ -226,7 +225,6 @@ Modal.glyphDisplayOptions = new Modal(GlyphDisplayOptionsModal);
 Modal.cosmeticSetChoice = new Modal(CosmeticSetChoiceModal);
 Modal.singleGlyphAppearance = new Modal(SingleGlyphAppearanceModal);
 Modal.hotkeys = new Modal(HotkeysModal);
-Modal.newsOptions = new Modal(NewsOptionsModal);
 Modal.animationOptions = new Modal(AnimationOptionsModal);
 Modal.hiddenTabs = new Modal(HiddenTabsModal);
 Modal.preferredTree = new Modal(PreferredTreeModal);

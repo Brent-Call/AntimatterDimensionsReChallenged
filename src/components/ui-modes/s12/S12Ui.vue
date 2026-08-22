@@ -4,7 +4,6 @@ import HeaderBlackHole from "../HeaderBlackHole";
 import HeaderChallengeDisplay from "../HeaderChallengeDisplay";
 import HeaderChallengeEffects from "../HeaderChallengeEffects";
 import HeaderPrestigeGroup from "../HeaderPrestigeGroup";
-import NewsTicker from "../NewsTicker";
 
 import BackgroundAnimations from "@/components/BackgroundAnimations";
 import GameUiComponentFixed from "@/components/GameUiComponentFixed";
@@ -20,7 +19,6 @@ export default {
     BigCrunchButton,
     HeaderChallengeDisplay,
     HeaderChallengeEffects,
-    NewsTicker,
     HeaderBlackHole,
     HeaderPrestigeGroup,
     GameSpeedDisplay,
@@ -38,11 +36,8 @@ export default {
     };
   },
   computed: {
-    news() {
-      return this.$viewModel.news;
-    },
     topPadding() {
-      return this.$viewModel.news ? "" : "padding-top: 3.9rem";
+      return "padding-top: 3.9rem";
     },
     isOldUi() {
       return !this.$viewModel.newUI;
@@ -53,8 +48,7 @@ export default {
       const crunchButtonVisible = !player.break && Player.canCrunch;
       this.bigCrunch = crunchButtonVisible && Time.bestInfinityRealTime.totalMinutes > 1;
       this.hasReality = PlayerProgress.realityUnlocked();
-      // This only exists to force a key-swap after pressing the button to start a new game; the news ticker can break
-      // if it isn't redrawn
+      // This only exists to force a key-swap after pressing the button to start a new game
       this.newGameKey = Pelle.isDoomed;
       this.tabName = Tabs.current[this.$viewModel.subtab].name;
     },
@@ -89,9 +83,6 @@ export default {
       <GameUiComponentFixed />
       <BackgroundAnimations />
       <div class="c-s12-window__content-container">
-        <NewsTicker
-          v-if="news"
-        />
         <BigCrunchButton />
         <div
           v-if="!bigCrunch"

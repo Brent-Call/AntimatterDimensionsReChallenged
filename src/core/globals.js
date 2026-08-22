@@ -83,7 +83,6 @@ export * from "./dilation";
 export * from "./black-hole";
 export * from "./machines";
 export * from "./devtools";
-export * from "./news-ticker";
 export * from "./shop";
 export * from "./tabs";
 export * from "./tab-notifications";

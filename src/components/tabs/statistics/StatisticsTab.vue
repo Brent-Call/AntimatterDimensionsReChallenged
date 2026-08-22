@@ -14,8 +14,6 @@ export default {
       totalAntimatter: new Decimal(0),
       realTimePlayed: TimeSpan.zero,
       timeSinceCreation: 0,
-      uniqueNews: 0,
-      totalNews: 0,
       secretAchievementCount: 0,
       infinity: {
         isUnlocked: false,
@@ -86,8 +84,6 @@ export default {
       this.totalAntimatter.copyFrom(records.totalAntimatter);
       this.realTimePlayed.setFrom(records.realTimePlayed);
       this.fullTimePlayed = TimeSpan.fromMilliseconds(records.previousRunRealTime + records.realTimePlayed);
-      this.uniqueNews = NewsHandler.uniqueTickersSeen;
-      this.totalNews = player.news.totalSeen;
       this.secretAchievementCount = SecretAchievements.all.filter(a => a.isUnlocked).length;
       this.timeSinceCreation = Date.now() - player.records.gameCreatedTime;
 
@@ -145,7 +141,6 @@ export default {
 
       this.isDoomed = Pelle.isDoomed;
       this.realTimeDoomed.setFrom(player.records.realTimeDoomed);
-      this.paperclips = player.news.specialTickerData.paperclips;
     },
     formatDecimalAmount(value) {
       return value.gt(1e9) ? format(value, 3) : formatInt(Math.floor(value.toNumber()));
@@ -188,16 +183,7 @@ export default {
         </div>
         <br>
         <div>
-          You have seen {{ quantifyInt("news message", totalNews) }} in total.
-        </div>
-        <div>
-          You have seen {{ quantifyInt("unique news message", uniqueNews) }}.
-        </div>
-        <div>
           You have unlocked {{ quantifyInt("Secret Achievement", secretAchievementCount) }}.
-        </div>
-        <div v-if="paperclips">
-          You have {{ quantifyInt("useless paperclip", paperclips) }}.
         </div>
         <div v-if="fullGameCompletions">
           <br>

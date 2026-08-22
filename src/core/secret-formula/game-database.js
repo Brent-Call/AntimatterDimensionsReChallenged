@@ -12,7 +12,6 @@ import { discordRichPresence } from "./discord-rich-presence";
 import { eternity } from "./eternity";
 import { h2p } from "./h2p";
 import { infinity } from "./infinity";
-import { news } from "./news";
 import { progressStages } from "./progress-checker";
 import { reality } from "./reality";
 import { shopPurchases } from "./shop-purchases";
@@ -36,7 +35,6 @@ export const GameDatabase = {
   infinity,
   multiplierTabTree,
   multiplierTabValues,
-  news,
   progressStages,
   reality,
   sidebarResources,

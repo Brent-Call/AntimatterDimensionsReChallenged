@@ -73,12 +73,6 @@ export default {
           {{ UILabel }}
         </OptionsButton>
         <UpdateRateSlider />
-        <OptionsButton
-          class="o-primary-btn--option"
-          onclick="Modal.newsOptions.show();"
-        >
-          Open News Options
-        </OptionsButton>
       </div>
       <div class="l-options-grid__row">
         <ExpandingControlBox

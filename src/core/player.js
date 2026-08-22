@@ -205,17 +205,6 @@ window.player = {
   infinitiesBanked: DC.D0,
   dimensionBoosts: 0,
   galaxies: 0,
-  news: {
-    // This is properly handled in NewsHandler.addSeenNews which adds properties as needed
-    seen: {},
-    specialTickerData: {
-      uselessNewsClicks: 0,
-      paperclips: 0,
-      newsQueuePosition: 1000,
-      eiffelTowerChapter: 0
-    },
-    totalSeen: 0,
-  },
   lastUpdate: new Date().getTime(),
   backupTimer: 0,
   chall2Pow: 1,
@@ -765,13 +754,6 @@ window.player = {
   tutorialState: 0,
   tutorialActive: true,
   options: {
-    news: {
-      enabled: true,
-      repeatBuffer: 40,
-      AIChance: 0,
-      speed: 1,
-      includeAnimated: true,
-    },
     notation: "Mixed scientific",
     notationDigits: {
       comma: 5,

@@ -8,12 +8,6 @@ import FullScreenAnimationHandler from "./full-screen-animation-handler";
 
 export class GameOptions {
 
-  static toggleNews() {
-    player.options.news.enabled = !player.options.news.enabled;
-    ui.view.news = player.options.news.enabled;
-    GameStorage.save();
-  }
-
   static toggleUI() {
     player.options.newUI = !player.options.newUI;
     ui.view.newUI = player.options.newUI;

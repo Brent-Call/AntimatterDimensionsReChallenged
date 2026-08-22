@@ -84,10 +84,8 @@ export const normalAchievements = [
   },
   {
     id: 22,
-    name: "FAKE NEWS!",
-    get description() { return `Encounter ${formatInt(50)} different news messages.`; },
-    checkRequirement: () => NewsHandler.uniqueTickersSeen >= 50,
-    checkEvent: GAME_EVENT.REALITY_RESET_AFTER
+    name: "Gotta rework this Achievement.",
+    get description() { return "WIP--needs to be completely reworked."; }
   },
   {
     id: 23,
