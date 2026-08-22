@@ -53,14 +53,14 @@ export const normalAchievements = [
         : "Buy a 6th Antimatter Dimension.";
     },
     checkEvent: GAME_EVENT.ACHIEVEMENT_EVENT_OTHER,
-    reward: "WIP - Unlock Autobuyers for Antimatter Dimensions 1-4",
+    reward: "Unlock Autobuyers for Antimatter Dimensions 1~4.",
   },
   {
     id: 17,
     name: "Not a luck related achievement",
     description: "Buy a 7th Antimatter Dimension.",
     checkEvent: GAME_EVENT.ACHIEVEMENT_EVENT_OTHER,
-    reward: "WIP - Unlock Autobuyer for Tickspeed Upgrades",
+    reward: "Unlock the Autobuyer for Tickspeed Upgrades.",
   },
   {
     id: 18,
@@ -71,7 +71,7 @@ export const normalAchievements = [
         : "Buy an 8th Antimatter Dimension.";
     },
     checkEvent: GAME_EVENT.ACHIEVEMENT_EVENT_OTHER,
-    reward: "WIP - Unlock Autobuyers for Antimatter Dimensions 5~8",
+    reward: "Unlock Autobuyers for Antimatter Dimensions 5~8.",
   },
   {
     id: 21,

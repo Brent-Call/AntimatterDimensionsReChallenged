@@ -430,7 +430,7 @@ ${formatX(8)} then ${formatX(5)}; in both cases you will end up with a total sac
     }, {
       name: "Achievements",
       info: () => `
-Each Achievement has requirements to unlock. Once unlocked, some Achievements give a reward.
+Each Achievement has requirements to unlock. Once unlocked, some Achievements give a reward.  The plan is for every Achievement to have a reward, eventually.
 Requirements and rewards vary in difficulty and benefit significantly.
 <br>
 <br>

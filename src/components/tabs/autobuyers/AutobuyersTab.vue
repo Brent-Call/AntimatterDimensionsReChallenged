@@ -29,7 +29,7 @@ export default {
       hasInfinity: false,
       hasContinuum: false,
       displayADAutobuyersIndividually: false,
-      hasInstant: false,
+      hasInstant: false
     };
   },
   computed: {
@@ -40,7 +40,10 @@ export default {
     },
     gameTickLength() {
       return `${formatInt(player.options.updateRate)} ms`;
-    }
+    },
+    hasAutoFirstFourADs() { return Achievement(16).isEffectActive; },
+    hasAutoTickspeed() { return Achievement(17).isEffectActive; },
+    hasAutoLastFourADs() { return Achievement(18).isEffectActive; }
   },
   methods: {
     update() {
@@ -88,13 +91,20 @@ export default {
     <BigCrunchAutobuyerBox class="c-infinity-pos" />
     <GalaxyAutobuyerBox />
     <DimensionBoostAutobuyerBox />
-    <TickspeedAutobuyerBox v-if="!hasContinuum" />
+    <TickspeedAutobuyerBox v-if="!hasContinuum && hasAutoTickspeed" />
     <template v-if="displayADAutobuyersIndividually">
-      <DimensionAutobuyerBox
-        v-for="tier in 8"
-        :key="tier"
-        :tier="tier"
-      />
+      <template v-if="hasAutoFirstFourADs">
+        <DimensionAutobuyerBox :tier="1" />
+        <DimensionAutobuyerBox :tier="2" />
+        <DimensionAutobuyerBox :tier="3" />
+        <DimensionAutobuyerBox :tier="4" />
+      </template>
+      <template v-if="hasAutoLastFourADs">
+        <DimensionAutobuyerBox :tier="5" />
+        <DimensionAutobuyerBox :tier="6" />
+        <DimensionAutobuyerBox :tier="7" />
+        <DimensionAutobuyerBox :tier="8" />
+      </template>
     </template>
     <SimpleAutobuyersMultiBox />
   </div>

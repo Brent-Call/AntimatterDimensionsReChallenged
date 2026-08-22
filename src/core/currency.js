@@ -201,12 +201,6 @@ Currency.antimatter = new class extends DecimalCurrency {
 
   set value(value) {
     if (InfinityChallenges.nextIC) InfinityChallenges.notifyICUnlock(value);
-    if (GameCache.cheapestAntimatterAutobuyer.value && value.gte(GameCache.cheapestAntimatterAutobuyer.value)) {
-      // Clicking into the automation tab clears the trigger and prevents it from retriggering as long as the player
-      // stays on the tab; leaving the tab with an available autobuyer will immediately force it to trigger again
-      TabNotification.newAutobuyer.clearTrigger();
-      TabNotification.newAutobuyer.tryTrigger();
-    }
     player.antimatter = value;
     player.records.thisInfinity.maxAM = player.records.thisInfinity.maxAM.max(value);
     player.records.thisEternity.maxAM = player.records.thisEternity.maxAM.max(value);

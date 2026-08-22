@@ -25,19 +25,7 @@ export class AntimatterDimensionAutobuyerState extends UpgradeableAutobuyerState
 
   get isUnlocked() {
     if (Pelle.isDisabled(`antimatterDimAutobuyer${this.tier}`)) return false;
-    return this.data.isBought || this.canBeUpgraded;
-  }
-
-  get isBought() {
-    return this.data.isBought;
-  }
-
-  get antimatterCost() {
-    return DC.E10.pow(this.tier - 1).times(DC.E40);
-  }
-
-  get canBeBought() {
-    return !Pelle.isDisabled(`antimatterDimAutobuyer${this.tier}`);
+    return this.canUnlockSlowVersion;
   }
 
   get canBeUpgraded() {
@@ -74,7 +62,12 @@ export class AntimatterDimensionAutobuyerState extends UpgradeableAutobuyerState
   }
 
   get canUnlockSlowVersion() {
-    return player.records.thisEternity.maxAM.gte(this.antimatterCost);
+    if (this.tier <= 4) {
+      return Achievement(16).isEffectActive;
+    }
+    else {
+      return Achievement(18).isEffectActive;
+    }
   }
 
   toggleMode() {
@@ -105,7 +98,7 @@ export class AntimatterDimensionAutobuyerState extends UpgradeableAutobuyerState
     const intervalTick = this.timeSinceLastTick >= this.interval;
 
     // From AutobuyerState.canTick (ignores this.constructor.isActive because that's accounted for in thisSetting)
-    const autoTick = player.auto.autobuyersOn && this.isActive && (this.isUnlocked || this.isBought);
+    const autoTick = player.auto.autobuyersOn && this.isActive && this.isUnlocked;
 
     return thisSetting && hasAutobuyer && intervalTick && autoTick;
   }
@@ -132,11 +125,6 @@ export class AntimatterDimensionAutobuyerState extends UpgradeableAutobuyerState
     GameUI.update();
   }
 
-  purchase() {
-    if (!this.canUnlockSlowVersion) return;
-    this.data.isBought = true;
-  }
-
   get resetTickOn() {
     return Perk.antimatterNoReset.canBeApplied ? PRESTIGE_EVENT.ANTIMATTER_GALAXY : PRESTIGE_EVENT.DIMENSION_BOOST;
   }
@@ -145,7 +133,6 @@ export class AntimatterDimensionAutobuyerState extends UpgradeableAutobuyerState
     super.reset();
     if (EternityMilestone.keepAutobuyers.isReached || PelleUpgrade.keepAutobuyers.canBeApplied) return;
     this.data.isUnlocked = false;
-    this.data.isBought = false;
     this.data.bulk = 1;
     TabNotification.newAutobuyer.clearTrigger();
   }
@@ -160,7 +147,6 @@ export class AntimatterDimensionAutobuyerState extends UpgradeableAutobuyerState
   static createAccessor() {
     const accessor = super.createAccessor();
     Object.defineProperties(accessor, {
-      allBought: { get: () => accessor.zeroIndexed.every(x => x.isBought) },
       // We can get away with this since allUnlimitedBulk is the same for all AD autos
       allUnlimitedBulk: { get: () => accessor.zeroIndexed[0].hasUnlimitedBulk },
       bulkCap: { get: () => accessor.zeroIndexed[0].bulkCap },

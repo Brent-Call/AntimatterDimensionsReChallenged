@@ -81,14 +81,6 @@ export const GameCache = {
 
   buyablePerks: new Lazy(() => Perks.all.filter(p => p.canBeBought)),
 
-  // Cached because it needs to be checked upon any change to antimatter, but that's a hot path and we want to keep
-  // unnecessary repetitive calculations and accessing to a minimum
-  cheapestAntimatterAutobuyer: new Lazy(() => Autobuyer.antimatterDimension.zeroIndexed.concat(Autobuyer.tickspeed)
-    .filter(ab => !(ab.isBought || ab.isUnlocked))
-    .map(ab => ab.antimatterCost.toNumber())
-    .min()
-  ),
-
   // The effect is defined in antimatter_dimensions.js because that's where the non-cached
   // code originally lived.
   antimatterDimensionCommonMultiplier: new Lazy(() => antimatterDimensionCommonMultiplier()),

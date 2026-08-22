@@ -35,9 +35,7 @@ export default {
       globalToggle: false,
       canBeBought: false,
       isUnlockable: false,
-      antimatterCost: new Decimal(),
       isBought: false,
-      antimatter: new Decimal(),
       currMode: 0,
       nextValue: 0,
       nextTime: 0,
@@ -117,9 +115,7 @@ export default {
       this.globalToggle = player.auto.autobuyersOn;
       this.canBeBought = autobuyer.canBeBought;
       this.isUnlockable = autobuyer.canUnlockSlowVersion;
-      this.antimatterCost = autobuyer.antimatterCost;
       this.isBought = autobuyer.isBought;
-      this.antimatter.copyFrom(player.records.thisEternity.maxAM);
 
       this.currMode = autobuyer.mode;
       if (this.isShowingStateInfo) {
@@ -133,7 +129,6 @@ export default {
     purchase() {
       this.autobuyer.purchase();
       TabNotification.newAutobuyer.clearTrigger();
-      GameCache.cheapestAntimatterAutobuyer.invalidate();
     }
   }
 };
@@ -188,7 +183,7 @@ export default {
   >
     {{ name }}
     <br>
-    Requirement: {{ format(antimatterCost) }} Total Antimatter {{ showEternity }}
+    This text isn't supposed to ever be displayed...
   </div>
 </template>
 

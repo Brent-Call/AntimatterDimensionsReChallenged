@@ -13,7 +13,7 @@ export class TickspeedAutobuyerState extends UpgradeableAutobuyerState {
 
   get isUnlocked() {
     if (Pelle.isDisabled("tickspeedAutobuyer")) return false;
-    return this.canBeUpgraded;
+    return this.canUnlockSlowVersion;
   }
 
   get canBeUpgraded() {
@@ -22,18 +22,6 @@ export class TickspeedAutobuyerState extends UpgradeableAutobuyerState {
 
   get baseInterval() {
     return Player.defaultStart.auto.tickspeed.interval;
-  }
-
-  get isBought() {
-    return this.data.isBought;
-  }
-
-  get antimatterCost() {
-    return DC.E140;
-  }
-
-  get canBeBought() {
-    return !Pelle.isDoomed;
   }
 
   get disabledByContinuum() {
@@ -53,7 +41,7 @@ export class TickspeedAutobuyerState extends UpgradeableAutobuyerState {
   }
 
   get canUnlockSlowVersion() {
-    return player.records.thisEternity.maxAM.gte(this.antimatterCost);
+    return Achievement(17).isEffectActive;
   }
 
   toggleMode() {
@@ -80,11 +68,6 @@ export class TickspeedAutobuyerState extends UpgradeableAutobuyerState {
     }
   }
 
-  purchase() {
-    if (!this.canUnlockSlowVersion) return;
-    this.data.isBought = true;
-  }
-
   get resetTickOn() {
     return Perk.antimatterNoReset.canBeApplied ? PRESTIGE_EVENT.ANTIMATTER_GALAXY : PRESTIGE_EVENT.DIMENSION_BOOST;
   }
@@ -94,7 +77,6 @@ export class TickspeedAutobuyerState extends UpgradeableAutobuyerState {
     if (EternityMilestone.keepAutobuyers.isReached || PelleUpgrade.keepAutobuyers.canBeApplied) return;
     this.data.mode = AUTOBUYER_MODE.BUY_SINGLE;
     this.data.isUnlocked = false;
-    this.data.isBought = false;
     TabNotification.newAutobuyer.clearTrigger();
   }
 }

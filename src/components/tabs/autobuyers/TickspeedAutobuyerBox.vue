@@ -11,7 +11,7 @@ export default {
   data() {
     return {
       mode: AUTOBUYER_MODE.BUY_SINGLE,
-      isUnlocked: false
+      canToggleMode: false
     };
   },
   computed: {
@@ -27,7 +27,7 @@ export default {
   methods: {
     update() {
       this.mode = this.autobuyer.mode;
-      this.isUnlocked = this.autobuyer.isUnlocked;
+      this.canToggleMode = this.autobuyer.canBeUpgraded;
     },
     toggleMode() {
       this.autobuyer.toggleMode();
@@ -48,7 +48,7 @@ export default {
     </template>
     <template #toggleSlot>
       <button
-        v-if="isUnlocked"
+        v-if="canToggleMode"
         class="o-autobuyer-btn"
         @click="toggleMode"
       >
