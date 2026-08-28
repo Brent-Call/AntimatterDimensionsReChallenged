@@ -128,6 +128,7 @@ function applyNDMultipliers(mult, tier) {
     tier <= 4 ? Achievement(15) : null, //×1.25 on first 4 ADs
     tier === 8 ? Achievement(23) : null,
     tier < 8 ? Achievement(34) : null,
+    tier === 3 ? Achievement(35) : null, //Boost to 3rd AD which grows based on time spent in this Infinity
     tier <= 4 ? Achievement(64) : null,
     tier < 8 ? TimeStudy(71) : null,
     tier === 8 ? TimeStudy(214) : null,

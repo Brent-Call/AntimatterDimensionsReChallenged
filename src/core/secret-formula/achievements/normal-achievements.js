@@ -181,7 +181,32 @@ export const normalAchievements = [
         : `Be offline for a period of over ${formatInt(6)} hours.`;
     },
     checkRequirement: () => Date.now() - player.lastUpdate >= 21600000,
-    checkEvent: GAME_EVENT.GAME_TICK_BEFORE
+    checkEvent: GAME_EVENT.GAME_TICK_BEFORE,
+    get reward() { //TODO: get this to update each second...
+      var firstLine = "Gain a multiplier to the 3rd Antimatter Dimension which grows ";
+      if (PlayerProgress.infinityUnlocked()) {
+        firstLine += "based on time spent in this Infinity.";
+      } else {
+        firstLine += "over time.";
+      }
+      var secondLine = "  Effect is stronger after one minute, after half an hour, and after one day.";
+      return firstLine + secondLine;
+    },
+    effect: () => {
+      var minutes = Time.thisInfinity.totalMinutes;
+      if (minutes >= 1440 /*one day*/) {
+        return Math.pow(minutes, 3);
+      }
+      if (minutes >= 30) {
+        return 100000 * minutes - 2000000;
+      }
+      if (minutes >= 1) {
+        return 800 + 200 * minutes;
+      }
+      //Else:
+      return 1 + 1 * minutes;
+    },
+    formatEffect: value => `${formatX(value, 2, 2)}`
   },
   {
     id: 36,

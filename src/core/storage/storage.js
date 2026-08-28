@@ -468,7 +468,6 @@ export const GameStorage = {
       guardFromNaNValues(player);
     }
 
-    ui.view.news = player.options.news.enabled;
     ui.view.newUI = player.options.newUI;
     ui.view.tutorialState = player.tutorialState;
     ui.view.tutorialActive = player.tutorialActive;
