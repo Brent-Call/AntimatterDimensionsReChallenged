@@ -105,9 +105,12 @@ export const MultiplierTabHelper = {
   achievementDimCheck(ach, dimStr) {
     switch (ach) {
       case 23:
+      case 42:
         return dimStr === "AD8";
       case 35:
         return dimStr === "AD3";
+      case 26:
+      case 27:
       case 28:
       case 31:
       case 68:

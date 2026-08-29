@@ -116,6 +116,7 @@ export const AD = {
     name: "Achievement Rewards",
     multValue: dim => {
       const allMult = DC.D1.timesEffectsOf(
+        Achievement(25), //×1.5 on all Antimatter Dimensions, +0.1 for each Infinity.
         Achievement(48),
         Achievement(56),
         Achievement(65),
@@ -141,8 +142,11 @@ export const AD = {
         dimMults[tier] = dimMults[tier].timesEffectsOf(
           tier <= 4 ? Achievement(15) : null, //×1.25 on first 4 ADs
           tier === 8 ? Achievement(23) : null,
+          tier === 1 ? Achievement(26) : null, //×2 on the 1st AD if you have 0 Dimension Boosts
+          tier === 1 ? Achievement(27) : null, //×2 on the 1st AD if you have 0 Dimension Boosts
           tier < 8 ? Achievement(34) : null,
           tier === 3 ? Achievement(35) : null, //Boost to 3rd AD which grows based on time spent in this Infinity
+          tier === 8 ? Achievement(42) : null, //×1.75 on 8th AD
           tier <= 4 ? Achievement(64) : null,
         );
         if (Achievement(43).isUnlocked) {
