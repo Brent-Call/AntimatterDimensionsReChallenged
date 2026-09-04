@@ -214,6 +214,9 @@ export const InfinityUpgrade = mapGameDataToObject(
     : new InfinityUpgradeState(config))
 );
 
+//TODO: instead of having to loop through all upgrades each tick for each game mechanic affected,
+//let's evaluate the upgrades once per tick & cache their effects!  Then, all queries can be to the cached effects.
+//TODO: Look into something called a "lazy" which might already do that!
 export const InfinityUpgradesNew = function() { //Custom logic mimicking mapGameDataToObject
   var retVal = { columns: [], all: []};
 
@@ -222,6 +225,10 @@ export const InfinityUpgradesNew = function() { //Custom logic mimicking mapGame
     //Each column is an array of Infinity Upgrades
     column.forEach((config, rowIndex) => {
       config.id = (rowIndex + 1).toFixed() + (columnIndex + 1).toFixed(); //Dynamically generate IDs for these upgrades based on position
+      if (rowIndex > 0) {
+        //Generate the requirement: you must have the upgrade directly above this one purchased.
+        config.checkRequirement = function() { return retVal.columns[columnIndex][rowIndex - 1].isBought; };
+      }
       //TODO: unlock requirement of having previous upgrade purchased.
       retVal.columns[columnIndex].push(new InfinityUpgradeState(config));
       retVal.all.push(retVal.columns[columnIndex][rowIndex]);

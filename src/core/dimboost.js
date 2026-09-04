@@ -113,6 +113,12 @@ export class DimBoost {
       amount += Math.pow(targetResets - 1, 3) + targetResets - 1;
     }
 
+    InfinityUpgradesNew.all.forEach((upgrade) => {
+      if (upgrade.config.effectTarget === "dimBoostRequirement") {
+        amount -= upgrade.effectOrDefault(0);
+      }
+    });
+
     amount -= Effects.sum(InfinityUpgrade.resetBoost);
     if (InfinityChallenge(5).isCompleted) amount -= 1;
 

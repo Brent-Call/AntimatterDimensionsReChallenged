@@ -44,6 +44,12 @@ export function antimatterDimensionCommonMultiplier() {
     PelleUpgrade.antimatterDimensionMult
   );
 
+  InfinityUpgradesNew.all.forEach((upgrade) => {
+    if (upgrade.config.effectTarget === "all") {
+      multiplier = multiplier.timesEffectOf(upgrade);
+    }
+  });
+
   multiplier = multiplier.dividedByEffectOf(InfinityChallenge(6));
   multiplier = multiplier.times(getAdjustedGlyphEffect("powermult"));
   multiplier = multiplier.times(Currency.realityMachines.value.powEffectOf(AlchemyResource.force));
@@ -141,6 +147,12 @@ function applyNDMultipliers(mult, tier) {
   if (Achievement(43).isUnlocked) {
     multiplier = multiplier.times(1 + tier / 100);
   }
+
+  InfinityUpgradesNew.all.forEach((upgrade) => {
+    if (Array.isArray(upgrade.config.effectTarget) && upgrade.config.effectTarget.includes(tier)) {
+      multiplier = multiplier.timesEffectOf(upgrade);
+    }
+  });
 
   multiplier = multiplier.clampMin(1);
 
@@ -642,6 +654,12 @@ export const AntimatterDimensions = {
       Achievement(141).effects.buyTenMult,
       EternityChallenge(3).reward
     );
+    
+    InfinityUpgradesNew.all.forEach((upgrade) => {
+      if (upgrade.config.effectTarget === "buy10Mult") {
+        mult = mult.timesEffectOf(upgrade);
+      }
+    });
 
     mult = mult.timesEffectsOf(
       InfinityUpgrade.buy10Mult,

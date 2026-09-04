@@ -25,6 +25,18 @@ const columnOne = [{
   effect: () => dimInfinityMult(),
   effectTarget: [2, 7],
   formatEffect: value => formatX(value, 1, 1)
+}, {
+  cost: 2,
+  description: "3rd and 6th Antimatter Dimensions gain a multiplier based on Infinities",
+  effect: () => dimInfinityMult(),
+  effectTarget: [3, 6],
+  formatEffect: value => formatX(value, 1, 1)
+}, {
+  cost: 2,
+  description: "4th and 5th Antimatter Dimensions gain a multiplier based on Infinities",
+  effect: () => dimInfinityMult(),
+  effectTarget: [4, 5],
+  formatEffect: value => formatX(value, 1, 1)
 }];
 //Column 2--Production multipliers on all Antimatter Dimensions.
 const columnTwo = [{
@@ -33,9 +45,42 @@ const columnTwo = [{
   effect: () => Math.pow(Time.totalTimePlayed.totalMinutes / 2, 0.15),
   effectTarget: "all",
   formatEffect: value => formatX(value, 2, 2)
+}, {
+  cost: 1,
+  description: () => `Increase the multiplier for buying ${formatInt(10)} Antimatter Dimensions`,
+  effect: () => 1.1,
+  formatEffect: () => `${formatX(2, 0, 1)} ➜ ${formatX(2.2, 0, 1)}`,
+  effectTarget: "buy10Mult"
+}, {
+  cost: 3,
+  description: "Antimatter Dimensions gain a multiplier based on time spent in current Infinity",
+  effect: () => Decimal.max(Math.pow(Time.thisInfinity.totalMinutes / 4, 0.25), 1),
+  formatEffect: value => formatX(value, 2, 2),
+  effectTarget: "all"
 }];
 //Column 3--Things dealing with Galaxies or Dimension Boosts.
-const columnThree = [];
+const columnThree = [{
+  cost: 2,
+  description: () =>
+    `Decrease the number of Dimensions needed for Dimension Boosts by ${formatInt(5)}`,
+  effect: 5,
+  effectTarget: "dimBoostRequirement"
+}, {
+  cost: 3,
+  description: "Unlock Antimatter Challenges 1-8"
+}, {
+  cost: 2,
+  description: () =>
+    `Decrease the number of Dimensions needed for Antimatter Galaxies by ${formatInt(10)}`,
+  effect: 10,
+  effectTarget: "antimatterGalaxyRequirement"
+}, {
+  cost: 5,
+  description: () =>
+    `All Galaxies are ${formatPercents(0.25)} stronger`,
+  effect: 1.25,
+  effectTarget: "allGalaxyStrength"
+}];
 //Column 4--Quality-of-life improvements.  These ones are typically disabled during Challenges.
 const columnFour = [];
 
