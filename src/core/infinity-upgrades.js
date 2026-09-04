@@ -217,6 +217,7 @@ export const InfinityUpgrade = mapGameDataToObject(
 //TODO: instead of having to loop through all upgrades each tick for each game mechanic affected,
 //let's evaluate the upgrades once per tick & cache their effects!  Then, all queries can be to the cached effects.
 //TODO: Look into something called a "lazy" which might already do that!
+//TODO: make a function somewhere which counts the number of Infinity upgrades purchased.  It should be cached & change only when an upgrade is purchased or when a prestige event occurs.
 export const InfinityUpgradesNew = function() { //Custom logic mimicking mapGameDataToObject
   var retVal = { columns: [], all: []};
 

@@ -292,6 +292,7 @@ export const normalAchievements = [
       Currency.antimatter.exponent >= 63 &&
       Currency.antimatter.productionPerSecond.gt(Currency.antimatter.value),
     checkEvent: GAME_EVENT.GAME_TICK_AFTER,
+    //TODO: change this one so that it scales based on Antimatter Galaxies.
     get reward() { return `The 8th Antimatter Dimension is ${formatPercents(0.75)} stronger.`; },
     effect: 1.75
   },

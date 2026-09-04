@@ -56,7 +56,11 @@ export class Galaxy {
       amount *= Math.pow(1.002, galaxies - (Galaxy.remoteStart - 1));
     }
 
-    amount -= Effects.sum(InfinityUpgrade.resetBoost);
+    InfinityUpgradesNew.all.forEach((upgrade) => {
+      if (upgrade.config.effectTarget === "antimatterGalaxyRequirement") {
+        amount -= upgrade.effectOrDefault(0);
+      }
+    });
     if (InfinityChallenge(5).isCompleted) amount -= 1;
 
     if (GlyphAlteration.isAdded("power")) amount *= getSecondaryGlyphEffect("powerpow");

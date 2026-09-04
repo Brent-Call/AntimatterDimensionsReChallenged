@@ -1,5 +1,6 @@
 import { DC } from "./constants";
 import { GameMechanicState } from "./game-mechanics";
+import { InfinityUpgrade } from "./infinity-upgrades";
 
 export function updateNormalAndInfinityChallenges(diff) {
   if (NormalChallenge(11).isRunning || InfinityChallenge(6).isRunning) {
@@ -53,11 +54,18 @@ class NormalChallengeState extends GameMechanicState {
     return player.challenge.normal.current === this.id;
   }
 
+  //TODO: figure out how to handle this with Infinity Upgrades
   get isUnlocked() {
-    if (PlayerProgress.eternityUnlocked()) return true;
-    if (this.id === 0) return true;
-    const ip = GameDatabase.challenges.normal[this.id - 1].lockedAt;
-    return Currency.infinitiesTotal.gte(ip);
+    //Current method: check if we've bought an upgrade which unlocks this Challenge
+    return InfinityUpgradesNew.all.some((upgrade) => {
+      if (!upgrade.isBought) {
+        return false; //This upgrade's effects don't apply, since we haven't bought it
+      }
+      if (!Array.isArray(upgrade.config.unlockAntimatterChallenges)) {
+        return false; //This upgrade doesn't unlock any Antimatter Challenges
+      }
+      return upgrade.config.unlockAntimatterChallenges.includes(this.id);
+    });
   }
 
   get isDisabled() {

@@ -11,6 +11,7 @@ function chargedDimInfinityMult() {
 //I want to simply specify the columns in an array & have their IDs & dependencies dynamically generated.
 //I want to have an effectTarget behavior that lets me specify which dimensions are targeted
 
+const NBSP = '\u00a0';
 
 //Column 1--Production multipliers on specific Antimatter Dimensions.
 const columnOne = [{
@@ -54,7 +55,7 @@ const columnTwo = [{
 }, {
   cost: 3,
   description: "Antimatter Dimensions gain a multiplier based on time spent in current Infinity",
-  effect: () => Decimal.max(Math.pow(Time.thisInfinity.totalMinutes / 4, 0.25), 1),
+  effect: () => Decimal.max(Math.pow(Time.thisInfinity.totalSeconds / 4, 0.25), 1),
   formatEffect: value => formatX(value, 2, 2),
   effectTarget: "all"
 }];
@@ -65,9 +66,6 @@ const columnThree = [{
     `Decrease the number of Dimensions needed for Dimension Boosts by ${formatInt(5)}`,
   effect: 5,
   effectTarget: "dimBoostRequirement"
-}, {
-  cost: 3,
-  description: "Unlock Antimatter Challenges 1-8"
 }, {
   cost: 2,
   description: () =>
@@ -81,8 +79,26 @@ const columnThree = [{
   effect: 1.25,
   effectTarget: "allGalaxyStrength"
 }];
-//Column 4--Quality-of-life improvements.  These ones are typically disabled during Challenges.
-const columnFour = [];
+//Column 4--Quality-of-life improvements, major progression milestones, etc.
+const columnFour = [{
+  cost: 3,
+  description: `Unlock Antimatter Challenges${NBSP}1-8`,
+  unlockAntimatterChallenges: [1, 2, 3, 4, 5, 6, 7, 8]
+}, {
+  cost: 1,
+  description: "Antimatter Dimensions gain a multiplier based on Achievements completed",
+  effect: () => Math.max(Math.pow((Achievements.effectiveCount - 25), 3) / 40, 1),
+  formatEffect: value => formatX(value, 2, 2)
+}, {
+  cost: 3,
+  description: `Unlock Antimatter Challenges${NBSP}9-12`,
+  unlockAntimatterChallenges: [9, 10, 11, 12]
+}, {
+  cost: 10,
+  description: () => `Multiply Infinity Point gain by ${formatX(2)}`,
+  effect: 2,
+  effectTarget: "ipMult"
+}];
 
 export const infinityUpgradesNew = {
   columns: [ columnOne, columnTwo, columnThree, columnFour ]
