@@ -171,6 +171,7 @@ export function gainedGlyphLevel() {
 }
 
 export function resetChallengeStuff() {
+  player.chall2Timer = 1;
   player.chall2Pow = 1;
   player.chall3Pow = DC.D0_01;
   Currency.matter.reset();

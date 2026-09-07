@@ -236,6 +236,7 @@ export const normalAchievements = [
       //Else:
       return 1 + 1 * minutes;
     },
+    //TODO: See if you can use formatEffect to tell you when the effect will next jump in strength
     formatEffect: value => `${formatX(value, 2, 2)}`
   },
   {

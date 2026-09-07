@@ -50,6 +50,10 @@ export function antimatterDimensionCommonMultiplier() {
     }
   });
 
+  if (NormalChallenge(1).isRunning) {
+    multiplier = multiplier.dividedBy(DC.E10);
+  }
+
   multiplier = multiplier.dividedByEffectOf(InfinityChallenge(6));
   multiplier = multiplier.times(getAdjustedGlyphEffect("powermult"));
   multiplier = multiplier.times(Currency.realityMachines.value.powEffectOf(AlchemyResource.force));
@@ -154,8 +158,6 @@ function applyNDMultipliers(mult, tier) {
     }
   });
 
-  multiplier = multiplier.clampMin(1);
-
   return multiplier;
 }
 
@@ -203,7 +205,10 @@ function onBuyDimension(tier) {
 
   if (player.speedrun.isActive && !player.speedrun.hasStarted) Speedrun.startTimer();
 
-  if (NormalChallenge(2).isRunning) player.chall2Pow = 0;
+  if (NormalChallenge(2).isRunning) {
+    player.chall2Timer = 0;
+    player.chall2Pow = 0;
+  }
   if (NormalChallenge(4).isRunning || InfinityChallenge(1).isRunning) {
     AntimatterDimensions.resetAmountUpToTier(tier - 1);
   }
@@ -648,7 +653,7 @@ export const AntimatterDimensions = {
   },
 
   get buyTenMultiplier() {
-    if (NormalChallenge(7).isRunning) return DC.D2.min(1 + DimBoost.totalBoosts / 5);
+    if (NormalChallenge(7).isRunning) return DC.D1_2.min(1 + DimBoost.totalBoosts / 50);
 
     let mult = DC.D2.plusEffectsOf(
       Achievement(141).effects.buyTenMult,

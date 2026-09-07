@@ -21,8 +21,7 @@ export default {
       isRunning: false,
       isCompleted: false,
       isBroken: false,
-      isUnlocked: false,
-      lockedAt: new Decimal()
+      isUnlocked: false
     };
   },
   computed: {
@@ -30,9 +29,7 @@ export default {
       if (this.isUnlocked) {
         return this.challenge.config;
       }
-      return {
-        description: `Infinity ${formatInt(this.challenge.config.lockedAt)} times to unlock.`
-      };
+      return { description: "???" };
     },
     name() {
       return `C${this.challenge.id}`;
@@ -40,6 +37,9 @@ export default {
     overrideLabel() {
       return this.isBroken ? "Broken" : "";
     },
+    rewardText() {
+      return this.isUnlocked ? this.challenge.config.reward : "???";
+    }
   },
   methods: {
     update() {
@@ -47,7 +47,6 @@ export default {
       this.isUnlocked = this.challenge.isUnlocked;
       // This stops normal challenges from appearing like they're running during IC1
       this.isRunning = this.challenge.isOnlyActiveChallenge;
-      this.lockedAt = this.challenge.config.lockedAt;
       this.isBroken = Enslaved.isRunning && Enslaved.BROKEN_CHALLENGES.includes(this.challenge.id);
       this.isCompleted = this.challenge.isCompleted && !this.isBroken;
     }
@@ -62,7 +61,6 @@ export default {
     :is-running="isRunning"
     :is-completed="isCompleted"
     :override-label="overrideLabel"
-    :locked-at="lockedAt"
     class="c-challenge-box--normal"
     @start="challenge.requestStart()"
   >
@@ -70,7 +68,7 @@ export default {
       <DescriptionDisplay :config="descriptionDisplayConfig" />
     </template>
     <template #bottom>
-      <span :class="{ 'o-pelle-disabled': isDisabled }">Reward: {{ challenge.config.reward }}</span>
+      <span :class="{ 'o-pelle-disabled': isDisabled }">Reward: {{ rewardText }}</span>
     </template>
   </ChallengeBox>
 </template>

@@ -61,7 +61,22 @@ export default {
       this.isChallengePowerVisible = isChallengePowerVisible;
       if (isChallengePowerVisible) {
         const powerArray = [];
-        if (isC2Running) powerArray.push(`Production: ${formatPercents(player.chall2Pow, 2, 2)}`);
+        if (isC2Running) {
+          var places = 5;
+          if (player.chall2Pow >= 0.0001) {
+            places = 4;
+          }
+          if (player.chall2Pow >= 0.001) {
+            places = 3;
+          }
+          if (player.chall2Pow >= 0.01) {
+            places = 2;
+          }
+          if (player.chall2Pow >= 0.1) {
+            places = 1;
+          }
+          powerArray.push(`Production: ${formatPercents(player.chall2Pow, places)}`);
+        }
         if (isC3Running) powerArray.push(`First dimension: ${formatX(player.chall3Pow, 3, 4)}`);
         if (isIC6Running) powerArray.push(`Matter: Antimatter Dimensions /
           ${format(new Decimal(1).timesEffectOf(InfinityChallenge(6)), 2, 2)}`);

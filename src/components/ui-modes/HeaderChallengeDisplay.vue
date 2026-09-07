@@ -53,7 +53,7 @@ export default {
           activityToken: () => player.challenge.infinity.current
         },
         {
-          name: token => `${NormalChallenge(token).config.name} Challenge`,
+          name: token => `Antimatter Challenge ${token}`,
           isActive: token => token > 0,
           activityToken: () => player.challenge.normal.current
         },

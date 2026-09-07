@@ -207,6 +207,7 @@ window.player = {
   galaxies: 0,
   lastUpdate: new Date().getTime(),
   backupTimer: 0,
+  chall2Timer: 1,
   chall2Pow: 1,
   chall3Pow: DC.D0_01,
   matter: DC.D1,

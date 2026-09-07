@@ -24,7 +24,8 @@ export function updateNormalAndInfinityChallenges(diff) {
   }
 
   if (NormalChallenge(2).isRunning) {
-    player.chall2Pow = Math.min(player.chall2Pow + diff / 100 / 1800, 1);
+    player.chall2Timer = Math.min(player.chall2Timer + diff / 100 / 1800, 1);
+    player.chall2Pow = Math.pow(player.chall2Timer, 4);
   }
 
   if (InfinityChallenge(2).isRunning) {
@@ -72,10 +73,6 @@ class NormalChallengeState extends GameMechanicState {
     return Pelle.isDoomed;
   }
 
-  get lockedAt() {
-    return GameDatabase.challenges.normal[this.id].lockedAt;
-  }
-
   requestStart() {
     if (!Tab.challenges.isUnlocked) return;
     if (GameEnd.creditsEverClosed) return;
@@ -87,7 +84,7 @@ class NormalChallengeState extends GameMechanicState {
   }
 
   start() {
-    if (this.id === 1 || this.isOnlyActiveChallenge) return;
+    if (this.isOnlyActiveChallenge) return;
     if (!Tab.challenges.isUnlocked) return;
     // Forces big crunch reset but ensures IP gain, if any.
     bigCrunchReset(true, true);

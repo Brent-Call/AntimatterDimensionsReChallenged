@@ -38,6 +38,8 @@ const columnOne = [{
   effect: () => dimInfinityMult(),
   effectTarget: [4, 5],
   formatEffect: value => formatX(value, 1, 1)
+
+  //Next upgrade: all even-numbered Antimatter Dimensions gain a multiplier based on your best time for Antimatter Challenge 6
 }];
 //Column 2--Production multipliers on all Antimatter Dimensions.
 const columnTwo = [{
@@ -52,6 +54,7 @@ const columnTwo = [{
   effect: () => 1.1,
   formatEffect: () => `${formatX(2, 0, 1)} ➜ ${formatX(2.2, 0, 1)}`,
   effectTarget: "buy10Mult"
+  //TODO: visually disable this upgrade in Antimatter Challenge 7
 }, {
   cost: 3,
   description: "Antimatter Dimensions gain a multiplier based on time spent in current Infinity",
@@ -62,8 +65,7 @@ const columnTwo = [{
 //Column 3--Things dealing with Galaxies or Dimension Boosts.
 const columnThree = [{
   cost: 2,
-  description: () =>
-    `Decrease the number of Dimensions needed for Dimension Boosts by ${formatInt(5)}`,
+  description: () => `Decrease the number of Dimensions needed for Dimension Boosts by ${formatInt(5)}`,
   effect: 5,
   effectTarget: "dimBoostRequirement"
 }, {
@@ -86,9 +88,29 @@ const columnFour = [{
   unlockAntimatterChallenges: [1, 2, 3, 4, 5, 6, 7, 8]
 }, {
   cost: 1,
-  description: "Antimatter Dimensions gain a multiplier based on Achievements completed",
-  effect: () => Math.max(Math.pow((Achievements.effectiveCount - 25), 3) / 40, 1),
-  formatEffect: value => formatX(value, 2, 2)
+  description: "Only outside Challenges, ADs gain a multiplier based on Achievements completed",
+  effect: () => {
+    if (Player.isInAnyChallenge) {
+      return 1;
+    }
+    //No matter how many Achievements the player has, this upgrade still gives >1 multiplier.
+    var numAchievements = Achievements.effectiveCount;
+    if (numAchievements < 30 ) {
+      return 1 - 2 / (numAchievements - 31);
+    }
+    //Else, ≥30 Achievements
+    return Math.pow((numAchievements - 25), 3) / 40;
+  },
+  formatEffect: value => {
+    if (Player.isInAnyChallenge) {
+      return "Disabled";
+    }
+    //Else:
+    return formatX(value, 2, 2);
+  }
+}, {
+  cost: 8,
+  description: () => `Only outside Challenges, start every reset with ${formatInt(2)} Dimension Boosts`
 }, {
   cost: 3,
   description: `Unlock Antimatter Challenges${NBSP}9-12`,

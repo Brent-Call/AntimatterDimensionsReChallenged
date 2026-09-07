@@ -23,7 +23,7 @@ export function getTickSpeedMultiplier() {
   if (InfinityChallenge(3).isRunning) return DC.D1;
   if (Ra.isRunning) return DC.C1D1_1245;
   let galaxies = effectiveBaseGalaxies();
-  const effects = Effects.product(
+  var effects = Effects.product(
     InfinityUpgrade.galaxyBoost,
     InfinityUpgrade.galaxyBoost.chargedEffect,
     BreakInfinityUpgrade.galaxyBoost,
@@ -35,6 +35,13 @@ export function getTickSpeedMultiplier() {
     PelleUpgrade.galaxyPower,
     PelleRifts.decay.milestones[1]
   );
+
+  InfinityUpgradesNew.all.forEach((upgrade) => {
+    if (upgrade.config.effectTarget === "allGalaxyStrength") {
+      effects = effects * upgrade.effectOrDefault(1);
+    }
+  });
+
   if (galaxies < 3) {
     // Magic numbers are to retain balancing from before while displaying
     // them now as positive multipliers rather than negative percentages
@@ -77,7 +84,10 @@ export function buyTickSpeed() {
   player.totalTickBought++;
   player.records.thisInfinity.lastBuyTime = player.records.thisInfinity.time;
   player.requirementChecks.permanent.singleTickspeed++;
-  if (NormalChallenge(2).isRunning) player.chall2Pow = 0;
+  if (NormalChallenge(2).isRunning) {
+    player.chall2Timer = 0;
+    player.chall2Pow = 0;
+  }
   GameUI.update();
   return true;
 }
@@ -109,7 +119,10 @@ export function buyMaxTickSpeed() {
 
   if (boughtTickspeed) {
     player.records.thisInfinity.lastBuyTime = player.records.thisInfinity.time;
-    if (NormalChallenge(2).isRunning) player.chall2Pow = 0;
+    if (NormalChallenge(2).isRunning) {
+      player.chall2Timer = 0;
+      player.chall2Pow = 0;
+    }
   }
 }
 

@@ -29,7 +29,7 @@ export class AntimatterDimensionAutobuyerState extends UpgradeableAutobuyerState
   }
 
   get canBeUpgraded() {
-    return NormalChallenge(this.tier).isCompleted;
+    return NormalChallenge(2).isCompleted;
   }
 
   get disabledByContinuum() {

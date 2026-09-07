@@ -7,9 +7,6 @@ export function bigCrunchAnimation() {
 
 function handleChallengeCompletion() {
   const challenge = Player.antimatterChallenge;
-  if (!challenge && !NormalChallenge(1).isCompleted) {
-    NormalChallenge(1).complete();
-  }
   if (!challenge) return;
 
   // Clear the IC notification after the first completion (only) so that it can show it again for the next one
