@@ -45,6 +45,8 @@ export const MultiplierTabIcons = {
   CHALLENGE(type, tier) {
     const tierText = `<i class="fas fa-arrow-down-wide-short" />${tier ?? ""}`;
     switch (type) {
+      case "antimatter":
+        return { symbol: `<b>Ω</b>${tierText}`, color: "var(--color-antimatter)" };
       case "infinity":
         return { symbol: `<b>∞</b>${tierText}`, color: "var(--color-infinity)" };
       case "eternity":

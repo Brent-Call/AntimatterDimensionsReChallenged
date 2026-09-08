@@ -1,4 +1,5 @@
 import { DC } from "../../constants";
+import { getTickSpeedMultiplier, Tickspeed } from "../../tickspeed";
 
 export const MultiplierTabHelper = {
   // Helper method for counting enabled dimensions
@@ -34,69 +35,75 @@ export const MultiplierTabHelper = {
     ) * Pelle.specialGlyphEffect.power;
   },
 
-  // Helper method for galaxies and tickspeed, broken up as contributions of tickspeed*log(perGalaxy) and galaxyCount to
-  // their product, which is proportional to log(tickspeed)
+  // Helper method for galaxies and tickspeed to calculate the contributions of each
+  // Returns an object with 4 elements:
+  // base = Contribution from Achievement rewards
+  // tickspeed = Contribution from Tickspeed Upgrades as if there were no Galaxies
+  // galaxies = Contribution from Galaxies
+  // reduction = Contribution from effects like Normal Challenge 5 which reduce the BASE multiplier of Tickspeed Upgrades
   decomposeTickspeed() {
-    let effectiveCount = effectiveBaseGalaxies();
-    const effects = this.globalGalaxyMult();
-
-    let galFrac, tickFrac;
-    if (effectiveCount < 3) {
-      let baseMult = 1.1245;
-      if (player.galaxies === 1) baseMult = 1.11888888;
-      if (player.galaxies === 2) baseMult = 1.11267177;
-      if (NormalChallenge(5).isRunning) {
-        baseMult = 1.08;
-        if (player.galaxies === 1) baseMult = 1.07632;
-        if (player.galaxies === 2) baseMult = 1.072;
-      }
-      // This is needed for numerical consistency with the other conditional case
-      baseMult /= 0.965 ** 2;
-      const logBase = Math.log10(baseMult);
-
-      const perGalaxy = 0.02 * effects;
-      effectiveCount *= Pelle.specialGlyphEffect.power;
-
-      tickFrac = Tickspeed.totalUpgrades * logBase;
-      galFrac = -Math.log10(Math.max(0.01, 1 / baseMult - (effectiveCount * perGalaxy))) / logBase;
-    } else {
-      effectiveCount -= 2;
-      effectiveCount *= effects;
-      effectiveCount *= getAdjustedGlyphEffect("realitygalaxies") * (1 + ImaginaryUpgrade(9).effectOrDefault(0));
-      effectiveCount *= Pelle.specialGlyphEffect.power;
-
-      // These all need to be framed as INCREASING x/sec tick rate (ie. all multipliers > 1, all logs > 0)
-      const baseMult = 0.965 ** 2 / (NormalChallenge(5).isRunning ? 0.83 : 0.8);
-      const logBase = Math.log10(baseMult);
-      const logPerGalaxy = -DC.D0_965.log10();
-
-      tickFrac = Tickspeed.totalUpgrades * logBase;
-      galFrac = (1 + effectiveCount / logBase * logPerGalaxy);
+    const numUpgrades = Tickspeed.totalUpgrades;
+    if (numUpgrades == 0) {
+      //Very simple case.  EVERYTHING comes from Achievements.
+      return {
+        base: 1,
+        tickspeed: 0,
+        galaxies: 0,
+        reduction: 0
+      };
     }
 
-    // Artificially inflate the galaxy portion in order to make the breakdown closer to 50/50 in common situations
-    galFrac *= 3;
+    //The multiplier granted by 1 Tickspeed Upgrade:
+    const BASE_MULTIPLIER = DC.D1_1245;
+    const multiplierPostGalaxies = getTickSpeedMultiplier(true /*ignore NC5*/).recip();
+    const multiplierPostNC5 = getTickSpeedMultiplier(false /*ignore NC5*/).recip();
+
+    //Calculate total multiplier from Tickspeed Upgrades:
+    const tickspeedNoGalaxies = BASE_MULTIPLIER.pow( numUpgrades );
+    const tickspeedWithGalaxies = multiplierPostGalaxies.pow( numUpgrades );
+    const tickspeedWithNC5 = multiplierPostNC5.pow( numUpgrades );
+
+    //Calculate the relative contributions from different factors
+    const contributionFromGalaxies = tickspeedWithGalaxies.dividedBy( tickspeedNoGalaxies ); //Will be some large number
+    const contributionFromNC5 = tickspeedWithNC5.dividedBy( tickspeedWithGalaxies ); //Will be <1 if in the Challenge
+    const totalTickspeedLog = Tickspeed.perSecond.log10();
 
     // Calculate what proportion base tickspeed takes out of the entire tickspeed multiplier
     const base = Achievements.getBaseTickspeed();
-    let baseFrac = base.log10() / Tickspeed.perSecond.log10();
+    var baseFrac = base.log10() / totalTickspeedLog;
+    var tickFrac = tickspeedNoGalaxies.log10() / totalTickspeedLog;
+    var galFrac = contributionFromGalaxies.log10() / totalTickspeedLog;
+    var redFrac = contributionFromNC5.log10() / totalTickspeedLog;
 
-    // We want to make sure to zero out components in some edge cases
-    if (base.eq(1)) baseFrac = 0;
-    if (effectiveCount === 0) galFrac = 0;
+    //You can uncomment the code below to see a detailed breakdown of how it's all calculated:
+    /*
+    console.log(
+`Multiplier PER UPGRADE:
+      BASE = ${formatFloat(BASE_MULTIPLIER, 8)}
+      Including Galaxies = ${formatFloat(multiplierPostGalaxies, 8)}
+      Including Galaxies & NC5 = ${formatFloat(multiplierPostNC5,8)}
+Breakdown:
+      Achievements = ${format(base, 8, 8)} ticks per second
+      Tickspeed Upgrades = ${formatX(tickspeedNoGalaxies, 8, 8)}
+      Galaxies = ${formatX(contributionFromGalaxies, 8, 8 )}
+      NC5 = ${formatX(contributionFromNC5, 8, 8 )}
+      TOTAL (computed) = ${format(base.times(tickspeedNoGalaxies).times(
+        contributionFromGalaxies).times(contributionFromNC5), 8, 8)} ticks per second
+      TOTAL (measured) = ${format(Tickspeed.perSecond, 8, 8)} ticks per second`);
+    console.log(
+`baseFrac = ${formatFloat(baseFrac, 8)}
+tickFrac = ${formatFloat(tickFrac, 8)}
+galFrac = ${formatFloat(galFrac, 8)}
+base + tick + gal = ${formatFloat(baseFrac + tickFrac + galFrac, 8)}
+redFrac = ${formatFloat(redFrac, 8)}
+TOTAL = ${formatFloat(baseFrac + tickFrac + galFrac + redFrac, 8)} (if it's not equal to 1, something is wrong)`);
+    //*/
 
-    // Normalize the sum by splitting tickspeed and galaxies across what's leftover besides the base value. These three
-    // values must be scaled so that they sum to 1 and none are negative
-    let factor = (1 - baseFrac) / (tickFrac + galFrac);
-    //If the player has no tickspeed upgrades, then ALL of their tickspeed is coming from Achievement rewards.
-    if (Tickspeed.totalUpgrades === 0) {
-      factor = 0;
-      baseFrac = 1;
-    }
     return {
       base: baseFrac,
-      tickspeed: tickFrac * factor,
-      galaxies: galFrac * factor,
+      tickspeed: tickFrac,
+      galaxies: galFrac,
+      reduction: redFrac
     };
   },
 

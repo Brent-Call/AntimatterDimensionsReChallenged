@@ -81,7 +81,7 @@ export const multiplierTabTree = {
     getProps("DT")
   ],
   tickspeed_total: [
-    ["tickspeed_base", "tickspeed_upgrades", "tickspeed_galaxies", "tickspeed_pelleTickspeedPow"]
+    ["tickspeed_base", "tickspeed_upgrades", "tickspeed_galaxies", "tickspeed_baseMultiplierReduction", "tickspeed_pelleTickspeedPow"]
   ],
   tickspeed_upgrades: [
     ["tickspeedUpgrades_purchased", "tickspeedUpgrades_free"]

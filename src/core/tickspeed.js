@@ -19,9 +19,19 @@ export function effectiveBaseGalaxies() {
   return Math.max(player.galaxies + GalaxyGenerator.galaxies + replicantiGalaxies + freeGalaxies, 0);
 }
 
-export function getTickSpeedMultiplier() {
-  if (InfinityChallenge(3).isRunning) return DC.D1;
-  if (Ra.isRunning) return DC.C1D1_1245;
+/**
+ * Returns the total effect of all Galaxies on Tickspeed Upgrades.
+ * This accounts for all effects which make Galaxies stronger or weaker.
+ * This accounts for all effects which act on specific Galaxies as well as effects which act on ALL Galaxies.
+ * This accounts for all types of Galaxies summed together.
+ * Edge case: Does not account for Infinity Challenge 3, which bypasses Galaxies altogether.
+ * @returns {number}
+ */
+export function getTotalGalaxyPower() {
+  if (Ra.isRunning) {
+    //Ra's Reality shuts down Galaxy effects on Tickspeed.
+    return 0;
+  }
   let galaxies = effectiveBaseGalaxies();
   var effects = Effects.product(
     InfinityUpgrade.galaxyBoost,
@@ -42,26 +52,6 @@ export function getTickSpeedMultiplier() {
     }
   });
 
-  if (galaxies < 3) {
-    // Magic numbers are to retain balancing from before while displaying
-    // them now as positive multipliers rather than negative percentages
-    let baseMultiplier = 1 / 1.1245;
-    if (player.galaxies === 1) baseMultiplier = 1 / 1.11888888;
-    if (player.galaxies === 2) baseMultiplier = 1 / 1.11267177;
-    if (NormalChallenge(5).isRunning) {
-      baseMultiplier = 1 / 1.08;
-      if (player.galaxies === 1) baseMultiplier = 1 / 1.07632;
-      if (player.galaxies === 2) baseMultiplier = 1 / 1.072;
-    }
-    const perGalaxy = 0.02 * effects;
-    if (Pelle.isDoomed) galaxies *= 0.5;
-
-    galaxies *= Pelle.specialGlyphEffect.power;
-    return DC.D0_01.clampMin(baseMultiplier - (galaxies * perGalaxy));
-  }
-  let baseMultiplier = 0.8;
-  if (NormalChallenge(5).isRunning) baseMultiplier = 0.83;
-  galaxies -= 2;
   galaxies *= effects;
   galaxies *= getAdjustedGlyphEffect("cursedgalaxies");
   galaxies *= getAdjustedGlyphEffect("realitygalaxies");
@@ -69,8 +59,25 @@ export function getTickSpeedMultiplier() {
   if (Pelle.isDoomed) galaxies *= 0.5;
 
   galaxies *= Pelle.specialGlyphEffect.power;
-  const perGalaxy = DC.D0_965;
-  return perGalaxy.pow(galaxies - 2).times(baseMultiplier);
+  return galaxies;
+}
+
+/**
+ * Returns the effect on Tickspeed of ONE Tickspeed Upgrade.
+ * Basically, this is just "base multiplier" combined with "effect of all Galaxies."
+ * Accounts for all edge cases like Normal Challenge 5, Infinity Challenge 3, Ra's Reality, etc.
+ * @param {boolean} [ignoreNC5] If truthy, will act as though we are not in Normal Challenge 5.
+ *                              If falsy, reads from the current game-state whether or not we're in Normal Challenge 5.
+ * @returns {Decimal}
+ */
+export function getTickSpeedMultiplier(ignoreNC5) {
+  if (InfinityChallenge(3).isRunning) return DC.D1;
+  const baseMultiplier = (!ignoreNC5 && NormalChallenge(5).isRunning) ? 1.008 : 1.1245;
+  //Note that this is COMPLETELY CHANGED from how it is in vanilla Antimatter Dimensions.
+  //superExponentialScaling is based on the baseMultiplier such that at very, very large numbers of Galaxies, baseMultiplier is still influential.
+  const numGalaxies = getTotalGalaxyPower();
+  const superExponentialScaling = numGalaxies + ((baseMultiplier - 1) / 12.45) * numGalaxies * numGalaxies;
+  return DC.D1_01760804537.pow(superExponentialScaling).times(baseMultiplier).recip();
 }
 
 export function buyTickSpeed() {

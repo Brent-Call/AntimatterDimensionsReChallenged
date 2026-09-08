@@ -1,4 +1,5 @@
 import { DC } from "../../constants";
+import { getTotalGalaxyPower } from "../../tickspeed";
 
 import { MultiplierTabHelper } from "./helper-functions";
 import { MultiplierTabIcons } from "./icons";
@@ -45,14 +46,26 @@ export const tickspeed = {
   galaxies: {
     name: "Galaxies",
     displayOverride: () => {
-      const ag = player.galaxies + GalaxyGenerator.galaxies;
-      const rg = Replicanti.galaxies.total;
-      const tg = player.dilation.totalTachyonGalaxies;
-      return `${formatInt(ag + rg + tg)} Total`;
+      return `${formatFloat(getTotalGalaxyPower(), 2)} Total`;
     },
     multValue: () => new Decimal.pow10(100 * MultiplierTabHelper.decomposeTickspeed().galaxies),
-    isActive: true,
+    isActive: () => Math.abs(getTotalGalaxyPower()) > 0.0001,
     icon: MultiplierTabIcons.GALAXY,
+  },
+  baseMultiplierReduction: {
+    name: "Antimatter Challenge 5 effect",
+    displayOverride: () => {
+      const numUpgrades = Tickspeed.totalUpgrades;
+      const multiplierPostGalaxies = getTickSpeedMultiplier(true /*ignore NC5*/).recip();
+      const multiplierPostNC5 = getTickSpeedMultiplier(false /*ignore NC5*/).recip();
+      const tickspeedWithGalaxies = multiplierPostGalaxies.pow( numUpgrades );
+      const tickspeedWithNC5 = multiplierPostNC5.pow( numUpgrades );
+      const contributionFromNC5 = tickspeedWithNC5.dividedBy( tickspeedWithGalaxies );
+      return `/${format(contributionFromNC5.reciprocal(), 2, 2)}`;
+    },
+    multValue: () => new Decimal.pow10(100 * MultiplierTabHelper.decomposeTickspeed().reduction),
+    isActive: () => Math.abs(MultiplierTabHelper.decomposeTickspeed().reduction) > 0.0001,
+    icon: MultiplierTabIcons.CHALLENGE("antimatter", 5),
   },
   pelleTickspeedPow: {
     name: "Tickspeed Dilation Upgrade",
