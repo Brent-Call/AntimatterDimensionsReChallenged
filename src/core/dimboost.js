@@ -24,9 +24,15 @@ export class DimBoost {
       InfinityChallenge(7).reward,
       InfinityChallenge(7),
       TimeStudy(81)
-    )
-      .toDecimal()
-      .timesEffectsOf(
+    );
+
+    InfinityUpgradesNew.all.forEach((upgrade) => {
+      if (upgrade.config.effectTarget === "dimBoostBaseStrength") {
+        boost = Effects.max(boost, upgrade);
+      }
+    });
+
+    boost = boost.toDecimal().timesEffectsOf(
         TimeStudy(83),
         TimeStudy(231),
         Achievement(117),
@@ -171,11 +177,13 @@ export class DimBoost {
   }
 
   static get startingDimensionBoosts() {
-    if (InfinityUpgrade.skipResetGalaxy.isBought) return 4;
-    if (InfinityUpgrade.skipReset3.isBought) return 3;
-    if (InfinityUpgrade.skipReset2.isBought) return 2;
-    if (InfinityUpgrade.skipReset1.isBought) return 1;
-    return 0;
+    var sum = 0;
+    InfinityUpgradesNew.all.forEach((upgrade) => {
+      if (upgrade.config.effectTarget === "startingDimBoosts") {
+        sum += upgrade.effectOrDefault(0);
+      }
+    });
+    return sum;
   }
 }
 
@@ -208,12 +216,10 @@ export function softReset(tempBulk, forcedADReset = false, forcedAMReset = false
 
 export function skipResetsIfPossible(enteringAntimatterChallenge) {
   if (enteringAntimatterChallenge || Player.isInAntimatterChallenge) return;
-  if (InfinityUpgrade.skipResetGalaxy.isBought && player.dimensionBoosts < 4) {
-    player.dimensionBoosts = 4;
+  if (InfinityUpgrade.skipResetGalaxy.isBought) {
     if (player.galaxies === 0) player.galaxies = 1;
-  } else if (InfinityUpgrade.skipReset3.isBought && player.dimensionBoosts < 3) player.dimensionBoosts = 3;
-  else if (InfinityUpgrade.skipReset2.isBought && player.dimensionBoosts < 2) player.dimensionBoosts = 2;
-  else if (InfinityUpgrade.skipReset1.isBought && player.dimensionBoosts < 1) player.dimensionBoosts = 1;
+  }
+  player.dimensionBoosts = Math.max(player.dimensionBoosts, DimBoost.startingDimensionBoosts);
 }
 
 export function manualRequestDimensionBoost(bulk) {

@@ -22,7 +22,6 @@ export default {
     return {
       showWorstChallenge: false,
       worstChallengeString: "",
-      isUseless: false,
       canBeBought: false,
       chargePossible: false,
       canBeCharged: false,
@@ -56,15 +55,15 @@ export default {
     classObject() {
       return {
         "o-infinity-upgrade-btn": true,
-        "o-infinity-upgrade-btn--bought": !this.isUseless && this.isBought,
-        "o-infinity-upgrade-btn--available": !this.isUseless && !this.isBought && this.canBeBought,
-        "o-infinity-upgrade-btn--unavailable": !this.isUseless && !this.isBought && !this.canBeBought,
-        "o-infinity-upgrade-btn--useless": this.isUseless,
-        "o-pelle-disabled": this.isUseless,
+        "o-infinity-upgrade-btn--bought": !this.isDisabled && this.isBought,
+        "o-infinity-upgrade-btn--available": !this.isDisabled && !this.isBought && this.canBeBought,
+        "o-infinity-upgrade-btn--unavailable": !this.isDisabled && !this.isBought && !this.canBeBought,
+        "o-infinity-upgrade-btn--useless": this.isDisabled,
+        "o-pelle-disabled": this.isDisabled,
         "o-infinity-upgrade-btn--chargeable": !this.isCharged && this.chargePossible &&
           (this.showingCharged || this.shiftDown),
         "o-infinity-upgrade-btn--charged": this.isCharged,
-        "o-pelle-disabled-pointer": this.isUseless
+        "o-pelle-disabled-pointer": this.isDisabled
       };
     },
     isImprovedByTS31() {
@@ -91,8 +90,11 @@ export default {
       // like after eternity, it can be bought but have value 0, but not showing the effect
       // in this case doesn't feel too bad. Other upgrades, including the cost scaling
       // rebuyables, should never hide their effect.
-      this.isDisabled = upgrade.config.isDisabled && upgrade.config.isDisabled(upgrade.config.effect());
-      this.isUseless = Pelle.uselessInfinityUpgrades.includes(upgrade.id) && Pelle.isDoomed;
+      this.isDisabled = upgrade.config.isDisabled && upgrade.config.isDisabled(
+        (typeof(upgrade.config.effect) === "function") ? upgrade.config.effect() : upgrade.config.effect);
+      if (Pelle.uselessInfinityUpgrades.includes(upgrade.id) && Pelle.isDoomed) {
+        this.isDisabled = true;
+      }
       this.hasTS31 = TimeStudy(31).canBeApplied;
       if (!this.isDisabled && this.isImprovedByTS31) this.ts31Effect = Decimal.pow(upgrade.config.effect(), 4);
       if (upgrade.id !== "challengeMult") return;
@@ -119,7 +121,7 @@ export default {
     >
       {{ hintText }}
     </HintText>
-    <span :class="{ 'o-pelle-disabled': isUseless }">
+    <span :class="{ 'o-pelle-disabled': isDisabled }">
       <DescriptionDisplay
         :config="config"
       />

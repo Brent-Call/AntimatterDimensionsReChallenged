@@ -1,3 +1,4 @@
+// @ts-check
 import { DC } from "../../constants";
 
 function dimInfinityMult() {
@@ -6,14 +7,33 @@ function dimInfinityMult() {
 function chargedDimInfinityMult() {
   return 1 + Math.log10(Math.max(1, Currency.infinitiesTotal.value.pLog10())) * Math.sqrt(Ra.pets.teresa.level) / 150;
 }
-
-//I want to see if I can do them in columns... hmmm...
-//I want to simply specify the columns in an array & have their IDs & dependencies dynamically generated.
-//I want to have an effectTarget behavior that lets me specify which dimensions are targeted
-
 const NBSP = '\u00a0';
 
-//Column 1--Production multipliers on specific Antimatter Dimensions.
+/**
+ * @typedef {number[] | "all" | "buy10Mult" | "ipMult" |
+ * "passiveIPGen" | "dimBoostRequirement" | "antimatterGalaxyRequirement" |
+ * "allGalaxyStrength" | "dimBoostBaseStrength" | "startingDimBoosts"} effectTarget_t
+ */
+/**
+ * @typedef {Object} InfinityUpgradeSpec
+ * @property {DecimalSource} cost The cost of this upgrade, in Infinity Points
+ * @property {string | function(): string} description The description of this upgrade as shown to the player in the UI
+ * @property {DecimalSource | function(): DecimalSource} [effect]
+ * @property {effectTarget_t} [effectTarget] Tells the game engine which game mechanic is impacted by this upgrade
+ * @property {function(DecimalSource): string} [formatEffect]
+ * @property {function(): boolean} [isDisabled]
+ * @property {number[]} [unlockAntimatterChallenges] If set, this upgrade will be the unlock condition for the Challenges specified in the array
+ */
+
+//In this mod, Infinity Upgrades are specified in columns in arrays.  Their IDs & dependencies are dynamically generated.
+//effectTarget lets you specify what an effect does, such as giving multipliers to specific Antimatter Dimensions or whatever.
+//Note that the upgrades are arranged in order of nondecreasing cost.
+//There is no need to do this from the game engine's point of view; it was done as a game design choice.
+
+/**
+ * Column 1--Production multipliers on specific Antimatter Dimensions.
+ * @type {InfinityUpgradeSpec[]}
+ */
 const columnOne = [{
   cost: 1,
   description: "1st and 8th Antimatter Dimensions gain a multiplier based on Infinities",
@@ -38,10 +58,16 @@ const columnOne = [{
   effect: () => dimInfinityMult(),
   effectTarget: [4, 5],
   formatEffect: value => formatX(value, 1, 1)
-
-  //Next upgrade: all even-numbered Antimatter Dimensions gain a multiplier based on your best time for Antimatter Challenge 6
+}, {
+  cost: 10,
+  description: () => `Multiply Infinity Point gain by ${formatX(2)}`,
+  effect: 2,
+  effectTarget: "ipMult"
 }];
-//Column 2--Production multipliers on all Antimatter Dimensions.
+/**
+ * Column 2--Production multipliers on all Antimatter Dimensions.
+ * @type {InfinityUpgradeSpec[]}
+ */
 const columnTwo = [{
   cost: 1,
   description: "Antimatter Dimensions gain a multiplier based on time played",
@@ -51,18 +77,48 @@ const columnTwo = [{
 }, {
   cost: 1,
   description: () => `Increase the multiplier for buying ${formatInt(10)} Antimatter Dimensions`,
-  effect: () => 1.1,
+  effect: 1.1,
   formatEffect: () => `${formatX(2, 0, 1)} ➜ ${formatX(2.2, 0, 1)}`,
-  effectTarget: "buy10Mult"
+  effectTarget: "buy10Mult",
   //TODO: visually disable this upgrade in Antimatter Challenge 7
+  isDisabled: () => NormalChallenge(7).isRunning,
 }, {
   cost: 3,
   description: "Antimatter Dimensions gain a multiplier based on time spent in current Infinity",
   effect: () => Decimal.max(Math.pow(Time.thisInfinity.totalSeconds / 4, 0.25), 1),
   formatEffect: value => formatX(value, 2, 2),
   effectTarget: "all"
+}, {
+  cost: 3,
+  description: "Antimatter Dimensions gain a multiplier based on Achievements completed",
+  effect: () => {
+    //No matter how many Achievements the player has, this upgrade still gives >1 multiplier.
+    var numAchievements = Achievements.effectiveCount;
+    if (numAchievements < 30 ) {
+      return 1 - 2 / (numAchievements - 31);
+    }
+    //Else, ≥30 Achievements
+    return Math.pow((numAchievements - 25), 3) / 40;
+  },
+  formatEffect: value => formatX(value, 2, 2),
+  effectTarget: "all"
+}, {
+  cost: 10, //TODO: make this effect actually work.
+  description: () => `Passively generate Infinity Points ${formatInt(10)} times slower than your fastest Infinity`,
+  // Cutting corners: this is not actual effect, but it is totalIPMult that is displyed on upgrade
+  effect: () => (Teresa.isRunning || V.isRunning || Pelle.isDoomed ? DC.D0 : GameCache.totalIPMult.value),
+  formatEffect: value => {
+    if (Teresa.isRunning || V.isRunning) return "Disabled in this reality";
+    if (Pelle.isDoomed) return "Disabled";
+    if (player.records.bestInfinity.time >= 999999999999) return "Too slow to generate";
+    return `${format(value, 2)} every ${Time.bestInfinity.times(10).toStringShort()}`;
+  },
+  effectTarget: "passiveIPGen"
 }];
-//Column 3--Things dealing with Galaxies or Dimension Boosts.
+/**
+ * Column 3--Upgrades dealing with Galaxies or Dimension Boosts.
+ * @type {InfinityUpgradeSpec[]}
+ */
 const columnThree = [{
   cost: 2,
   description: () => `Decrease the number of Dimensions needed for Dimension Boosts by ${formatInt(5)}`,
@@ -80,26 +136,47 @@ const columnThree = [{
     `All Galaxies are ${formatPercents(0.25)} stronger`,
   effect: 1.25,
   effectTarget: "allGalaxyStrength"
+}, {
+  cost: 25,
+  description: "Increase Dimension Boost multiplier", //TODO: I implemented the effect.  Test that it works & that it doesn't break game balance.
+  effect: 2.5,
+  formatEffect: () => `${formatX(2, 0, 1)} ➜ ${formatX(2.5, 0, 1)}`,
+  effectTarget: "dimBoostBaseStrength",
+  isDisabled: () => NormalChallenge(8).isRunning,
+}, {
+  cost: 50,
+  description: () => `Multiply Infinity Point gain by ${formatX(2)}`,
+  effect: 2,
+  effectTarget: "ipMult"
 }];
-//Column 4--Quality-of-life improvements, major progression milestones, etc.
+/**
+ * Column 4--Quality-of-life improvements, major progression milestones, etc.
+ * Generally, these upgrades don't help within Challenges.
+ * @type {InfinityUpgradeSpec[]}
+ */
 const columnFour = [{
   cost: 3,
   description: `Unlock Antimatter Challenges${NBSP}1-8`,
   unlockAntimatterChallenges: [1, 2, 3, 4, 5, 6, 7, 8]
 }, {
-  cost: 1,
-  description: "Only outside Challenges, ADs gain a multiplier based on Achievements completed",
+  cost: 4,
+  description: () => {
+    var retVal = `Only outside Challenges, ADs gain a multiplier based on the duration `;
+    if (PlayerProgress.seenAlteredSpeed()) {
+      retVal += `(game-time) `;
+    }
+    retVal += `of your fastest Infinity`;
+    if (PlayerProgress.eternityUnlocked()) {
+      retVal += ` in this Eternity`;
+    }
+    return retVal;
+  },
   effect: () => {
     if (Player.isInAnyChallenge) {
       return 1;
     }
-    //No matter how many Achievements the player has, this upgrade still gives >1 multiplier.
-    var numAchievements = Achievements.effectiveCount;
-    if (numAchievements < 30 ) {
-      return 1 - 2 / (numAchievements - 31);
-    }
-    //Else, ≥30 Achievements
-    return Math.pow((numAchievements - 25), 3) / 40;
+    var bestTimeInSeconds = new Decimal(player.records.bestInfinity.time / 1000);
+    return bestTimeInSeconds.pow(0.6).dividedBy(30).recip().max(1);
   },
   formatEffect: value => {
     if (Player.isInAnyChallenge) {
@@ -107,12 +184,16 @@ const columnFour = [{
     }
     //Else:
     return formatX(value, 2, 2);
-  }
+  },
+  isDisabled: () => Player.isInAnyChallenge
 }, {
   cost: 8,
-  description: () => `Only outside Challenges, start every reset with ${formatInt(2)} Dimension Boosts`
+  description: () => `Only outside Challenges, start every reset with ${formatInt(2)} Dimension Boosts`,
+  effect: 2,
+  effectTarget: "startingDimBoosts",
+  isDisabled: () => Player.isInAnyChallenge
 }, {
-  cost: 3,
+  cost: 9,
   description: `Unlock Antimatter Challenges${NBSP}9-12`,
   unlockAntimatterChallenges: [9, 10, 11, 12]
 }, {
@@ -126,6 +207,7 @@ export const infinityUpgradesNew = {
   columns: [ columnOne, columnTwo, columnThree, columnFour ]
 };
 
+//TODO: at some point, we will have to delete these from the game code.
 export const infinityUpgrades = {
   totalTimeMult: {
     id: "timeMult",

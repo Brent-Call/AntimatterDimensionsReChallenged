@@ -43,7 +43,7 @@ export class InfinityUpgradeState extends SetPurchasableMechanicState {
   purchase() {
     if (super.purchase()) {
       // This applies the 4th column of infinity upgrades retroactively
-      if (this.config.id.includes("skip")) skipResetsIfPossible();
+      if (this.config.id.includes("skip") || this.config.effectTarget === "startingDimBoosts") skipResetsIfPossible();
       EventHub.dispatch(GAME_EVENT.INFINITY_UPGRADE_BOUGHT);
       return true;
     }
@@ -101,6 +101,11 @@ export function totalIPMult() {
       DilationUpgrade.ipMultDT,
       GlyphEffect.ipMult
     );
+  InfinityUpgradesNew.all.forEach((upgrade) => {
+    if (upgrade.config.effectTarget === "ipMult") {
+      ipMult = ipMult.timesEffectOf(upgrade);
+    }
+  });
   ipMult = ipMult.times(Replicanti.amount.powEffectOf(AlchemyResource.exponential));
   return ipMult;
 }
