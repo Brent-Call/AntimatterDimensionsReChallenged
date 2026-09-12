@@ -205,7 +205,7 @@ export const Tickspeed = {
     let boughtTickspeed;
     if (Laitela.continuumActive) boughtTickspeed = this.continuumValue;
     else boughtTickspeed = player.totalTickBought;
-    return boughtTickspeed + player.totalTickGained;
+    return boughtTickspeed + player.totalTickGained + FreeTickspeed.fromChall1;
   },
 
   get perSecond() {
@@ -230,8 +230,18 @@ export const FreeTickspeed = {
   GROWTH_EXP: 2,
   multToNext: 1.33,
 
+  /**
+   * Normal Challenge 1 effect: get some free Tickspeed upgrades
+   */
+  get fromChall1() {
+    if (NormalChallenge(1).isRunning) {
+      return AntimatterDimension(5).bought / 5;
+    }
+    return 0;
+  },
+
   get amount() {
-    return player.totalTickGained;
+    return player.totalTickGained + this.fromChall1;
   },
 
   get softcap() {

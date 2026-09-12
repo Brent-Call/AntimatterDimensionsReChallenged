@@ -8,14 +8,12 @@ export const normalChallenges = [
     id: 1,
     legacyId: 1,
     isQuickResettable: false,
+    //It'll be intended that you use a "start with Antimatter already" type of effect to make this one feasible
     description() {
-      //TODO: compensate by giving free Tickspeed upgrades based on the number of purchased 5th ADs.
-      //The reference to 5 is kind of important.  It will be a recurring number for thematic reasons.
-      //There's also the part where you can combine this with Eternity Challenge 11 to get pure upside!
-      return `all Antimatter Dimensions are ${format(1e10)} times weaker.`;
-      //It'll be intended that you use a "start with Antimatter already" type of effect to make this one feasible
+      return `all Antimatter Dimensions gain a divisor of /${format(1e10)}. ` +
+        `You gain ${format(1/5, 1, 1)} free Tickspeed upgrades for every purchased 5th Antimatter Dimension.`;
     },
-    reward: "Break Infinity (not implemented yet)"
+    reward: "Break Infinity"
   },
   {
     id: 2,

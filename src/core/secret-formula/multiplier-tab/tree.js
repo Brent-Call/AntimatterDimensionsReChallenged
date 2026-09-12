@@ -84,7 +84,7 @@ export const multiplierTabTree = {
     ["tickspeed_base", "tickspeed_upgrades", "tickspeed_galaxies", "tickspeed_baseMultiplierReduction", "tickspeed_pelleTickspeedPow"]
   ],
   tickspeed_upgrades: [
-    ["tickspeedUpgrades_purchased", "tickspeedUpgrades_free"]
+    ["tickspeedUpgrades_purchased", "tickspeedUpgrades_fromChall1", "tickspeedUpgrades_fromTimeDimensions"]
   ],
   tickspeed_galaxies: [
     ["galaxies_antimatter", "galaxies_replicanti", "galaxies_tachyon", "galaxies_nerfPelle"]

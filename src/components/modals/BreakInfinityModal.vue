@@ -12,14 +12,12 @@ export default {
       return `Breaking Infinity will allow you to gain antimatter past ${infinity}${PlayerProgress.eternityUnlocked()
         ? "." : `, and allow you to read numbers past ${infinity}.`}
         Dimensions and Tickspeed Upgrades will scale in cost faster after ${infinity} antimatter.
-        You will gain additional Infinity Points on Big Crunch based on antimatter produced over ${infinity}.\
-        ${EternityMilestone.keepAutobuyers.isReached ? "" : `\nIt will also unlock Break Infinity Upgrades and max\
-        all Normal Challenge Autobuyers.`}`.split("\n");
+        You will gain additional Infinity Points on Big Crunch based on antimatter produced over ${infinity}.`.split("\n");
     },
   },
   methods: {
     handleYesClick() {
-      breakInfinity();
+      //Do nothing.  This modal is for informational purposes only.
     }
   },
 };
@@ -31,7 +29,7 @@ export default {
     @confirm="handleYesClick"
   >
     <template #header>
-      You are Breaking Infinity
+      You Have Broken Infinity
     </template>
     <div class="c-modal-message__text">
       <span
@@ -42,7 +40,7 @@ export default {
       </span>
     </div>
     <template #confirm-text>
-      Break
+      OK
     </template>
   </ModalWrapperChoice>
 </template>

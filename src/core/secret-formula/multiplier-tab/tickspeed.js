@@ -1,5 +1,5 @@
 import { DC } from "../../constants";
-import { getTotalGalaxyPower } from "../../tickspeed";
+import { FreeTickspeed, getTotalGalaxyPower } from "../../tickspeed";
 
 import { MultiplierTabHelper } from "./helper-functions";
 import { MultiplierTabIcons } from "./icons";
@@ -85,8 +85,15 @@ export const tickspeedUpgrades = {
     isActive: () => true,
     icon: MultiplierTabIcons.PURCHASE("AD"),
   },
-  free: {
-    name: "Tickspeed Upgrades from TD",
+  fromChall1: {
+    name: "Tickspeed Upgrades from Antimatter Challenge 1",
+    displayOverride: () => formatFloat(FreeTickspeed.fromChall1, 1),
+    multValue: () => Decimal.pow10(FreeTickspeed.fromChall1),
+    isActive: () => FreeTickspeed.fromChall1 > 0,
+    icon: MultiplierTabIcons.CHALLENGE("antimatter", 1),
+  },
+  fromTimeDimensions: {
+    name: "Tickspeed Upgrades from Time Dimensions",
     displayOverride: () => formatInt(player.totalTickGained),
     multValue: () => Decimal.pow10(player.totalTickGained),
     isActive: () => Currency.timeShards.gt(0),

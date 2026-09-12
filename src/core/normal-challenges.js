@@ -103,11 +103,11 @@ class NormalChallengeState extends GameMechanicState {
 
   complete() {
     player.challenge.normal.completedBits |= 1 << this.id;
-    // Since breaking infinity maxes even autobuyers that aren't unlocked,
-    // it's possible to get r52 or r53 from completing a challenge
-    // and thus unlocking an autobuyer.
-    Achievement(52).tryUnlock();
-    Achievement(53).tryUnlock();
+    if (this.id === 1 && !player.break) {
+      //Show this when breaking Infinity for the first time:
+      Modal.breakInfinity.show();
+      breakInfinity();
+    }
   }
 
   get goal() {

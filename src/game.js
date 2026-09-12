@@ -73,13 +73,6 @@ export function playerInfinityUpgradesOnReset() {
 }
 
 export function breakInfinity() {
-  if (!Autobuyer.bigCrunch.hasMaxedInterval) return;
-  if (InfinityChallenge.isRunning) return;
-  for (const autobuyer of Autobuyers.all) {
-    if (autobuyer.data.interval !== undefined) autobuyer.maxIntervalForFree();
-  }
-  // There's a potential migration edge case involving already-maxed autobuyers; this should give the achievement
-  Achievement(61).tryUnlock();
   player.break = !player.break;
   TabNotification.ICUnlock.tryTrigger();
   EventHub.dispatch(player.break ? GAME_EVENT.BREAK_INFINITY : GAME_EVENT.FIX_INFINITY);
