@@ -118,12 +118,19 @@ export class DimBoost {
     if (EternityChallenge(5).isRunning) {
       amount += Math.pow(targetResets - 1, 3) + targetResets - 1;
     }
+    if (NormalChallenge(4).isRunning) {
+      amount += 10 * targetResets;
+      if (tier === 8 ) {
+        amount *= 1.5;
+      }
+    }
 
     InfinityUpgradesNew.all.forEach((upgrade) => {
       if (upgrade.config.effectTarget === "dimBoostRequirement") {
         amount -= upgrade.effectOrDefault(0);
       }
     });
+    if (NormalChallenge(6).isCompleted) { amount -= 5; }
 
     amount -= Effects.sum(InfinityUpgrade.resetBoost);
     if (InfinityChallenge(5).isCompleted) amount -= 1;
@@ -169,7 +176,11 @@ export class DimBoost {
   }
 
   static get imaginaryBoosts() {
-    return Ra.isRunning ? 0 : ImaginaryUpgrade(12).effectOrDefault(0) * ImaginaryUpgrade(23).effectOrDefault(1);
+    if (Ra.isRunning) {
+      return 0;
+    }
+    var baseAmt = ImaginaryUpgrade(12).effectOrDefault(0) + 2 * NormalChallenge(7).isCompleted;
+    return baseAmt * ImaginaryUpgrade(23).effectOrDefault(1);
   }
 
   static get totalBoosts() {
@@ -216,7 +227,7 @@ export function softReset(tempBulk, forcedADReset = false, forcedAMReset = false
 
 export function skipResetsIfPossible(enteringAntimatterChallenge) {
   if (enteringAntimatterChallenge || Player.isInAntimatterChallenge) return;
-  if (InfinityUpgrade.skipResetGalaxy.isBought) {
+  if (NormalChallenge(5).isCompleted) {
     if (player.galaxies === 0) player.galaxies = 1;
   }
   player.dimensionBoosts = Math.max(player.dimensionBoosts, DimBoost.startingDimensionBoosts);

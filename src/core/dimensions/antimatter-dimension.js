@@ -10,6 +10,9 @@ export function antimatterDimensionCommonMultiplier() {
   multiplier = multiplier.times(Achievements.power);
   multiplier = multiplier.times(ShopPurchase.dimPurchases.currentMult);
   multiplier = multiplier.times(ShopPurchase.allDimPurchases.currentMult);
+  if (NormalChallenge(8).isCompleted) {
+    multiplier = multiplier.times(8);
+  }
 
   if (!EternityChallenge(9).isRunning) {
     multiplier = multiplier.times(Currency.infinityPower.value.pow(InfinityDimensions.powerConversionRate).max(1));
@@ -548,7 +551,7 @@ class AntimatterDimensionState extends DimensionState {
   }
 
   get isAvailableForPurchase() {
-    if (!EternityMilestone.unlockAllND.isReached && this.tier > DimBoost.totalBoosts + 4) return false;
+    if (!EternityMilestone.unlockAllND.isReached && this.tier > DimBoost.purchasedBoosts + 4) return false;
     const hasPrevTier = this.tier === 1 || AntimatterDimension(this.tier - 1).totalAmount.gt(0);
     if (!EternityMilestone.unlockAllND.isReached && !hasPrevTier) return false;
     return this.tier < 7 || !NormalChallenge(10).isRunning;
@@ -652,14 +655,37 @@ export const AntimatterDimensions = {
     }
   },
 
-  get buyTenMultiplier() {
+  /**
+   * Gets the multiplier for purchasing 10 Antimatter Dimensions, accounting for all ADDITIVE effects
+   * (such as Eternity Challenge 3, etc.) but not MULTIPLICATIVE or POWER effects.
+   * @returns {Decimal}
+   */
+  get buyTenBASEMultiplier() {
     if (NormalChallenge(7).isRunning) return DC.D1_2.min(1 + DimBoost.totalBoosts / 50);
 
-    let mult = DC.D2.plusEffectsOf(
+    let baseMult = DC.D2.plusEffectsOf(
       Achievement(141).effects.buyTenMult,
       EternityChallenge(3).reward
     );
-    
+    if (NormalChallenge(5).isRunning) {
+      //Increase by +0.3 per minute spent in this Infinity.
+      //This applies BEFORE all multiplicative effects.
+      baseMult = baseMult.plus(0.3 * Time.thisInfinity.totalMinutes);
+    }
+    return baseMult;
+  },
+
+  /**
+   * Gets the final multiplier for purchasing 10 Antimatter Dimensions, accounting for ALL effects.
+   * @returns {Decimal}
+   */
+  get buyTenMultiplier() {
+    let mult = this.buyTenBASEMultiplier;
+    if (NormalChallenge(7).isRunning) {
+      //All upgrades are ignored in this Challenge.
+      return mult;
+    }
+
     InfinityUpgradesNew.all.forEach((upgrade) => {
       if (upgrade.config.effectTarget === "buy10Mult") {
         mult = mult.timesEffectOf(upgrade);

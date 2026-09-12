@@ -1,6 +1,10 @@
 import { DC } from "./constants";
 
 export function effectiveBaseGalaxies() {
+  let antimatterGalaxies = player.galaxies;
+  if (NormalChallenge(4).isRunning) {
+    antimatterGalaxies *= 0.035;
+  }
   // Note that this already includes the "50% more" active path effect
   let replicantiGalaxies = Replicanti.galaxies.bought;
   replicantiGalaxies *= (1 + Effects.sum(
@@ -16,7 +20,7 @@ export function effectiveBaseGalaxies() {
   replicantiGalaxies += nonActivePathReplicantiGalaxies * Effects.sum(EternityChallenge(8).reward);
   let freeGalaxies = player.dilation.totalTachyonGalaxies;
   freeGalaxies *= 1 + Math.max(0, Replicanti.amount.log10() / 1e6) * AlchemyResource.alternation.effectValue;
-  return Math.max(player.galaxies + GalaxyGenerator.galaxies + replicantiGalaxies + freeGalaxies, 0);
+  return Math.max(antimatterGalaxies + GalaxyGenerator.galaxies + replicantiGalaxies + freeGalaxies, 0);
 }
 
 /**

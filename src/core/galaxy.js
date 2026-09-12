@@ -63,6 +63,7 @@ export class Galaxy {
     });
     if (InfinityChallenge(5).isCompleted) amount -= 1;
 
+    if (NormalChallenge(4).isRunning) { amount *= 0.25; }
     if (GlyphAlteration.isAdded("power")) amount *= getSecondaryGlyphEffect("powerpow");
 
     amount = Math.floor(amount);
@@ -75,7 +76,7 @@ export class Galaxy {
   }
 
   static get baseCost() {
-    return NormalChallenge(10).isRunning ? 99 : 80;
+    return NormalChallenge(10).isRunning ? 100 : 80;
   }
 
   static get requiredTier() {

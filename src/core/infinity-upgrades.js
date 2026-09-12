@@ -106,6 +106,9 @@ export function totalIPMult() {
       ipMult = ipMult.timesEffectOf(upgrade);
     }
   });
+  if (NormalChallenge(4).isCompleted) {
+    ipMult = ipMult.times(3);
+  }
   ipMult = ipMult.times(Replicanti.amount.powEffectOf(AlchemyResource.exponential));
   return ipMult;
 }

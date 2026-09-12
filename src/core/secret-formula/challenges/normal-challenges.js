@@ -9,13 +9,13 @@ export const normalChallenges = [
     legacyId: 1,
     isQuickResettable: false,
     description() {
-      //TODO: reduce all AD multipliers, but compensate by giving free Tickspeed upgrades based on the number of purchased 5th ADs.
+      //TODO: compensate by giving free Tickspeed upgrades based on the number of purchased 5th ADs.
       //The reference to 5 is kind of important.  It will be a recurring number for thematic reasons.
       //There's also the part where you can combine this with Eternity Challenge 11 to get pure upside!
       return `all Antimatter Dimensions are ${format(1e10)} times weaker.`;
       //It'll be intended that you use a "start with Antimatter already" type of effect to make this one feasible
     },
-    reward: "WIP - not decided yet" //Reward: gain a multiplier to Infinity Points based on the number of Normal Challenges completed.
+    reward: "Break Infinity (not implemented yet)"
   },
   {
     id: 2,
@@ -30,7 +30,7 @@ export const normalChallenges = [
     description:
       () => "buying Antimatter Dimensions or Tickspeed upgrades halts production of all Antimatter Dimensions. " +
       `Production gradually returns to normal over ${formatInt(3)} minutes.`,
-    reward: "Ability to upgrade the Antimatter Dimension Autobuyers"
+    reward: "Upgradeable Antimatter Dimension Autobuyers"
   },
   {
     id: 3,
@@ -41,28 +41,29 @@ export const normalChallenges = [
     //How about, "Infinity Upgrades which grant multipliers to Antimatter Dimensions are disabled"
       `the 1st Antimatter Dimension is heavily weakened, but gets an uncapped exponentially increasing multiplier.
         This multiplier resets after Dimension Boosts and Antimatter Galaxies.`,
-    reward: "WIP - not decided yet" //Reward: passively generate Infinity Points based on your best IP per minute in this Eternity.
+    reward: () => `Passively generate ${formatInt(1)} Infinity per second`
   },
   {
     id: 4,
     legacyId: 8,
     isQuickResettable: false,
-    //TODO: no.  Completely rework this one.  Come up with something more interesting.
-    //How about "Antimatter Galaxies operate at only 1% of their strength, but the requirements are lowered?" or similar
-    //In this one, Antimatter Galaxy requirement will be lowered, so the player will get, like, 5 or 6 Galaxies, 
-    description: "buying an Antimatter Dimension automatically erases all lower tier Antimatter Dimensions, " +
-      "like a sacrifice without the boost.",
-    reward: "WIP - not decided yet"
+    //I'm satisfied with the balancing on this one.
+    //Hopefully, this'll make for some interesting interactions in the later stages of the game.
+    description: () => `Antimatter Galaxies operate at only ${formatPercents(0.035, 1)} of their strength, but their requirements are lowered. ` +
+      "Dimension Boost requirements are increased.",
+    reward: () => `${formatX(3)} Infinity Point gain`
   },
   {
     id: 5,
     legacyId: 6,
     isQuickResettable: false,
     description:
-    //TODO: make this one even harsher.  Maybe 1.008?
-    // The strategy for this Challenge will be to deliberately avoid getting Galaxies because they're too weak to be worth your time.
-      () => `the Tickspeed purchase multiplier starts at ${formatX(1.080, 0, 3)} instead of ${formatX(1.1245, 0, 3)}.`,
-    reward: "WIP - not decided yet"
+    //The strategy for this Challenge will be to deliberately avoid getting Galaxies because they're too weak to be worth your time.
+    //The balancing for this one is... hmmm... the scaling on the "buy 10" multiplier might be a little bit too fast, actually.
+    //It's OK for now, but we might have to reevaluate this one later.
+      () => `the Tickspeed purchase multiplier starts at ${formatX(1.008, 0, 3)} instead of ${formatX(1.1245, 0, 3)}, ` +
+      `but the multiplier from buying ${formatInt(10)} Antimatter Dimensions increases slowly over time.`,
+    reward: "Only outside Challenges, start Infinities with an Antimatter Galaxy"
   },
   {
     id: 6,
@@ -71,27 +72,27 @@ export const normalChallenges = [
     //I might want to make this harder by raising prices significantly.  The idea is that the player's progression will come not from purchasing Dimensions (as it'll cost too much), but mostly from Tickspeed improvements.
     description: () => `upgrading each Antimatter Dimension costs the Antimatter Dimension ${formatInt(2)} tiers ` +
       "below it instead of antimatter. Antimatter Dimension prices are modified.",
-    reward: "WIP - not decided yet" //Reward: Dimension Boosts require 5 fewer Antimatter Dimensions
+    reward: "Decrease the number of Dimensions needed for Dimension Boosts by 5"
   },
   {
     id: 7,
     legacyId: 9,
     isQuickResettable: false,
     description: () =>
-      //This one is TOO EASY, I think.  Let's set a lower maximum.  Maybe 1.2?  And say it's +0.01 per DimBoost, so it takes 20 DimBoosts to cap?
-    //TODO: visibly disable any Infinity Upgrades which grant a "buy 10 multi" effect while this challenge is running
+    //This is one of the harder Challenges in the set, but I'm fine with it as-is.
       `the multiplier from buying ${formatInt(10)} Antimatter Dimensions is reduced to ${formatX(1)}. This increases by
         +${format(0.02, 2, 2)} per Dimension Boost, to a maximum of ${formatX(1.2,2,2)}, and is unaffected by any upgrades.`,
-    reward: "WIP - not decided yet" //Planned reward: multiplier to all Antimatter Dimensions based on Dimension Boost multiplier.  f(x)=x^x
+    reward: () => `Gain ${formatInt(2)} ghost Dimension Boosts, which always affect all Antimatter Dimensions but don't unlock anything`
   },
   {
     id: 8,
     legacyId: 11,
     isQuickResettable: false,
     //This challenge is deliberately left easy.  It'll be used later to help the player get Dimensional-Sacrifice-related Achievements.
+    //Since this is one of the easier Challenges, its reward should be comparatively small.
     description: `Dimension Boosts provide no multiplier and Antimatter Galaxies cannot be bought. Dimensional
       Sacrifice resets antimatter and all Antimatter Dimensions, but also gives a significantly stronger multiplier.`,
-    reward: "WIP - not decided yet" //Planned reward:
+    reward: () => `${formatX(8)} on all Antimatter Dimensions` //TODO: account for this in the multiplier breakdown tab
   },
   {
     id: 9,
@@ -114,6 +115,7 @@ export const normalChallenges = [
     id: 11,
     legacyId: 12,
     isQuickResettable: true,
+    //This one is way too easy.  Simply waaaaay too easy.  I'll have to take a look at it.
     description: () => `there is normal matter which rises once you have at least ${formatInt(1)} 2nd Antimatter ` +
       "Dimension. If it exceeds your antimatter, it will Dimension Boost without giving the bonus.",
     reward: "Antimatter Galaxies Autobuyer"

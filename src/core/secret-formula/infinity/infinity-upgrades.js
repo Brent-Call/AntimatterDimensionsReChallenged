@@ -63,6 +63,11 @@ const columnOne = [{
   description: () => `Multiply Infinity Point gain by ${formatX(2)}`,
   effect: 2,
   effectTarget: "ipMult"
+}, {
+  cost: 1000,
+  description: () => `Multiply Infinity Point gain by ${formatX(2)}`,
+  effect: 2,
+  effectTarget: "ipMult"
 }];
 /**
  * Column 2--Production multipliers on all Antimatter Dimensions.
@@ -78,9 +83,8 @@ const columnTwo = [{
   cost: 1,
   description: () => `Increase the multiplier for buying ${formatInt(10)} Antimatter Dimensions`,
   effect: 1.1,
-  formatEffect: () => `${formatX(2, 0, 1)} ➜ ${formatX(2.2, 0, 1)}`,
+  formatEffect: () => `${formatX(AntimatterDimensions.buyTenBASEMultiplier, 0, 1)} ➜ ${formatX(AntimatterDimensions.buyTenBASEMultiplier.times(1.1), 0, 1)}`,
   effectTarget: "buy10Mult",
-  //TODO: visually disable this upgrade in Antimatter Challenge 7
   isDisabled: () => NormalChallenge(7).isRunning,
 }, {
   cost: 3,
@@ -103,7 +107,7 @@ const columnTwo = [{
   formatEffect: value => formatX(value, 2, 2),
   effectTarget: "all"
 }, {
-  cost: 10, //TODO: make this effect actually work.
+  cost: 10,
   description: () => `Passively generate Infinity Points ${formatInt(10)} times slower than your fastest Infinity`,
   // Cutting corners: this is not actual effect, but it is totalIPMult that is displyed on upgrade
   effect: () => (Teresa.isRunning || V.isRunning || Pelle.isDoomed ? DC.D0 : GameCache.totalIPMult.value),
@@ -114,6 +118,11 @@ const columnTwo = [{
     return `${format(value, 2)} every ${Time.bestInfinity.times(10).toStringShort()}`;
   },
   effectTarget: "passiveIPGen"
+}, {
+  cost: 1000,
+  description: () => `Multiply Infinity Point gain by ${formatX(2)}`,
+  effect: 2,
+  effectTarget: "ipMult"
 }];
 /**
  * Column 3--Upgrades dealing with Galaxies or Dimension Boosts.
@@ -138,13 +147,18 @@ const columnThree = [{
   effectTarget: "allGalaxyStrength"
 }, {
   cost: 25,
-  description: "Increase Dimension Boost multiplier", //TODO: I implemented the effect.  Test that it works & that it doesn't break game balance.
+  description: "Increase Dimension Boost multiplier",
   effect: 2.5,
   formatEffect: () => `${formatX(2, 0, 1)} ➜ ${formatX(2.5, 0, 1)}`,
   effectTarget: "dimBoostBaseStrength",
   isDisabled: () => NormalChallenge(8).isRunning,
 }, {
   cost: 50,
+  description: () => `Multiply Infinity Point gain by ${formatX(2)}`,
+  effect: 2,
+  effectTarget: "ipMult"
+}, {
+  cost: 1000,
   description: () => `Multiply Infinity Point gain by ${formatX(2)}`,
   effect: 2,
   effectTarget: "ipMult"
@@ -198,6 +212,11 @@ const columnFour = [{
   unlockAntimatterChallenges: [9, 10, 11, 12]
 }, {
   cost: 10,
+  description: () => `Multiply Infinity Point gain by ${formatX(2)}`,
+  effect: 2,
+  effectTarget: "ipMult"
+}, {
+  cost: 1000,
   description: () => `Multiply Infinity Point gain by ${formatX(2)}`,
   effect: 2,
   effectTarget: "ipMult"

@@ -684,6 +684,10 @@ function passivePrestigeGen() {
 
   if (!EternityChallenge(4).isRunning) {
     let infGen = DC.D0;
+    if (NormalChallenge(3).isCompleted) {
+      //Passive 1 Infinity per second, boosted by multipliers.
+      infGen = infGen.plus(gainedInfinities().times(Time.deltaTime));
+    }
     if (BreakInfinityUpgrade.infinitiedGen.isBought) {
       // Multipliers are done this way to explicitly exclude ach87 and TS32
       infGen = infGen.plus(0.5 * Time.deltaTimeMs / Math.clampMin(50, player.records.bestInfinity.time));
