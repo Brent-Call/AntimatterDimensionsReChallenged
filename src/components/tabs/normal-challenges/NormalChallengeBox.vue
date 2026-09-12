@@ -38,7 +38,14 @@ export default {
       return this.isBroken ? "Broken" : "";
     },
     rewardText() {
-      return this.isUnlocked ? this.challenge.config.reward : "???";
+      if (!this.isUnlocked) {
+        return "???";
+      }
+      //Else, unlocked, so evaluate reward:
+      if (typeof(this.challenge.config.reward) === "function") {
+        return this.challenge.config.reward();
+      }
+      return this.challenge.config.reward;
     }
   },
   methods: {
