@@ -205,7 +205,7 @@ export const tabs = [
     condition: () =>
       PlayerProgress.realityUnlocked() ||
       PlayerProgress.eternityUnlocked() ||
-      PlayerProgress.infinityUnlocked(),
+      NormalChallenges.getIsAnyChallengeUnlocked(),
     id: 5,
     hidable: true,
     subtabs: [
@@ -255,23 +255,7 @@ export const tabs = [
         name: "Infinity Upgrades",
         symbol: "<i class='fas fa-arrow-up'></i>",
         component: "InfinityUpgradesTab",
-        condition: () =>
-          PlayerProgress.realityUnlocked() ||
-          PlayerProgress.eternityUnlocked() ||
-          PlayerProgress.infinityUnlocked(),
         id: 0,
-        hidable: true,
-      },
-      {
-        key: "break",
-        name: "Break Infinity",
-        symbol: "∝",
-        component: "BreakInfinityTab",
-        condition: () =>
-          PlayerProgress.realityUnlocked() ||
-          PlayerProgress.eternityUnlocked() ||
-          PlayerProgress.infinityUnlocked(),
-        id: 1,
         hidable: true,
       },
       {
@@ -282,8 +266,8 @@ export const tabs = [
         condition: () =>
           PlayerProgress.realityUnlocked() ||
           PlayerProgress.eternityUnlocked() ||
-          PlayerProgress.infinityUnlocked(),
-        id: 2,
+          PlayerProgress.infinityUnlocked(), //TODO: don't unlock this one until much later in the game
+        id: 1,
         hidable: true,
       }
     ],
@@ -475,25 +459,6 @@ export const tabs = [
         condition: () => Pelle.isUnlocked,
         id: 7,
         hidable: true,
-      }
-    ]
-  },
-  {
-    key: "shop",
-    name: "Shop",
-    newUIClass: "shop",
-    hideAt: 1.5,
-    condition: () => Cloud.isAvailable,
-    id: 10,
-    hidable: true,
-    subtabs: [
-      {
-        key: "shop",
-        name: "Shop",
-        symbol: "$",
-        component: "ShopTab",
-        id: 0,
-        hidable: true
       }
     ]
   }

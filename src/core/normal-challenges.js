@@ -163,5 +163,8 @@ export const NormalChallenges = {
   },
   clearCompletions() {
     player.challenge.normal.completedBits = 0;
+  },
+  getIsAnyChallengeUnlocked: function() {
+    return this.all.some( challengeConfig => challengeConfig.isUnlocked);
   }
 };

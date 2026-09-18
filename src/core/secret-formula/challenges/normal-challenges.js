@@ -8,7 +8,8 @@ export const normalChallenges = [
     id: 1,
     legacyId: 1,
     isQuickResettable: false,
-    //It'll be intended that you use a "start with Antimatter already" type of effect to make this one feasible
+    //It'll be intended that you use a "start with Antimatter already" type of effect to make this one feasible.
+    //I'm satisfied with the balancing on this one :D
     description() {
       return `all Antimatter Dimensions gain a divisor of /${format(1e10)}. ` +
         `You gain ${format(1/5, 1, 1)} free Tickspeed upgrades for every purchased 5th Antimatter Dimension.`;
@@ -80,7 +81,7 @@ export const normalChallenges = [
     //This is one of the harder Challenges in the set, but I'm fine with it as-is.
       `the multiplier from buying ${formatInt(10)} Antimatter Dimensions is reduced to ${formatX(1)}. This increases by
         +${format(0.02, 2, 2)} per Dimension Boost, to a maximum of ${formatX(1.2,2,2)}, and is unaffected by any upgrades.`,
-    reward: () => `Gain ${formatInt(2)} ghost Dimension Boosts, which always affect all Antimatter Dimensions but don't unlock anything`
+    reward: () => `Gain ${formatInt(2)} ghost Dimension Boosts, which always affect all Antimatter Dimensions but don't unlock anything` //TODO: in the multiplier breakdown tab, separate ghost boosts from purchased boosts
   },
   {
     id: 8,
@@ -128,3 +129,7 @@ export const normalChallenges = [
     reward: "Big Crunches Autobuyer"
   }
 ];
+
+//PLANNED: Challenge 13.  Reward: "Unlock the buy max Dimension Boost Autobuyer mode"
+//PLANNED: Challenge 14.  Reward: "Autobuyers unlocked or improved by Normal Challenges work twice as fast"
+//PLANNED: Challenge 15.  Reward: Probably a boost to Antimatter Galaxy strength, or something?  IDK.
