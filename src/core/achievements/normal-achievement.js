@@ -197,12 +197,10 @@ export const Achievements = {
     }
     //Else, tickspeed as a mechanic is unlocked & is boosted by certain Achievements:
     return DC.D1.dividedByEffectsOf(
-      Achievement(13), Achievement(14), //×1.1 each
-      Achievement(24), //Scales based on Dimension Boosts
-      Achievement(36),
-      Achievement(44), Achievement(45), Achievement(46), //×1.15 each
-      Achievement(66),
-      Achievement(83)
+      Achievement(13), Achievement(21), Achievement(27), //tickspeedBasedOnRow
+      Achievement(34), Achievement(35), Achievement(45), Achievement(66), //tickspeedBasedOnRow
+      Achievement(33), //Scales based on Dimension Boosts
+      Achievement(83) //Scales based on Antimatter Galaxies
     );
   },
 

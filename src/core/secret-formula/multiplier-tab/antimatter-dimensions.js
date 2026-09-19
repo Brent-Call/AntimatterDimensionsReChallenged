@@ -116,7 +116,8 @@ export const AD = {
     name: "Achievement Rewards",
     multValue: dim => {
       const allMult = DC.D1.timesEffectsOf(
-        Achievement(25), //×1.5 on all Antimatter Dimensions, +0.1 for each Infinity.
+        Achievement(22), //×1.5 on all Antimatter Dimensions, +0.1 for each Infinity.
+        Achievement(23), //×1.5 on all Antimatter Dimensions, +1 for each Eternity.
         Achievement(48),
         Achievement(56),
         Achievement(65),
@@ -133,23 +134,25 @@ export const AD = {
       for (let tier = 1; tier <= 8; tier++) {
         if (tier === 1) {
           dimMults[tier] = dimMults[tier].timesEffectsOf(
-            Achievement(28),
-            Achievement(31),
+            Achievement(25), //×2 on the 1st AD if you have 0 Dimension Boosts
+            Achievement(26), //×2 on the 1st AD if you have 0 Dimension Boosts
+            Achievement(36), //×1.5 on 1st AD
             Achievement(68),
             Achievement(71),
           );
         }
         dimMults[tier] = dimMults[tier].timesEffectsOf(
           tier <= 4 ? Achievement(15) : null, //×1.25 on first 4 ADs
-          tier === 8 ? Achievement(23) : null,
-          tier === 1 ? Achievement(26) : null, //×2 on the 1st AD if you have 0 Dimension Boosts
-          tier === 1 ? Achievement(27) : null, //×2 on the 1st AD if you have 0 Dimension Boosts
-          tier < 8 ? Achievement(34) : null,
-          tier === 3 ? Achievement(35) : null, //Boost to 3rd AD which grows based on time spent in this Infinity
-          tier === 8 ? Achievement(42) : null, //×1.75 on 8th AD
+          tier === 3 ? Achievement(24) : null, //Boost to 3rd AD which grows based on time spent in this Infinity
+          tier === 1 ? Achievement(28) : null, //×1.3 on the 6th AD for each Antimatter Galaxy you have
+          tier === 4 ? Achievement(31) : null, //×1.75 on 4th AD
+          tier === 8 ? Achievement(32) : null, //×1.5 on 8th AD
+          tier === 7 ? Achievement(37) : null, //×1.75 on 7th AD
+          tier < 8 ? Achievement(44) : null, //×1.02 on each of 1st through 7th ADs
           tier <= 4 ? Achievement(64) : null,
         );
-        if (Achievement(43).isUnlocked) {
+        if (Achievement(47).isUnlocked) {
+          //Each Antimatter Dimension gains a boost proportional to tier
           dimMults[tier] = dimMults[tier].times(1 + tier / 100);
         }
       }
@@ -168,22 +171,20 @@ export const AD = {
   infinityUpgrade: {
     name: dim => (dim ? `Infinity Upgrades (AD ${dim})` : "Infinity Upgrades"),
     multValue: dim => {
-      const allMult = DC.D1.timesEffectsOf(
-        InfinityUpgrade.totalTimeMult,
-        InfinityUpgrade.thisInfinityTimeMult,
-      );
+      var allMult = DC.D1;
+      InfinityUpgradesNew.all.forEach((upgrade) => {
+        if (upgrade.config.effectTarget === "all") {
+          allMult = allMult.timesEffectOf(upgrade);
+        }
+      });
 
       const dimMults = Array.repeat(DC.D1, 9);
       for (let tier = 1; tier <= 8; tier++) {
-        if (tier === 1) {
-          dimMults[tier] = dimMults[tier].timesEffectsOf(
-            InfinityUpgrade.unspentIPMult,
-            InfinityUpgrade.unspentIPMult.chargedEffect,
-          );
-        }
-        dimMults[tier] = dimMults[tier].timesEffectsOf(
-          AntimatterDimension(tier).infinityUpgrade,
-        );
+        InfinityUpgradesNew.all.forEach((upgrade) => {
+          if (Array.isArray(upgrade.config.effectTarget) && upgrade.config.effectTarget.includes(tier)) {
+            dimMults[tier] = dimMults[tier].timesEffectOf(upgrade);
+          }
+        });
       }
 
       if (dim) return allMult.times(dimMults[dim]);

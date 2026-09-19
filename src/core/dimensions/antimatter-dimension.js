@@ -24,7 +24,8 @@ export function antimatterDimensionCommonMultiplier() {
     BreakInfinityUpgrade.slowestChallengeMult,
     InfinityUpgrade.totalTimeMult,
     InfinityUpgrade.thisInfinityTimeMult,
-    Achievement(25), //×1.5 on all Antimatter Dimensions, +0.1 for each Infinity.
+    Achievement(22), //×1.5 on all Antimatter Dimensions, +0.1 for each Infinity.
+    Achievement(23), //×1.5 on all Antimatter Dimensions, +1 for each Eternity.
     Achievement(48),
     Achievement(56),
     Achievement(65),
@@ -140,18 +141,22 @@ function applyNDMultipliers(mult, tier) {
 
   multiplier = multiplier.timesEffectsOf(
     tier <= 4 ? Achievement(15) : null, //×1.25 on first 4 ADs
-    tier === 8 ? Achievement(23) : null,
+    tier === 3 ? Achievement(24) : null, //Boost to 3rd AD which grows based on time spent in this Infinity
+    tier === 1 ? Achievement(25) : null, //×2 on the 1st AD if you have 0 Dimension Boosts
     tier === 1 ? Achievement(26) : null, //×2 on the 1st AD if you have 0 Dimension Boosts
-    tier === 1 ? Achievement(27) : null, //×2 on the 1st AD if you have 0 Dimension Boosts
-    tier < 8 ? Achievement(34) : null,
-    tier === 3 ? Achievement(35) : null, //Boost to 3rd AD which grows based on time spent in this Infinity
-    tier === 8 ? Achievement(42) : null, //×1.75 on 8th AD
+    tier === 1 ? Achievement(28) : null, //×1.3 on the 6th AD for each Antimatter Galaxy you have
+    tier === 4 ? Achievement(31) : null, //×1.75 on 4th AD
+    tier === 8 ? Achievement(32) : null, //×1.5 on 8th AD
+    tier === 1 ? Achievement(36) : null, //×1.5 on 1st AD
+    tier === 7 ? Achievement(37) : null, //×1.75 on 7th AD
+    tier < 8 ? Achievement(44) : null, //×1.02 on each of 1st through 7th ADs
     tier <= 4 ? Achievement(64) : null,
     tier < 8 ? TimeStudy(71) : null,
     tier === 8 ? TimeStudy(214) : null,
     tier > 1 && tier < 8 ? InfinityChallenge(8).reward : null
   );
-  if (Achievement(43).isUnlocked) {
+  if (Achievement(47).isUnlocked) {
+    //Each Antimatter Dimension gains a boost proportional to tier
     multiplier = multiplier.times(1 + tier / 100);
   }
 
@@ -204,7 +209,7 @@ function onBuyDimension(tier) {
   if (tier === 1) Tutorial.turnOffEffect(TUTORIAL_STATE.DIM1);
   if (tier === 2) Tutorial.turnOffEffect(TUTORIAL_STATE.DIM2);
   Achievement(10 + tier).unlock();
-  Achievement(23).tryUnlock();
+  Achievement(32).tryUnlock();
 
   if (player.speedrun.isActive && !player.speedrun.hasStarted) Speedrun.startTimer();
 
@@ -242,7 +247,7 @@ export function buyOneDimension(tier) {
   dimension.bought++;
 
   if (tier === 1) {
-    Achievement(28).tryUnlock();
+    Achievement(36).tryUnlock();
   }
 
   onBuyDimension(tier);

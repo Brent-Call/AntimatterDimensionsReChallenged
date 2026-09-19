@@ -111,21 +111,25 @@ TOTAL = ${formatFloat(baseFrac + tickFrac + galFrac + redFrac, 8)} (if it's not 
   // expected to be a three-character string "XXN", eg. "AD3" or "TD2"
   achievementDimCheck(ach, dimStr) {
     switch (ach) {
-      case 23:
-      case 42:
-        return dimStr === "AD8";
-      case 35:
+      case 24:
         return dimStr === "AD3";
+      case 25:
       case 26:
-      case 27:
-      case 28:
-      case 31:
+      case 36:
       case 68:
       case 71:
         return dimStr === "AD1";
+      case 28:
+        return dimStr === "AD6";
+      case 31:
+        return dimStr === "AD4";
+      case 32:
+        return dimStr === "AD8";
+      case 37:
+        return dimStr === "AD7";
       case 94:
         return dimStr === "ID1";
-      case 34:
+      case 44:
         return dimStr.substr(0, 2) === "AD" && Number(dimStr.charAt(2)) !== 8;
       case 15:
       case 64:

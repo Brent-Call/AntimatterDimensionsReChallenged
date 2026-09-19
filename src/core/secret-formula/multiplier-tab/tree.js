@@ -118,7 +118,7 @@ const singleRes = ["IP", "EP", "DT", "infinities", "replicanti"];
 const targetedEffects = {
   achievement: {
     checkFn: MultiplierTabHelper.achievementDimCheck,
-    AD: [15, 23, 25, 26, 27, 28, 31, 34, 35, 42, 43, 48, 56, 64, 65, 68, 71, 72, 73, 74, 76, 84, 91, 92, 183],
+    AD: [15, 22, 23, 24, 25, 26, 28, 31, 32, 36, 37, 44, 47, 48, 56, 64, 65, 68, 71, 72, 73, 74, 76, 84, 91, 92, 183],
     TD: [105, 128],
     IP: [85, 93, 116, 125, 141],
     DT: [132, 137],

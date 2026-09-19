@@ -3012,9 +3012,10 @@ br {
   user-select: none;
 }
 
-.o-achievement--normal {
+/*TODO: re-enable Achievement images after you're done moving them around*/
+/*.o-achievement--normal {
   background-image: url("../images/normal achievements.png");
-}
+}*/
 
 .o-achievement--cancer {
   background-image: url("../images/cancer achievements.png");

@@ -121,6 +121,12 @@ export default {
       return this.renderedRowIndices.includes(row);
     },
     isObscured(row) {
+      if (row < 3) { //Pre-Infinity Achievements
+        return false;
+      }
+      if (row < 17) {
+        return !PlayerProgress.infinityUnlocked();
+      } 
       return this.isDoomed ? false : row === 17;
     },
     timeDisplay,

@@ -78,6 +78,7 @@ export const tabs = [
     hideAt: 1.7,
     id: 2,
     hidable: true,
+    condition: () => Achievement(14).isEffectActive,
     subtabs: [
       {
         key: "statistics",
@@ -113,7 +114,6 @@ export const tabs = [
         name: "Multiplier Breakdown",
         symbol: "<i class='fas fa-calculator'></i>",
         component: "MultiplierBreakdownTab",
-        //condition: () => PlayerProgress.infinityUnlocked(),
         id: 3,
         hidable: true,
       },
