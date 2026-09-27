@@ -238,6 +238,20 @@ export const AD = {
     isActive: () => Currency.infinityPower.value.gt(1) && !EternityChallenge(9).isRunning,
     icon: MultiplierTabIcons.INFINITY_POWER,
   },
+  antimatterChallenge8: { //Formerly Normal Challenge 8
+    name: dim => (dim ? `Antimatter Challenge 8 Reward (AD ${dim})` : "Antimatter Challenge 8"),
+    multValue: dim => {
+      const allMult = 8;
+      if (dim) return allMult;
+      let totalMult = DC.D1;
+      for (let tier = 1; tier <= MultiplierTabHelper.activeDimCount("AD"); tier++) {
+        totalMult = totalMult.times(allMult);
+      }
+      return totalMult;
+    },
+    isActive: () => NormalChallenge(8).isCompleted && !EternityChallenge(11).isRunning,
+    icon: MultiplierTabIcons.CHALLENGE("antimatter"),
+  },
   infinityChallenge: {
     name: dim => (dim ? `Infinity Challenges (AD ${dim})` : "Infinity Challenges"),
     multValue: dim => {

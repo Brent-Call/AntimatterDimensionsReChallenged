@@ -79,6 +79,7 @@ export const normalChallenges = [
     legacyId: 9,
     isQuickResettable: false,
     description: () =>
+    //Compared to vanilla AD, the nerf is even steeper.
     //This is one of the harder Challenges in the set, but I'm fine with it as-is.
       `the multiplier from buying ${formatInt(10)} Antimatter Dimensions is reduced to ${formatX(1)}. This increases by
         +${format(0.02, 2, 2)} per Dimension Boost, to a maximum of ${formatX(1.2,2,2)}, and is unaffected by any upgrades.`,
@@ -92,7 +93,7 @@ export const normalChallenges = [
     //Since this is one of the easier Challenges, its reward should be comparatively small.
     description: `Dimension Boosts provide no multiplier and Antimatter Galaxies cannot be bought. Dimensional
       Sacrifice resets antimatter and all Antimatter Dimensions, but also gives a significantly stronger multiplier.`,
-    reward: () => `${formatX(8)} on all Antimatter Dimensions` //TODO: account for this in the multiplier breakdown tab
+    reward: () => `${formatX(8)} on all Antimatter Dimensions`
   },
   {
     id: 9,

@@ -6,7 +6,7 @@ import { multiplierTabValues } from "./values";
 const dynamicGenProps = ["TP", "DT", "infinities", "eternities", "gamespeed", "replicanti"];
 const propList = {
   AD: ["purchase", "dimboost", "sacrifice", "achievementMult", "achievement", "infinityUpgrade",
-    "breakInfinityUpgrade", "infinityPower", "infinityChallenge", "timeStudy", "eternityChallenge", "glyph", "v",
+    "breakInfinityUpgrade", "infinityPower", "antimatterChallenge8", "infinityChallenge", "timeStudy", "eternityChallenge", "glyph", "v",
     "alchemy", "pelle", "iap", "effectNC", "nerfIC", "nerfV", "nerfCursed", "nerfPelle"],
   ID: ["purchase", "achievementMult", "achievement", "replicanti", "infinityChallenge", "timeStudy", "eternityUpgrade",
     "eternityChallenge", "glyph", "alchemy", "imaginaryUpgrade", "pelle", "iap", "nerfV", "nerfCursed", "nerfPelle"],
@@ -165,7 +165,7 @@ for (const res of dimTypes) {
 
 // A few dynamically-generated props are largely useless in terms of what they connect to, in that they have very few
 // entries or have 8 identical entries, so we explicitly remove those lists for a cleaner appearance on the UI
-const removedRegexes = ["AD_sacrifice", "AD_breakInfinityUpgrade", "AD_nerfIC", "AD_infinityUpgrade", "AD_v",
+const removedRegexes = ["AD_sacrifice", "AD_breakInfinityUpgrade", "AD_nerfIC", "AD_antimatterChallenge8", "AD_infinityUpgrade", "AD_v",
   "ID_replicanti", "ID_infinityChallenge", "ID_eternityUpgrades",
   "TD_achievement", "TD_eternityUpgrade", "TD_dilationUpgrade", "TD_realityUpgrade",
   ".._achievementMult", ".._glyph", ".._alchemy", ".._imaginaryUpgrade", ".._iap",
