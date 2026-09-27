@@ -68,7 +68,8 @@ export const normalChallenges = [
     id: 6,
     legacyId: 10,
     isQuickResettable: false,
-    //I might want to make this harder by raising prices significantly.  The idea is that the player's progression will come not from purchasing Dimensions (as it'll cost too much), but mostly from Tickspeed improvements.
+    //Compared to vanilla AD, the prices have been increased.
+    //I'm satisfied with the balancing on this one.
     description: () => `upgrading each Antimatter Dimension costs the Antimatter Dimension ${formatInt(2)} tiers ` +
       "below it instead of antimatter. Antimatter Dimension prices are modified.",
     reward: "Decrease the number of Dimensions needed for Dimension Boosts by 5"

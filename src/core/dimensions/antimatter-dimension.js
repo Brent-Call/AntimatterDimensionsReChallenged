@@ -369,9 +369,9 @@ class AntimatterDimensionState extends DimensionState {
     this._baseCost = BASE_COSTS[tier];
     const BASE_COST_MULTIPLIERS = [null, 1e3, 1e4, 1e5, 1e6, 1e8, 1e10, 1e12, 1e15];
     this._baseCostMultiplier = BASE_COST_MULTIPLIERS[tier];
-    const C6_BASE_COSTS = [null, 10, 100, 100, 500, 2500, 2e4, 2e5, 4e6];
+    const C6_BASE_COSTS = [null, 10, 100, 1e4, 1e5, 1e9, 1e10, 1e13, 1e15];
     this._c6BaseCost = C6_BASE_COSTS[tier];
-    const C6_BASE_COST_MULTIPLIERS = [null, 1e3, 5e3, 1e4, 1.2e4, 1.8e4, 2.6e4, 3.2e4, 4.2e4];
+    const C6_BASE_COST_MULTIPLIERS = [null, 1e3, 5e3, 1e4, 1.2e4, 5.4e4, 9.1e4, 2e5, 3e5];
     this._c6BaseCostMultiplier = C6_BASE_COST_MULTIPLIERS[tier];
   }
 
