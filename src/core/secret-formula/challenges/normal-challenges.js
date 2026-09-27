@@ -22,10 +22,6 @@ export const normalChallenges = [
     isQuickResettable: false,
     //Compared to vanilla Antimatter Dimensions, the penalty on this one is made harsher.  There is no upside.
     //I'm happy with the balancing on this one :D
-    //TODO: I need to account for this one in the Multiplier Breakdown tab, somehow.  It's already accounted for
-    // in the Antimatter Dimensions multiplier breakdown, but that's not correct as this doesn't affect
-    // Dimension multipliers.  I should put it into the breakdown for "Antimatter Production" & do the same thing
-    // as Tickspeed where I power it by the number of active Dimension tiers.
     description:
       () => "buying Antimatter Dimensions or Tickspeed upgrades halts production of all Antimatter Dimensions. " +
       `Production gradually returns to normal over ${formatInt(3)} minutes.`,

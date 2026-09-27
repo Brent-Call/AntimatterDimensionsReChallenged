@@ -48,7 +48,7 @@ function getProps(resource, tier) {
 // specification, all children props are dynamically added based on the arrays in the helper functions above
 export const multiplierTabTree = {
   AM_total: [
-    ["AD_total", "tickspeed_total", "AM_effarigAM"]
+    ["AD_total", "AM_antimatterChallenge2", "tickspeed_total", "AM_effarigAM"]
   ],
   AD_total: [
     getProps("AD"),

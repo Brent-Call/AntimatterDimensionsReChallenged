@@ -393,9 +393,6 @@ export const AD = {
       const formatFn = num => (num.gte(1) ? formatX(num, 2, 2) : `/${format(num.reciprocal(), 2, 2)}`);
 
       let dimMults = Array.repeat(DC.D1, 9);
-      if (NormalChallenge(2).isRunning) {
-        dimMults = Array.repeat(new Decimal(player.chall2Pow), 9);
-      }
       if (NormalChallenge(3).isRunning) {
         dimMults[1] = dimMults[1].times(player.chall3Pow);
       }
@@ -416,10 +413,7 @@ export const AD = {
     // This and displayOverride contain largely the same code
     multValue: dim => {
       let dimMults = Array.repeat(DC.D1, 9);
-      // Do not change this to an else-if, as NC2/NC3 need to be enterable simultaneously in IC1
-      if (NormalChallenge(2).isRunning) {
-        dimMults = Array.repeat(new Decimal(player.chall2Pow), 9);
-      }
+      // Do not change this to an else-if, as Infinity Challenge 1 has us enter multiple at once
       if (NormalChallenge(3).isRunning) {
         dimMults[1] = dimMults[1].times(player.chall3Pow);
       }
@@ -449,7 +443,7 @@ export const AD = {
       }
       return totalMult;
     },
-    isActive: () => [2, 3, 12].some(c => NormalChallenge(c).isRunning),
+    isActive: () => [3, 12].some(c => NormalChallenge(c).isRunning),
     icon: MultiplierTabIcons.CHALLENGE("infinity"),
   },
   nerfIC: {
