@@ -228,13 +228,8 @@ Currency.antimatter = new class extends DecimalCurrency {
   get startingValue() {
     if (Pelle.isDisabled()) return new Decimal(100);
     return Effects.max(
-      10,
-      Perk.startAM,
-      Achievement(41),
-      //Achievement(45),
-      Achievement(54),
-      Achievement(55),
-      Achievement(78)
+      Achievements.effectsCached.startingAntimatter,
+      Perk.startAM
     ).toDecimal();
   }
 }();

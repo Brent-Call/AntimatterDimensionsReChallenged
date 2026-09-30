@@ -1,8 +1,6 @@
 import { GameMechanicState } from "../game-mechanics";
 import { DC } from "../constants";
 
-import { SteamRuntime } from "@/steam";
-
 class AchievementState extends GameMechanicState {
   constructor(config) {
     super(config);
@@ -73,7 +71,6 @@ class AchievementState extends GameMechanicState {
       GameUI.notify.reality(`Automatically unlocked: ${this.name}`);
     } else {
       GameUI.notify.success(`Achievement: ${this.name}`);
-      SteamRuntime.activateAchievement(this.id);
     }
     if (player.speedrun.isActive && !player.speedrun.achievementTimes[this.id]) {
       // This stores a lot of data in the savefile and seems particularly suceptible to floating-point rounding issues
@@ -196,18 +193,48 @@ export const Achievements = {
       return DC.D0;
     }
     //Else, tickspeed as a mechanic is unlocked & is boosted by certain Achievements:
-    return DC.D1.dividedByEffectsOf(
-      Achievement(13), Achievement(21), Achievement(27), //tickspeedBasedOnRow
-      Achievement(34), Achievement(35), Achievement(45), Achievement(66), //tickspeedBasedOnRow
-      Achievement(33), //Scales based on Dimension Boosts
-      Achievement(83) //Scales based on Antimatter Galaxies
-    );
+    return this.effectsCached.baseTickspeed;
   },
 
-  updateSteamStatus() {
-    for (const achievement of Achievements.all.filter(x => x.isUnlocked)) {
-      SteamRuntime.activateAchievement(achievement.id);
-    }
+  //Call this once per tick.  Loop through all Achievements, evaluate their effect.
+  cacheEffects: function() {
+    this.effectsCached = {
+      baseTickspeed: DC.D1,
+      allADsMultiplier: DC.D1,
+      specificADMultipliers: Array.repeat(DC.D1, 9),
+      dimensionalSacrificeFormulaBoost: 0,
+      startingAntimatter: 10
+    };
+    this.all.forEach( ach => {
+      /**
+       * effectTarget specifies which game system is affected by this Achievement.
+       * @type {string | undefined}
+       */
+      const effectTarget = ach.config.effectTarget;
+      switch (effectTarget) {
+      case "baseTickspeed":
+        this.effectsCached.baseTickspeed = this.effectsCached.baseTickspeed.dividedByEffectOf(ach);
+        break;
+      case "allADs":
+        this.effectsCached.allADsMultiplier = this.effectsCached.allADsMultiplier.timesEffectOf(ach);
+        break;
+      case "someADs":
+        ach.config.affectedTiers.forEach( tier => {
+          this.effectsCached.specificADMultipliers[tier] = this.effectsCached.specificADMultipliers[tier].timesEffectOf(ach);
+        }, this);
+        break;
+      case "dimensionalSacrificeFormulaBoost":
+        this.effectsCached.dimensionalSacrificeFormulaBoost += ach.effectOrDefault(0);
+        break;
+      case "startingAntimatter":
+        this.effectsCached.startingAntimatter = Math.max(this.effectsCached.startingAntimatter, ach.effectOrDefault(0));
+        break;
+      default:
+        if (effectTarget) {
+          console.warn("Unimplemented effectTarget for Achievements: " + effectTarget);
+        }
+      }
+    }, this);
   }
 };
 

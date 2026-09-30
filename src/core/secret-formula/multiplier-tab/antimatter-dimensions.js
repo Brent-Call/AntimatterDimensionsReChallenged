@@ -115,47 +115,8 @@ export const AD = {
   achievement: {
     name: "Achievement Rewards",
     multValue: dim => {
-      const allMult = DC.D1.timesEffectsOf(
-        Achievement(22), //×1.5 on all Antimatter Dimensions, +0.1 for each Infinity.
-        Achievement(23), //×1.5 on all Antimatter Dimensions, +1 for each Eternity.
-        Achievement(48),
-        Achievement(56),
-        Achievement(65),
-        Achievement(72),
-        Achievement(73),
-        Achievement(74),
-        Achievement(76),
-        Achievement(84),
-        Achievement(91),
-        Achievement(92)
-      );
-
-      const dimMults = Array.repeat(DC.D1, 9);
-      for (let tier = 1; tier <= 8; tier++) {
-        if (tier === 1) {
-          dimMults[tier] = dimMults[tier].timesEffectsOf(
-            Achievement(25), //×2 on the 1st AD if you have 0 Dimension Boosts
-            Achievement(26), //×2 on the 1st AD if you have 0 Dimension Boosts
-            Achievement(36), //×1.5 on 1st AD
-            Achievement(68),
-            Achievement(71),
-          );
-        }
-        dimMults[tier] = dimMults[tier].timesEffectsOf(
-          tier <= 4 ? Achievement(15) : null, //×1.25 on first 4 ADs
-          tier === 3 ? Achievement(24) : null, //Boost to 3rd AD which grows based on time spent in this Infinity
-          tier === 1 ? Achievement(28) : null, //×1.3 on the 6th AD for each Antimatter Galaxy you have
-          tier === 4 ? Achievement(31) : null, //×1.75 on 4th AD
-          tier === 8 ? Achievement(32) : null, //×1.5 on 8th AD
-          tier === 7 ? Achievement(37) : null, //×1.75 on 7th AD
-          tier < 8 ? Achievement(44) : null, //×1.02 on each of 1st through 7th ADs
-          tier <= 4 ? Achievement(64) : null,
-        );
-        if (Achievement(47).isUnlocked) {
-          //Each Antimatter Dimension gains a boost proportional to tier
-          dimMults[tier] = dimMults[tier].times(1 + tier / 100);
-        }
-      }
+      const allMult = Achievements.effectsCached.allADsMultiplier;
+      const dimMults = Achievements.effectsCached.specificADMultipliers;
 
       if (dim) return allMult.times(dimMults[dim]);
       let totalMult = DC.D1;
