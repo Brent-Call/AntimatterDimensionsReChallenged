@@ -48,7 +48,7 @@ export const normalAchievements = [
     name: "L4D: Left 4 Dimensions",
     description: "Buy a 4th Antimatter Dimension.",
     checkEvent: GAME_EVENT.ACHIEVEMENT_EVENT_OTHER,
-    reward: "Unlock the Statistics tab."
+    reward: "Unlock the Statistics tab." //TODO: show (!) notifications on this tab when unlocked
   },
   {
     id: 15,
@@ -431,7 +431,7 @@ export const normalAchievements = [
     description: "Break Infinity.",
     checkRequirement: () => player.break, //i.e. Complete Antimatter Challenge 1
     checkEvent: [GAME_EVENT.BREAK_INFINITY, GAME_EVENT.REALITY_RESET_AFTER, GAME_EVENT.REALITY_UPGRADE_TEN_BOUGHT],
-    autoGenerate: "tickspeedBasedOnRow"
+    reward: "WIP - multiplier to base Tickspeed based on fastest completion time for this Challenge"
   },
   {
     id: 52,
@@ -439,7 +439,7 @@ export const normalAchievements = [
     get description() { return `Complete Antimatter Challenge 1 in under ${formatInt(2)} minutes.`; },
     checkRequirement: () => NormalChallenge(1).isOnlyActiveChallenge && Time.thisInfinity.totalMinutes <= 2,
     checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,
-    reward: "WIP - not decided yet"
+    autoGenerate: "tickspeedBasedOnRow"
   },
   {
     id: 53,
@@ -447,7 +447,10 @@ export const normalAchievements = [
     get description() { return `Complete Antimatter Challenge 1 in under ${formatInt(10)} seconds.`; },
     checkRequirement: () => NormalChallenge(1).isOnlyActiveChallenge && Time.thisInfinity.totalSeconds <= 10,
     checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,
-    reward: "WIP - not decided yet"
+    get reward() { return `${formatX(5)} to the 1st Antimatter Dimension`; },
+    effect: 5,
+    effectTarget: "someADs",
+    affectedTiers: [1]
   },
   {
     id: 54,
@@ -455,15 +458,16 @@ export const normalAchievements = [
     get description() { return `Complete Antimatter Challenge 1 in under ${formatInt(2)} milliseconds.`; },
     checkRequirement: () => NormalChallenge(1).isOnlyActiveChallenge && Time.thisInfinity.totalMilliseconds <= 2,
     checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,
-    reward: "WIP - not decided yet"
+    get reward() { return `${formatX(250000)} to the 1st Antimatter Dimension`; },
+    effect: 250000,
+    effectTarget: "someADs",
+    affectedTiers: [1]
   },
   {
     id: 55,
     name: "Many Deaths",
-    get description() {
-      return `Complete Antimatter Challenge 2 in ${formatInt(3)} minutes or less.`;
-    },
-    checkRequirement: () => NormalChallenge(2).isOnlyActiveChallenge && Time.thisInfinity.totalMinutes <= 3,
+    get description() { return `Complete Antimatter Challenge 2 in under ${formatInt(2)} minutes.`; },
+    checkRequirement: () => NormalChallenge(2).isOnlyActiveChallenge && Time.thisInfinity.totalMinutes <= 2,
     checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,
     get reward() {
       return `WIP - I'm going to rework this one`;
@@ -472,24 +476,26 @@ export const normalAchievements = [
   {
     id: 56,
     name: "WIP",
-    get description() { return `Obtain ${formatInt(5)} Antimatter Galaxies while in Antimatter Challenge 2.` }
+    get description() { return `Obtain ${formatInt(5)} Antimatter Galaxies while in Antimatter Challenge 2.` },
     //It's intended that you'd have broken Infinity first
+    //TODO: actually, y'know, make the achievement unlock condition & reward
+    reward: "WIP--some kind of buff based on fastest completion time for this challenge."
   },
   {
     id: 57,
     name: "ERROR 909: Dimension not found",
-    description:
-      `Get to Infinity with only a single 1st Antimatter Dimension without Dimension Boosts
-      or Antimatter Galaxies, while in the 2nd Antimatter Dimension Autobuyer Challenge.`,
+    description: "Complete Antimatter Challenge 2 with only a single 1st Antimatter Dimension " +
+      "without Dimension Boosts or Antimatter Galaxies.",
     checkRequirement: () =>
       NormalChallenge(2).isOnlyActiveChallenge &&
       AntimatterDimension(1).amount.eq(1) &&
       DimBoost.purchasedBoosts === 0 &&
       player.galaxies === 0,
     checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,
-    get reward() { return `1st Antimatter Dimensions are ${formatInt(3)} times stronger.`; },
-    effect: 3
-    //TODO: fix effectTarget for this one
+    get reward() { return `1st Antimatter Dimensions gain a multiplier of ${formatX(3)}.`; },
+    effect: 3,
+    effectTarget: "someADs",
+    affectedTiers: [1]
   },
   {
     id: 58,
@@ -499,9 +505,122 @@ export const normalAchievements = [
     checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,
     reward: "WIP - not decided yet"
   },
+  // ================================================ //
+  // ACHIEVEMENT ROW #6 - Antimatter Challenges 3 & 4 //
+  // ================================================ //
+  {
+    id: 61,
+    name: "WIP",
+    description: "Complete Antimatter Challenge 3 without using Antimatter Galaxies.",
+    checkRequirement: () =>
+      NormalChallenge(3).isOnlyActiveChallenge &&
+      player.galaxies === 0,
+    checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,
+    autoGenerate: "tickspeedBasedOnRow"
+  },
+  {
+    id: 62,
+    name: "Boosting to the max II",
+    get description() { return `Buy ${formatInt(25)} Dimension Boosts while in Antimatter Challenge 3.`; },
+    //TODO: unlock condition for this Achievement
+    get reward() { return `Antimatter Challenge 3's reward generates ${formatX(2)} Infinities.` },
+    effect: 2,
+    effectTarget: "normalChallenge3Reward"
+  },
+  {
+    id: 63,
+    name: "You did this again just for the achievement right?",
+    get description() { return `Complete Antimatter Challenge 3 in ${formatInt(10)} seconds or less.`; },
+    checkRequirement: () => NormalChallenge(3).isOnlyActiveChallenge && Time.thisInfinity.totalSeconds <= 10,
+    checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,
+    get reward() { return `1st Antimatter Dimensions are ${formatPercents(0.5)} stronger.`; },
+    effect: 1.5,
+    effectTarget: "someADs",
+    affectedTiers: [1]
+  },
+  {
+    id: 64,
+    name: "Less than 3",
+    get description() { return `Complete Antimatter Challenge 3 in under ${formatInt(3)} milliseconds.`; },
+    checkRequirement: () => NormalChallenge(3).isOnlyActiveChallenge && Time.thisInfinity.totalMilliseconds <= 3,
+    checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,
+    reward: "WIP - not decided yet"
+  },
+  {
+    id: 65,
+    name: "Not-so-challenging",
+    get description() { return `Complete Antimatter Challenge 4 in under ${formatInt(4)} minutes.`; },
+    checkRequirement: () => NormalChallenge(4).isOnlyActiveChallenge && Time.thisInfinity.totalMinutes <= 4,
+    checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,
+    get reward() { return `All Galaxies are ${formatPercents(0.25)} stronger.`; },
+    effect: 1.25,
+    effectTarget: "allGalaxyStrength"
+  },
+  {
+    id: 66,
+    name: "WIP",
+    get description() { return `Complete Antimatter Challenge 4 in under ${formatInt(4)} seconds.`; },
+    checkRequirement: () => NormalChallenge(4).isOnlyActiveChallenge && Time.thisInfinity.totalSeconds <= 4,
+    checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,
+    reward: "WIP - not decided yet"
+  },
+  {
+    id: 67,
+    name: "SIX SEVEN",
+    //It's intended that you'd use Antimatter Challenge 4 to obtain this one, but it isn't required.
+    get description() { return `Buy ${formatInt(67)} Antimatter Galaxies.`; },
+    checkRequirement: () => player.galaxies >= 67,
+    checkEvent: GAME_EVENT.GALAXY_RESET_AFTER,
+    reward: "WIP - not decided yet"
+  },
+  {
+    id: 68,
+    name: "SIX POINT EIGHT",
+    get description() { return `Complete Antimatter Challenge 4 in under ${formatInt(6.8)} milliseconds.`; },
+    checkRequirement: () => NormalChallenge(4).isOnlyActiveChallenge && Time.thisInfinity.totalMilliseconds <= 6.8,
+    checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,
+    reward: "WIP - not decided yet"
+  },
+  // ================================================ //
+  // ACHIEVEMENT ROW #7 - Antimatter Challenges 5 & 6 //
+  // ================================================ //
+  {
+    id: 71,
+    name: "WIP",
+    get description() { return `Complete Antimatter Challenge 5 in under ${formatInt(5)} minutes.`; },
+    checkRequirement: () => NormalChallenge(5).isOnlyActiveChallenge && Time.thisInfinity.totalMinutes <= 5,
+    checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,
+    reward: "WIP - not decided yet"
+  },
+  {
+    id: 72,
+    name: "Faster than five potatoes in Antimatter Challenge 5",
+    get description() { return `WIP tickspeed >= potato^5`; },
+    //TODO: this Achievement's unlock requirement
+    reward: "WIP - not decided yet"
+  },
+  {
+    id: 73,
+    name: "Not a second lost",
+    get description() { return `Complete Antimatter Challenge 5 in under ${formatInt(5)} seconds.`; },
+    checkRequirement: () => NormalChallenge(5).isOnlyActiveChallenge && Time.thisInfinity.totalSeconds <= 5,
+    checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,
+    get reward() { return `All Antimatter Dimensions are ${formatPercents(0.4)} stronger, but only in challenges.`; },
+    effect: 1.4,
+    effectCondition: () => Player.isInAnyChallenge
+    //TODO: rework this one to use the new system
+  },
+  {
+    id: 74,
+    name: "WIP",
+    get description() { return `Complete Antimatter Challenge 5 in under ${formatInt(5)} milliseconds.`; },
+    checkRequirement: () => NormalChallenge(5).isOnlyActiveChallenge && Time.thisInfinity.totalMilliseconds <= 5,
+    checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,
+    reward: "WIP - not decided yet"
+  },
 
 
-  // ROWS 6 AND BEYOND
+  // OTHER
   /*
   {
     id: 52,
@@ -534,7 +653,7 @@ export const normalAchievements = [
     id: 57,
     name: "Gift from the Gods",
     get description() {
-      return `Complete the 8th Antimatter Dimension Autobuyer Challenge in ${formatInt(3)} minutes or less.`;
+      return `Complete Antimatter Challenge 8 in ${formatInt(3)} minutes or less.`;
     },
     checkRequirement: () => NormalChallenge(8).isOnlyActiveChallenge && Time.thisInfinityRealTime.totalMinutes <= 3,
     checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,
@@ -548,14 +667,14 @@ export const normalAchievements = [
   {
     id: 58,
     name: "This is fine.",
-    get description() { return `Complete the Tickspeed Autobuyer Challenge in ${formatInt(3)} minutes or less.`; },
+    get description() { return `Complete Antimatter Challenge 9 in ${formatInt(3)} minutes or less.`; },
     checkRequirement: () => NormalChallenge(9).isOnlyActiveChallenge && Time.thisInfinityRealTime.totalMinutes <= 3,
     checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,
     get reward() {
       return `Increase the multiplier for buying ${formatInt(10)} Antimatter Dimensions by +${formatPercents(0.01)}.`;
     },
     effect: 1.01
-  },*/
+  },
   {
     id: 61,
     name: "Bulked Up",
@@ -592,20 +711,6 @@ export const normalAchievements = [
     effect: 1.25
   },
   {
-    id: 65,
-    name: "Not-so-challenging",
-    get description() { return `Get the sum of all of your Normal Challenge times under ${formatInt(3)} minutes.`; },
-    checkRequirement: () => Time.challengeSum.totalMinutes < 3,
-    checkEvent: [GAME_EVENT.BIG_CRUNCH_AFTER, GAME_EVENT.REALITY_RESET_AFTER],
-    get reward() {
-      return `All Antimatter Dimensions are stronger in the first ${formatInt(3)} minutes of Infinities,
-      but only in Challenges.`;
-    },
-    effect: () => (Player.isInAnyChallenge ? Math.max(4 / (Time.thisInfinity.totalMinutes + 1), 1) : 1),
-    effectCondition: () => Player.isInAnyChallenge && Time.thisInfinity.totalMinutes < 3,
-    formatEffect: value => `${formatX(value, 2, 2)}`
-  },
-  {
     id: 66,
     name: "Faster than a squared potato",
     get description() { return `Get more than ${format(DC.E58)} ticks per second.`; },
@@ -619,21 +724,6 @@ export const normalAchievements = [
     description: "Complete an Infinity Challenge.",
     checkRequirement: () => InfinityChallenges.completed.length > 0,
     checkEvent: [GAME_EVENT.INFINITY_CHALLENGE_COMPLETED, GAME_EVENT.REALITY_RESET_AFTER]
-  },
-  {
-    id: 68,
-    name: "You did this again just for the achievement right?",
-    get description() {
-      return `Complete the 3rd Antimatter Dimension Autobuyer Challenge in ${formatInt(10)} seconds or less.`;
-    },
-    checkRequirement: () => NormalChallenge(3).isOnlyActiveChallenge && Time.thisInfinityRealTime.totalSeconds <= 10,
-    checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,
-    get reward() { return `1st Antimatter Dimensions are ${formatPercents(0.5)} stronger.`; },
-    effect: 1.5
-  },
-  {
-    id: 71,
-    name: "WIP"
   },
   {
     id: 72,
@@ -658,14 +748,7 @@ export const normalAchievements = [
   },
   {
     id: 74,
-    name: "Not a second lost",
-    get description() { return `Get the sum of all best Normal Challenge times under ${formatInt(5)} seconds.`; },
-    checkRequirement: () => Time.challengeSum.totalSeconds < 5,
-    checkEvent: [GAME_EVENT.BIG_CRUNCH_AFTER, GAME_EVENT.REALITY_RESET_AFTER],
-    get reward() { return `All Antimatter Dimensions are ${formatPercents(0.4)} stronger, but only in challenges.`; },
-    effect: 1.4,
-    effectCondition: () => Player.isInAnyChallenge
-  },
+  },*/
   {
     id: 75,
     name: "NEW DIMENSIONS???",

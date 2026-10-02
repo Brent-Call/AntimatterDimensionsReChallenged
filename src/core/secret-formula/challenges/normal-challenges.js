@@ -32,10 +32,9 @@ export const normalChallenges = [
     legacyId: 3,
     isQuickResettable: false,
     description:
-    //This one is too easy.  I should make it harder, somehow.
-    //How about, "Infinity Upgrades which grant multipliers to Antimatter Dimensions are disabled"
-      `the 1st Antimatter Dimension is heavily weakened, but gets an uncapped exponentially increasing multiplier.
-        This multiplier resets after Dimension Boosts and Antimatter Galaxies.`,
+    //Compared to vanilla Antimatter Dimensions, the penalty only ever gets harsher.
+    //I'm happy with the balancing on this one :D
+      `the 1st Antimatter Dimension is heavily weakened. Each Dimension Boost further weakens it.`,
     reward: () => `Passively generate ${formatInt(1)} Infinity per second`
   },
   {
@@ -53,9 +52,8 @@ export const normalChallenges = [
     legacyId: 6,
     isQuickResettable: false,
     description:
-    //The strategy for this Challenge will be to deliberately avoid getting Galaxies because they're too weak to be worth your time.
-    //The balancing for this one is... hmmm... the scaling on the "buy 10" multiplier might be a little bit too fast, actually.
-    //It's OK for now, but we might have to reevaluate this one later.
+    //Compared to vanilla AD, Tickspeed is even weaker.
+    //I'm happy with the balancing on this one :D
       () => `the Tickspeed purchase multiplier starts at ${formatX(1.008, 0, 3)} instead of ${formatX(1.1245, 0, 3)}, ` +
       `but the multiplier from buying ${formatInt(10)} Antimatter Dimensions increases slowly over time.`,
     reward: "Only outside Challenges, start Infinities with an Antimatter Galaxy"

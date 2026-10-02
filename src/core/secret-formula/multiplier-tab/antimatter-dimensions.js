@@ -355,7 +355,7 @@ export const AD = {
 
       let dimMults = Array.repeat(DC.D1, 9);
       if (NormalChallenge(3).isRunning) {
-        dimMults[1] = dimMults[1].times(player.chall3Pow);
+        dimMults[1] = dimMults[1].times(NormalChallenges.getChallenge3Multiplier());
       }
 
       if (NormalChallenge(12).isRunning) {

@@ -19,10 +19,6 @@ export function updateNormalAndInfinityChallenges(diff) {
     }
   }
 
-  if (NormalChallenge(3).isRunning) {
-    player.chall3Pow = player.chall3Pow.times(DC.D1_00038.pow(diff / 100)).clampMax(Decimal.NUMBER_MAX_VALUE);
-  }
-
   if (NormalChallenge(2).isRunning) {
     player.chall2Timer = Math.min(player.chall2Timer + diff / 100 / 1800, 1);
     player.chall2Pow = Math.pow(player.chall2Timer, 4);
@@ -166,5 +162,13 @@ export const NormalChallenges = {
   },
   getIsAnyChallengeUnlocked: function() {
     return this.all.some( challengeConfig => challengeConfig.isUnlocked);
+  },
+  /**
+   * Normal Challenge 3 applies a multiplier to the 1st Antimatter Dimension.
+   * This function calculates the value of that multiplier.
+   * @returns {Decimal} A value less than 1.
+   */
+  getChallenge3Multiplier: function() {
+    return new Decimal(Math.max(100, 200 * DimBoost.totalBoosts)).recip();
   }
 };

@@ -55,7 +55,7 @@ export default {
         "o-achievement--locked": !this.isUnlocked && !this.isDisabled && !this.isObscured,
         "o-achievement--unlocked": this.isUnlocked,
         "o-achievement--waiting": !this.isUnlocked && this.isPreRealityAchievement && !this.isDisabled,
-        "o-achievement--blink": !this.isUnlocked && this.id === 78 && !this.isDisabled,
+        "o-achievement--blink": !this.isUnlocked && this.config.name === "Blink of an eye" && !this.isDisabled,
         "o-achievement--normal": !this.isCancer && !this.isObscured,
         "o-achievement--cancer": this.isCancer && !this.isObscured,
         "o-achievement--hidden": this.isObscured,

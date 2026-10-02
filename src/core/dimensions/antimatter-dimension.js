@@ -123,6 +123,9 @@ function applyNDMultipliers(mult, tier) {
         InfinityUpgrade.unspentIPMult.chargedEffect,
         TimeStudy(234)
       );
+    if (NormalChallenge(3).isRunning) {
+      multiplier = multiplier.times(NormalChallenges.getChallenge3Multiplier());
+    }
   }
   if (tier === 8) {
     multiplier = multiplier.times(Sacrifice.totalBoost);
@@ -595,9 +598,6 @@ class AntimatterDimensionState extends DimensionState {
       production = production.times(player.chall2Pow);
     }
     if (tier === 1) {
-      if (NormalChallenge(3).isRunning) {
-        production = production.times(player.chall3Pow);
-      }
       if (production.gt(10)) {
         const log10 = production.log10();
         production = Decimal.pow10(Math.pow(log10, getAdjustedGlyphEffect("effarigantimatter")));

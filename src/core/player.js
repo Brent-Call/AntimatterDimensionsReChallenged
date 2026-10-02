@@ -109,7 +109,7 @@ window.player = {
     tickspeed: {
       isUnlocked: false,
       cost: 1,
-      interval: 500,
+      interval: 2500,
       mode: AUTOBUYER_MODE.BUY_SINGLE,
       isActive: true,
       lastTick: 0,
@@ -209,7 +209,8 @@ window.player = {
   backupTimer: 0,
   chall2Timer: 1,
   chall2Pow: 1,
-  chall3Pow: DC.D0_01,
+  //get chall3Pow() { console.error("Actually, we removed this from the codebase."); return DC.D1; },
+  //set chall3Pow(dummyParam) { console.error("Actually, we removed this from the codebase."); },
   matter: DC.D1,
   chall9TickspeedCostBumps: 0,
   chall8TotalSacrifice: DC.D1,

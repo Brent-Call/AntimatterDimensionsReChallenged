@@ -54,10 +54,9 @@ export default {
     },
     updateChallengePower() {
       const isC2Running = NormalChallenge(2).isRunning;
-      const isC3Running = NormalChallenge(3).isRunning;
       const isIC6Running = InfinityChallenge(6).isRunning;
       const isIC8Running = InfinityChallenge(8).isRunning;
-      const isChallengePowerVisible = isC2Running || isC3Running || isIC6Running || isIC8Running;
+      const isChallengePowerVisible = isC2Running || isIC6Running || isIC8Running;
       this.isChallengePowerVisible = isChallengePowerVisible;
       if (isChallengePowerVisible) {
         const powerArray = [];
@@ -77,7 +76,6 @@ export default {
           }
           powerArray.push(`Production: ${formatPercents(player.chall2Pow, places)}`);
         }
-        if (isC3Running) powerArray.push(`First dimension: ${formatX(player.chall3Pow, 3, 4)}`);
         if (isIC6Running) powerArray.push(`Matter: Antimatter Dimensions /
           ${format(new Decimal(1).timesEffectOf(InfinityChallenge(6)), 2, 2)}`);
         if (isIC8Running) powerArray.push(`Production: /
