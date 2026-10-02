@@ -362,7 +362,7 @@ export const GameStorage = {
     const saveFileName = player.options.saveFileName ? ` - ${player.options.saveFileName},` : "";
     const save = this.exportModifiedSave();
     download(
-      `AD Save, Slot ${GameStorage.currentSlot + 1}${saveFileName} #${player.options.exportedFileCount} \
+      `AD_ReChallenged Save, Slot ${GameStorage.currentSlot + 1}${saveFileName} #${player.options.exportedFileCount} \
 (${this.exportDateString}).txt`, save);
     GameUI.notify.info("Successfully downloaded current save file to your computer");
   },
