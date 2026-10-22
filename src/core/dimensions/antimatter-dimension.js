@@ -670,11 +670,8 @@ export const AntimatterDimensions = {
         mult = mult.timesEffectOf(upgrade);
       }
     });
-
-    mult = mult.timesEffectsOf(
-      InfinityUpgrade.buy10Mult,
-      Achievement(58)
-    ).times(getAdjustedGlyphEffect("powerbuy10"));
+    mult = mult.times(Achievements.effectsCached.buy10Multi);
+    mult = mult.times(getAdjustedGlyphEffect("powerbuy10"));
 
     mult = mult.pow(getAdjustedGlyphEffect("effarigforgotten")).powEffectOf(InfinityUpgrade.buy10Mult.chargedEffect);
     mult = mult.pow(ImaginaryUpgrade(14).effectOrDefault(1));

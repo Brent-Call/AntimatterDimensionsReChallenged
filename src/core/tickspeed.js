@@ -43,12 +43,12 @@ export function getTotalGalaxyPower() {
     BreakInfinityUpgrade.galaxyBoost,
     TimeStudy(212),
     TimeStudy(232),
-    Achievement(86),
-    Achievement(178),
     InfinityChallenge(5).reward,
     PelleUpgrade.galaxyPower,
     PelleRifts.decay.milestones[1]
   );
+
+  effects *= Achievements.effectsCached.allGalaxyStrength || 1;
 
   InfinityUpgradesNew.all.forEach((upgrade) => {
     if (upgrade.config.effectTarget === "allGalaxyStrength") {

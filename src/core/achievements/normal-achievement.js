@@ -201,6 +201,8 @@ export const Achievements = {
     this.effectsCached = {
       baseTickspeed: DC.D1,
       allADsMultiplier: DC.D1,
+      allGalaxyStrength: 1,
+      buy10Multi: DC.D1,
       specificADMultipliers: Array.repeat(DC.D1, 9),
       dimensionalSacrificeFormulaBoost: 0,
       startingAntimatter: 10
@@ -228,6 +230,12 @@ export const Achievements = {
         break;
       case "startingAntimatter":
         this.effectsCached.startingAntimatter = Math.max(this.effectsCached.startingAntimatter, ach.effectOrDefault(0));
+        break;
+      case "allGalaxyStrength":
+        this.effectsCached.allGalaxyStrength = this.effectsCached.allGalaxyStrength * ach.effectOrDefault(1);
+        break;
+      case "buy10Multi":
+        this.effectsCached.buy10Multi = this.effectsCached.buy10Multi.timesEffectOf(ach);
         break;
       default:
         if (effectTarget) {

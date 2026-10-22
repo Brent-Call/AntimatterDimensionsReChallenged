@@ -21,7 +21,7 @@ export default {
     },
     message() {
       const info = this.isFirstInfinity ? this.firstInfinityInfo : ``;
-      return `Upon Infinity, all Dimensions, Dimension Boosts, and Antimatter Galaxies are reset. ${info}`;
+      return `Upon Infinity, all Antimatter Dimensions, Dimension Boosts, and Antimatter Galaxies are reset. ${info}`;
     },
     firstInfinityInfo() {
       return `In return, you gain an Infinity Point (IP). This allows you to buy multiple upgrades that you can

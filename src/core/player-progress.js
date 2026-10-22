@@ -61,6 +61,10 @@ export class PlayerProgress {
     return this.realityUnlocked() || ec12.completions > 0 || ec12.isRunning;
   }
 
+  static seenNormalChallenges() {
+    return this.eternityUnlocked() || NormalChallenges.getIsAnyChallengeUnlocked();
+  }
+
   static challengeCompleted() {
     return NormalChallenges.all.slice(1).some(c => c.isCompleted);
   }

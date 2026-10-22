@@ -124,8 +124,11 @@ export default {
       if (row < 3) { //Pre-Infinity Achievements
         return false;
       }
-      if (row < 17) {
+      if (row == 3) { //Early Infinity Achievements
         return !PlayerProgress.infinityUnlocked();
+      }
+      if (row < 17) {
+        return !PlayerProgress.seenNormalChallenges();
       } 
       return this.isDoomed ? false : row === 17;
     },

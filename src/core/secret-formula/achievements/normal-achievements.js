@@ -48,15 +48,20 @@ export const normalAchievements = [
     name: "L4D: Left 4 Dimensions",
     description: "Buy a 4th Antimatter Dimension.",
     checkEvent: GAME_EVENT.ACHIEVEMENT_EVENT_OTHER,
-    reward: "Unlock the Statistics tab." //TODO: show (!) notifications on this tab when unlocked
+    //TODO: show (!) notifications on the Statistics tab when unlocked
+    reward: "Unlock the Statistics tab. Also gain a multiplier to the 4th Antimatter Dimension based on how many Dimension Boosts you have.",
+    effect: () => 1 + 0.02 * Math.pow(DimBoost.totalBoosts, 2),
+    effectTarget: "someADs",
+    affectedTiers: [4],
+    formatEffect: value => `${formatX(value, 2, 2)}`
   },
   {
     id: 15,
     name: "5 Dimension Antimatter Punch",
     description: "Buy a 5th Antimatter Dimension.",
     checkEvent: GAME_EVENT.ACHIEVEMENT_EVENT_OTHER,
-    get reward() { return `Antimatter Dimensions 1-4 are ${formatPercents(0.25)} stronger.`; },
-    effect: 1.25,
+    get reward() { return `Antimatter Dimensions 1-4 are ${formatPercents(0.60)} stronger.`; },
+    effect: 1.6,
     effectTarget: "someADs",
     affectedTiers: [1, 2, 3, 4]
   },
@@ -76,7 +81,11 @@ export const normalAchievements = [
     name: "Not a luck related achievement",
     description: "Buy a 7th Antimatter Dimension.",
     checkEvent: GAME_EVENT.ACHIEVEMENT_EVENT_OTHER,
-    reward: "Unlock the Autobuyer for Tickspeed Upgrades.",
+    get reward() {
+      return `Unlock the Autobuyer for Tickspeed Upgrades. Also multiply starting tickspeed by ${formatX(tickspeedBasedOnRow(1), 2, 2)}.`;
+    },
+    effect: tickspeedBasedOnRow(1).recip(),
+    effectTarget: "baseTickspeed"
   },
   {
     id: 18,
@@ -147,11 +156,11 @@ export const normalAchievements = [
     name: "Don't you dare sleep",
     get description() {
       return PlayerProgress.seenAlteredSpeed()
-        ? `Be offline for a period of over ${formatInt(6)} hours (real time).`
-        : `Be offline for a period of over ${formatInt(6)} hours.`;
+        ? `Play for ${formatInt(6)} hours (real time).`
+        : `Play for ${formatInt(6)} hours.`;
     },
-    checkRequirement: () => Date.now() - player.lastUpdate >= 21600000,
-    checkEvent: GAME_EVENT.GAME_TICK_BEFORE,
+    checkRequirement: () => Time.realTimePlayed.totalHours > 6,
+    checkEvent: GAME_EVENT.GAME_TICK_AFTER,
     get reward() {
       var firstLine = "Gain a multiplier to the 3rd Antimatter Dimension which grows ";
       if (PlayerProgress.infinityUnlocked()) {
@@ -164,7 +173,7 @@ export const normalAchievements = [
     },
     effect: () => {
       var minutes = Time.thisInfinity.totalMinutes;
-      if (minutes >= 1440 /*one day*/) {
+      if (minutes >= 1440 /*24 hours = 1 day*/) {
         return Math.pow(minutes, 4);
       }
       if (minutes >= 30) {
@@ -187,7 +196,7 @@ export const normalAchievements = [
         nextJumpTime = TimeSpan.fromMinutes(1).minus(Time.thisInfinity);
       } else if (minutes < 30) {
         nextJumpTime = TimeSpan.fromMinutes(30).minus(Time.thisInfinity);
-      } else if (minutes < 1440 /*one day*/) {
+      } else if (minutes < 1440 /*24 hours = 1 day*/) {
         nextJumpTime = TimeSpan.fromMinutes(1440).minus(Time.thisInfinity);
       }
       return lineOne + (nextJumpTime ? lineTwo + nextJumpTime.toTimeEstimate() : "");
@@ -199,23 +208,38 @@ export const normalAchievements = [
     description: "Buy an Antimatter Galaxy.",
     checkRequirement: () => true,
     checkEvent: GAME_EVENT.GALAXY_RESET_BEFORE,
-    get reward() { return `The 1st Antimatter Dimension is twice as strong, but only while you have no Dimension Boosts.` },
-    effect: () => DimBoost.totalBoosts < 1 ? 2 : 1,
+    get reward() { return `The 1st Antimatter Dimension is stronger (based on the strength of Dimension Boosts), but only while you have exactly zero Dimension Boosts.` },
+    effect: () => DimBoost.totalBoosts < 1 ? DimBoost.power.times(3) : DC.D1,
     effectTarget: "someADs",
     affectedTiers: [1],
-    formatEffect: value => (value != 1) ? `${formatX(value, 2, 2)}` : "Inactive"
+    /**@param {Decimal} value*/
+    formatEffect: function(value) {
+      if (value.eq(1)) {
+        return "Inactive";
+      }
+      //Else, multiplier is not 1, i.e. it actually does something.
+      return formatX(value, 2, 2);
+    }
   },
   {
     id: 26,
     name: "Double Galaxy",
+    //Note that pre-Infinity balancing is such that getting a second Antimatter Galaxy is completely optional.
     get description() { return `Buy ${formatInt(2)} Antimatter Galaxies.`; },
     checkRequirement: () => player.galaxies >= 2,
     checkEvent: GAME_EVENT.GALAXY_RESET_AFTER,
-    get reward() { return `The 1st Antimatter Dimension is twice as strong, but only while you have no Dimension Boosts.` },
-    effect: () => DimBoost.totalBoosts < 1 ? 2 : 1,
+    get reward() { return `The 1st Antimatter Dimension is stronger (based on the strength of Dimension Boosts), but only while you have exactly zero Dimension Boosts.` },
+    effect: () => DimBoost.totalBoosts < 1 ? DimBoost.power.times(3) : DC.D1,
     effectTarget: "someADs",
     affectedTiers: [1],
-    formatEffect: value => (value != 1) ? `${formatX(value, 2, 2)}` : "Inactive"
+    /**@param {Decimal} value*/
+    formatEffect: function(value) {
+      if (value.eq(1)) {
+        return "Inactive";
+      }
+      //Else, multiplier is not 1, i.e. it actually does something.
+      return formatX(value, 2, 2);
+    }
   },
   {
     id: 27,
@@ -253,10 +277,7 @@ export const normalAchievements = [
       Currency.antimatter.exponent >= 63 &&
       Currency.antimatter.productionPerSecond.gt(Currency.antimatter.value),
     checkEvent: GAME_EVENT.GAME_TICK_AFTER,
-    get reward() { return `The 4th Antimatter Dimension is ${formatPercents(0.75)} stronger.`; },
-    effect: 1.75,
-    effectTarget: "someADs",
-    affectedTiers: [4]
+    autoGenerate: "tickspeedBasedOnRow"
   },
   {
     id: 32,
@@ -275,7 +296,7 @@ export const normalAchievements = [
     checkRequirement: () => Currency.antimatter.exponent >= 80,
     checkEvent: GAME_EVENT.GAME_TICK_AFTER,
     reward: "Tickspeed gains a multiplier based on Dimension Boosts.",
-    effect: () => DC.D0_965.sqrt().pow(DimBoost.totalBoosts),
+    effect: () => DC.D0_965.pow(DimBoost.totalBoosts),
     effectTarget: "baseTickspeed",
     formatEffect: value => `${formatX(value.recip(), 2, 2)}`
   },
@@ -289,6 +310,7 @@ export const normalAchievements = [
     checkRequirement: () => AchievementTimers.marathon1
       .check(Currency.antimatter.productionPerSecond.gt(Currency.antimatter.value), 30),
     checkEvent: GAME_EVENT.GAME_TICK_AFTER,
+    //Due do how finicky this Achievement is, let's make the reward relatively tame so there's not much FOMO.
     autoGenerate: "tickspeedBasedOnRow"
   },
   {
@@ -297,7 +319,18 @@ export const normalAchievements = [
     get description() { return `Reach ${format(DC.E12)} of all Antimatter Dimensions except the 8th.`; },
     checkRequirement: () => AntimatterDimension(7).amount.exponent >= 12,
     checkEvent: GAME_EVENT.GAME_TICK_AFTER,
-    autoGenerate: "tickspeedBasedOnRow"
+    get reward() {
+      var retVal = "All Antimatter Dimensions gain a multiplier which grows ";
+      if (PlayerProgress.infinityUnlocked()) {
+        retVal += "based on time spent in this Infinity.";
+      } else {
+        retVal += "over time.";
+      }
+      return retVal;
+    },
+    effect: () => { return Math.pow(Time.thisInfinity.totalHours + 1, 0.77); },
+    effectTarget: "allADs",
+    formatEffect: value => `${formatX(value, 2, 2)}`
   },
   {
     id: 36,
@@ -318,21 +351,29 @@ export const normalAchievements = [
     get description() { return `Get any Antimatter Dimension multiplier over ${formatX(DC.E31)}.`; },
     checkRequirement: () => AntimatterDimensions.all.some(x => x.multiplier.exponent >= 31),
     checkEvent: GAME_EVENT.GAME_TICK_AFTER,
-    get reward() { return `7th Antimatter Dimensions are ${formatPercents(0.75)} stronger.`; },
-    effect: 1.75,
+    get reward() { return `The 7th Antimatter Dimension gains a ${formatX(5)} multiplier.`; },
+    effect: 5,
     effectTarget: "someADs",
     affectedTiers: [7]
   },
   {
     id: 38,
     name: "The Gods are pleased",
-    get description() { return `Get over ${formatX(600)} from Dimensional Sacrifice while not in any Challenge.`; },
+    get description() {
+      //Hide mentions of Challenges until Challenges are unlocked for the first time.
+      var retVal = `Get over ${formatX(600)} from Dimensional Sacrifice`;
+      if (PlayerProgress.seenNormalChallenges()) {
+        retVal += " while not in any Challenge";
+      }
+      retVal += ".";
+      return retVal;
+    },
     checkRequirement: () => !Player.isInAnyChallenge && Sacrifice.totalBoost.gte(600),
     checkEvent: GAME_EVENT.SACRIFICE_RESET_AFTER,
     get reward() {
       return `Dimensional Sacrifice is stronger.
-      ${Sacrifice.getSacrificeDescription({ "Achievement38": false, "Achievement57": false, "Achievement88": false })} ➜
-      ${Sacrifice.getSacrificeDescription({ "Achievement38": true, "Achievement57": false, "Achievement88": false })}`;
+      ${Sacrifice.getSacrificeDescription({ "Achievement38": false, "Achievement54": false, "Achievement88": false })} ➜
+      ${Sacrifice.getSacrificeDescription({ "Achievement38": true, "Achievement54": false, "Achievement88": false })}`;
     },
     effect: 0.1,
     effectTarget: "dimensionalSacrificeFormulaBoost"
@@ -422,67 +463,107 @@ export const normalAchievements = [
     effect: 5e25,
     effectTarget: "startingAntimatter"
   },
-  // ================================================ //
-  // ACHIEVEMENT ROW #5 - Antimatter Challenges 1 & 2 //
-  // ================================================ //
+  // ========================================================================================= //
+  // ACHIEVEMENT ROW #5 - Achievements which care about having completed Antimatter Challenges //
+  // Some of them care about time restrictions, but the time is always 3 minutes               //
+  // ========================================================================================= //
   {
     id: 51,
     name: "Limit Break",
     description: "Break Infinity.",
     checkRequirement: () => player.break, //i.e. Complete Antimatter Challenge 1
     checkEvent: [GAME_EVENT.BREAK_INFINITY, GAME_EVENT.REALITY_RESET_AFTER, GAME_EVENT.REALITY_UPGRADE_TEN_BOUGHT],
-    reward: "WIP - multiplier to base Tickspeed based on fastest completion time for this Challenge"
+    reward: "WIP - multiplier to base Tickspeed based on fastest completion time for Antimatter Challenge 1"
   },
   {
     id: 52,
-    name: "Gotta come up with a cool name for this",
-    get description() { return `Complete Antimatter Challenge 1 in under ${formatInt(2)} minutes.`; },
-    checkRequirement: () => NormalChallenge(1).isOnlyActiveChallenge && Time.thisInfinity.totalMinutes <= 2,
+    name: "Many Deaths",
+    get description() { return `Complete Antimatter Challenge 2 in ${formatInt(3)} minutes or less.`; },
+    checkRequirement: () => NormalChallenge(2).isOnlyActiveChallenge && Time.thisInfinity.totalMinutes <= 3,
+    checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,
+    get reward() {
+      return `WIP - multiplier to the 2nd Antimatter Dimension based on fastest completion time for Antimatter Challenge 2`;
+    }
+  },
+  {
+    id: 53,
+    name: "WIP - some reference to galaxies",
+    description: "Complete Antimatter Challenge 4.",
+    checkRequirement: () => NormalChallenge(4).isOnlyActiveChallenge,
     checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,
     autoGenerate: "tickspeedBasedOnRow"
   },
   {
-    id: 53,
-    name: "You might wanna come back later to complete this one",
-    get description() { return `Complete Antimatter Challenge 1 in under ${formatInt(10)} seconds.`; },
-    checkRequirement: () => NormalChallenge(1).isOnlyActiveChallenge && Time.thisInfinity.totalSeconds <= 10,
-    checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,
-    get reward() { return `${formatX(5)} to the 1st Antimatter Dimension`; },
-    effect: 5,
-    effectTarget: "someADs",
-    affectedTiers: [1]
-  },
-  {
     id: 54,
-    name: "I promise you can obtain this one, just not until later",
-    get description() { return `Complete Antimatter Challenge 1 in under ${formatInt(2)} milliseconds.`; },
-    checkRequirement: () => NormalChallenge(1).isOnlyActiveChallenge && Time.thisInfinity.totalMilliseconds <= 2,
+    name: "Gift from the Gods",
+    get description() {
+      return `Complete Antimatter Challenge 8 in ${formatInt(3)} minutes or less.`;
+    },
+    checkRequirement: () => NormalChallenge(8).isOnlyActiveChallenge && Time.thisInfinityRealTime.totalMinutes <= 3,
     checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,
-    get reward() { return `${formatX(250000)} to the 1st Antimatter Dimension`; },
-    effect: 250000,
-    effectTarget: "someADs",
-    affectedTiers: [1]
+    get reward() {
+      return `Dimensional Sacrifice is stronger.
+      ${Sacrifice.getSacrificeDescription({ "Achievement38": true, "Achievement54": false, "Achievement88": false })} ➜
+      ${Sacrifice.getSacrificeDescription({ "Achievement38": true, "Achievement54": true, "Achievement88": false })}`;
+    },
+    effect: 0.1,
+    effectTarget: "dimensionalSacrificeFormulaBoost"
   },
   {
     id: 55,
-    name: "Many Deaths",
-    get description() { return `Complete Antimatter Challenge 2 in under ${formatInt(2)} minutes.`; },
-    checkRequirement: () => NormalChallenge(2).isOnlyActiveChallenge && Time.thisInfinity.totalMinutes <= 2,
+    name: "This is fine.",
+    get description() { return `Complete Antimatter Challenge 9 in ${formatInt(3)} minutes or less.`; },
+    checkRequirement: () => NormalChallenge(9).isOnlyActiveChallenge && Time.thisInfinityRealTime.totalMinutes <= 3,
     checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,
     get reward() {
-      return `WIP - I'm going to rework this one`;
-    }
+      return `Increase the multiplier for buying ${formatInt(10)} Antimatter Dimensions by ${formatX(1.05, 2, 2)}.`;
+    },
+    effect: 1.05,
+    effectTarget: "buy10Multi"
   },
   {
     id: 56,
-    name: "WIP",
-    get description() { return `Obtain ${formatInt(5)} Antimatter Galaxies while in Antimatter Challenge 2.` },
-    //It's intended that you'd have broken Infinity first
-    //TODO: actually, y'know, make the achievement unlock condition & reward
-    reward: "WIP--some kind of buff based on fastest completion time for this challenge."
+    name: "Daredevil",
+    get description() { return `Complete any ${formatInt(3)} Antimatter Challenges.`; },
+    checkRequirement: () => NormalChallenges.all.countWhere(c => c.isCompleted) >= 3,
+    checkEvent: [GAME_EVENT.BIG_CRUNCH_AFTER, GAME_EVENT.REALITY_RESET_AFTER, GAME_EVENT.REALITY_UPGRADE_TEN_BOUGHT],
+    get reward() {
+      return `Odd-numbered Antimatter Dimensions are ${formatPercents(0.8)} stronger.`;
+    },
+    effect: 1.8,
+    effectTarget: "someADs",
+    affectedTiers: [1, 3, 5, 7]
   },
   {
     id: 57,
+    name: "Daredevil^2",
+    get description() { return `Complete any ${formatInt(9)} Antimatter Challenges.`; },
+    checkRequirement: () => NormalChallenges.all.countWhere(c => c.isCompleted) >= 9,
+    checkEvent: [GAME_EVENT.BIG_CRUNCH_AFTER, GAME_EVENT.REALITY_RESET_AFTER, GAME_EVENT.REALITY_UPGRADE_TEN_BOUGHT],
+    get reward() {
+      return `Odd-numbered Antimatter Dimensions are ${formatPercents(0.8)} stronger.`;
+    },
+    effect: 1.8,
+    effectTarget: "someADs",
+    affectedTiers: [1, 3, 5, 7]
+  },
+  {
+    id: 58,
+    name: "Antichallenged",
+    get description() { return `Complete all ${formatInt(12)} Antimatter Challenges.`; },
+    checkRequirement: () => NormalChallenges.all.countWhere(c => !c.isCompleted) === 0,
+    checkEvent: [GAME_EVENT.BIG_CRUNCH_AFTER, GAME_EVENT.REALITY_RESET_AFTER, GAME_EVENT.REALITY_UPGRADE_TEN_BOUGHT],
+    get reward() {
+      return `All Antimatter Dimensions gain a multiplier of ${formatX(5)}.`;
+    },
+    effect: 5,
+    effectTarget: "allADs"
+  },
+  // ================================================================================== //
+  // ACHIEVEMENT ROW #6 - Awarded for doing unusual things inside Antimatter Challenges //
+  // ================================================================================== //
+  {
+    id: 61,
     name: "ERROR 909: Dimension not found",
     description: "Complete Antimatter Challenge 2 with only a single 1st Antimatter Dimension " +
       "without Dimension Boosts or Antimatter Galaxies.",
@@ -498,34 +579,12 @@ export const normalAchievements = [
     affectedTiers: [1]
   },
   {
-    id: 58,
-    name: "I promise you can obtain this one, just not until later",
-    get description() { return `Complete Antimatter Challenge 2 in under ${formatInt(2)} milliseconds.`; },
-    checkRequirement: () => NormalChallenge(2).isOnlyActiveChallenge && Time.thisInfinity.totalMilliseconds <= 2,
-    checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,
-    reward: "WIP - not decided yet"
-  },
-  // ================================================ //
-  // ACHIEVEMENT ROW #6 - Antimatter Challenges 3 & 4 //
-  // ================================================ //
-  {
-    id: 61,
-    name: "WIP",
-    description: "Complete Antimatter Challenge 3 without using Antimatter Galaxies.",
-    checkRequirement: () =>
-      NormalChallenge(3).isOnlyActiveChallenge &&
-      player.galaxies === 0,
-    checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,
-    autoGenerate: "tickspeedBasedOnRow"
-  },
-  {
     id: 62,
     name: "Boosting to the max II",
     get description() { return `Buy ${formatInt(25)} Dimension Boosts while in Antimatter Challenge 3.`; },
-    //TODO: unlock condition for this Achievement
+    //TODO: actually implement the unlock condition for this Achievement
     get reward() { return `Antimatter Challenge 3's reward generates ${formatX(2)} Infinities.` },
-    effect: 2,
-    effectTarget: "normalChallenge3Reward"
+    //TODO: actually implement this reward
   },
   {
     id: 63,
@@ -533,24 +592,27 @@ export const normalAchievements = [
     get description() { return `Complete Antimatter Challenge 3 in ${formatInt(10)} seconds or less.`; },
     checkRequirement: () => NormalChallenge(3).isOnlyActiveChallenge && Time.thisInfinity.totalSeconds <= 10,
     checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,
-    get reward() { return `1st Antimatter Dimensions are ${formatPercents(0.5)} stronger.`; },
+    get reward() { return `3rd Antimatter Dimensions are ${formatPercents(0.5)} stronger.`; },
     effect: 1.5,
     effectTarget: "someADs",
-    affectedTiers: [1]
+    affectedTiers: [3]
   },
   {
     id: 64,
-    name: "Less than 3",
-    get description() { return `Complete Antimatter Challenge 3 in under ${formatInt(3)} milliseconds.`; },
-    checkRequirement: () => NormalChallenge(3).isOnlyActiveChallenge && Time.thisInfinity.totalMilliseconds <= 3,
+    name: "Zero Deaths",
+    description: "Get to Infinity without Dimension Boosts or Antimatter Galaxies while in a Normal Challenge.",
+    checkRequirement: () => player.galaxies === 0 && DimBoost.purchasedBoosts === 0 && NormalChallenge.isRunning,
     checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,
-    reward: "WIP - not decided yet"
+    get reward() { return `Antimatter Dimensions 1-4 are ${formatPercents(0.25)} stronger.`; },
+    effect: 1.25,
+    effectTarget: "someADs",
+    affectedTiers: [1, 2, 3, 4]
   },
   {
     id: 65,
     name: "Not-so-challenging",
-    get description() { return `Complete Antimatter Challenge 4 in under ${formatInt(4)} minutes.`; },
-    checkRequirement: () => NormalChallenge(4).isOnlyActiveChallenge && Time.thisInfinity.totalMinutes <= 4,
+    get description() { return `Complete Antimatter Challenge 5 in under ${formatInt(5)} seconds.`; },
+    checkRequirement: () => NormalChallenge(5).isOnlyActiveChallenge && Time.thisInfinity.totalSeconds <= 5,
     checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,
     get reward() { return `All Galaxies are ${formatPercents(0.25)} stronger.`; },
     effect: 1.25,
@@ -559,10 +621,6 @@ export const normalAchievements = [
   {
     id: 66,
     name: "WIP",
-    get description() { return `Complete Antimatter Challenge 4 in under ${formatInt(4)} seconds.`; },
-    checkRequirement: () => NormalChallenge(4).isOnlyActiveChallenge && Time.thisInfinity.totalSeconds <= 4,
-    checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,
-    reward: "WIP - not decided yet"
   },
   {
     id: 67,
@@ -575,49 +633,11 @@ export const normalAchievements = [
   },
   {
     id: 68,
-    name: "SIX POINT EIGHT",
-    get description() { return `Complete Antimatter Challenge 4 in under ${formatInt(6.8)} milliseconds.`; },
-    checkRequirement: () => NormalChallenge(4).isOnlyActiveChallenge && Time.thisInfinity.totalMilliseconds <= 6.8,
-    checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,
-    reward: "WIP - not decided yet"
+    name: "WIP",
   },
   // ================================================ //
-  // ACHIEVEMENT ROW #7 - Antimatter Challenges 5 & 6 //
+  // the rest of them //
   // ================================================ //
-  {
-    id: 71,
-    name: "WIP",
-    get description() { return `Complete Antimatter Challenge 5 in under ${formatInt(5)} minutes.`; },
-    checkRequirement: () => NormalChallenge(5).isOnlyActiveChallenge && Time.thisInfinity.totalMinutes <= 5,
-    checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,
-    reward: "WIP - not decided yet"
-  },
-  {
-    id: 72,
-    name: "Faster than five potatoes in Antimatter Challenge 5",
-    get description() { return `WIP tickspeed >= potato^5`; },
-    //TODO: this Achievement's unlock requirement
-    reward: "WIP - not decided yet"
-  },
-  {
-    id: 73,
-    name: "Not a second lost",
-    get description() { return `Complete Antimatter Challenge 5 in under ${formatInt(5)} seconds.`; },
-    checkRequirement: () => NormalChallenge(5).isOnlyActiveChallenge && Time.thisInfinity.totalSeconds <= 5,
-    checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,
-    get reward() { return `All Antimatter Dimensions are ${formatPercents(0.4)} stronger, but only in challenges.`; },
-    effect: 1.4,
-    effectCondition: () => Player.isInAnyChallenge
-    //TODO: rework this one to use the new system
-  },
-  {
-    id: 74,
-    name: "WIP",
-    get description() { return `Complete Antimatter Challenge 5 in under ${formatInt(5)} milliseconds.`; },
-    checkRequirement: () => NormalChallenge(5).isOnlyActiveChallenge && Time.thisInfinity.totalMilliseconds <= 5,
-    checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,
-    reward: "WIP - not decided yet"
-  },
 
 
   // OTHER
@@ -648,32 +668,6 @@ export const normalAchievements = [
     checkRequirement: () => Tickspeed.current.exponent <= -26,
     checkEvent: GAME_EVENT.GAME_TICK_AFTER,
     autoGenerate: "tickspeedBasedOnRow"
-  },
-  {
-    id: 57,
-    name: "Gift from the Gods",
-    get description() {
-      return `Complete Antimatter Challenge 8 in ${formatInt(3)} minutes or less.`;
-    },
-    checkRequirement: () => NormalChallenge(8).isOnlyActiveChallenge && Time.thisInfinityRealTime.totalMinutes <= 3,
-    checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,
-    get reward() {
-      return `Dimensional Sacrifice is stronger.
-      ${Sacrifice.getSacrificeDescription({ "Achievement38": true, "Achievement57": false, "Achievement88": false })} ➜
-      ${Sacrifice.getSacrificeDescription({ "Achievement38": true, "Achievement57": true, "Achievement88": false })}`;
-    },
-    effect: 0.1
-  },
-  {
-    id: 58,
-    name: "This is fine.",
-    get description() { return `Complete Antimatter Challenge 9 in ${formatInt(3)} minutes or less.`; },
-    checkRequirement: () => NormalChallenge(9).isOnlyActiveChallenge && Time.thisInfinityRealTime.totalMinutes <= 3,
-    checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,
-    get reward() {
-      return `Increase the multiplier for buying ${formatInt(10)} Antimatter Dimensions by +${formatPercents(0.01)}.`;
-    },
-    effect: 1.01
   },
   {
     id: 61,
@@ -717,9 +711,9 @@ export const normalAchievements = [
     checkRequirement: () => Tickspeed.current.exponent <= -55,
     checkEvent: GAME_EVENT.GAME_TICK_AFTER,
     autoGenerate: "tickspeedBasedOnRow"
-  },
+  },*/
   {
-    id: 67,
+    id: 71,
     name: "Infinitely Challenging",
     description: "Complete an Infinity Challenge.",
     checkRequirement: () => InfinityChallenges.completed.length > 0,
@@ -736,8 +730,20 @@ export const normalAchievements = [
     get reward() { return `All Antimatter Dimensions are ${formatPercents(0.1)} stronger.`; },
     effect: 1.1
   },
+  
   {
     id: 73,
+    name: "Not a second lost",
+    get description() { return `Complete Antimatter Challenge 5 in under ${formatInt(5)} seconds.`; },
+    checkRequirement: () => NormalChallenge(5).isOnlyActiveChallenge && Time.thisInfinity.totalSeconds <= 5,
+    checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,
+    get reward() { return `All Antimatter Dimensions are ${formatPercents(0.4)} stronger, but only in challenges.`; },
+    effect: 1.4,
+    effectCondition: () => Player.isInAnyChallenge
+    //TODO: rework this one to use the new system
+  },
+  {
+    id: 74,
     name: "THIS ACHIEVEMENT DOESN'T EXIST",
     get description() { return `Get ${formatPostBreak(DC.D9_9999E9999, 4)} antimatter.`; },
     checkRequirement: () => Currency.antimatter.gte(DC.D9_9999E9999),
@@ -746,9 +752,6 @@ export const normalAchievements = [
     effect: () => Currency.antimatter.value.pow(0.00002).plus(1),
     formatEffect: value => `${formatX(value, 2, 2)}`
   },
-  {
-    id: 74,
-  },*/
   {
     id: 75,
     name: "NEW DIMENSIONS???",
@@ -854,10 +857,11 @@ export const normalAchievements = [
     checkEvent: GAME_EVENT.SACRIFICE_RESET_BEFORE,
     get reward() {
       return `Dimensional Sacrifice is stronger.
-      ${Sacrifice.getSacrificeDescription({ "Achievement38": true, "Achievement57": true, "Achievement88": false })} ➜
-      ${Sacrifice.getSacrificeDescription({ "Achievement38": true, "Achievement57": true, "Achievement88": true })}`;
+      ${Sacrifice.getSacrificeDescription({ "Achievement38": true, "Achievement54": true, "Achievement88": false })} ➜
+      ${Sacrifice.getSacrificeDescription({ "Achievement38": true, "Achievement54": true, "Achievement88": true })}`;
     },
-    effect: 0.1
+    effect: 0.1,
+    effectTarget: "dimensionalSacrificeFormulaBoost"
   },
   {
     id: 91,
