@@ -70,6 +70,9 @@ export const DC = deepFreeze({
   C2P1024:                  Decimal.pow(2, 1024),
   C10P16000D3:              Decimal.pow(10, 16000 / 3),
 
+  // Very small numbers:
+  EM250:                new Decimal("1e-250"),
+
   // 1e1 is 10
   E1:                   new Decimal("1e1"),
   E2:                   new Decimal("1e2"),

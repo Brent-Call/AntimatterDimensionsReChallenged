@@ -7,7 +7,6 @@ function dimInfinityMult() {
 function chargedDimInfinityMult() {
   return 1 + Math.log10(Math.max(1, Currency.infinitiesTotal.value.pLog10())) * Math.sqrt(Ra.pets.teresa.level) / 150;
 }
-const NBSP = '\u00a0';
 
 /**
  * @typedef {number[] | "all" | "buy10Mult" | "ipMult" |
@@ -36,12 +35,18 @@ const NBSP = '\u00a0';
  */
 const columnOne = [{
   cost: 1,
+  description: () => `The 6th Antimatter Dimension gains a ${formatX(3)} multiplier for each Antimatter Galaxy`,
+  effect: () => Math.pow(3, player.galaxies),
+  effectTarget: [6],
+  formatEffect: value => formatX(value),
+}, {
+  cost: 1,
   description: "1st and 8th Antimatter Dimensions gain a multiplier based on Infinities",
   effect: () => dimInfinityMult(),
   effectTarget: [1, 8],
   formatEffect: value => formatX(value, 1, 1),
 }, {
-  cost: 1,
+  cost: 2,
   description: "2nd and 7th Antimatter Dimensions gain a multiplier based on Infinities",
   effect: () => dimInfinityMult(),
   effectTarget: [2, 7],
@@ -53,16 +58,11 @@ const columnOne = [{
   effectTarget: [3, 6],
   formatEffect: value => formatX(value, 1, 1)
 }, {
-  cost: 2,
+  cost: 6,
   description: "4th and 5th Antimatter Dimensions gain a multiplier based on Infinities",
   effect: () => dimInfinityMult(),
   effectTarget: [4, 5],
   formatEffect: value => formatX(value, 1, 1)
-}, {
-  cost: 10,
-  description: () => `Multiply Infinity Point gain by ${formatX(2)}`,
-  effect: 2,
-  effectTarget: "ipMult"
 }, {
   cost: 1000,
   description: () => `Multiply Infinity Point gain by ${formatX(2)}`,
@@ -83,7 +83,7 @@ const columnTwo = [{
   cost: 1,
   description: () => `Increase the multiplier for buying ${formatInt(10)} Antimatter Dimensions`,
   effect: 1.1,
-  formatEffect: () => `${formatX(AntimatterDimensions.buyTenBASEMultiplier, 0, 1)} ➜ ${formatX(AntimatterDimensions.buyTenBASEMultiplier.times(1.1), 0, 1)}`,
+  formatEffect: () => `${formatX(AntimatterDimensions.buyTenBASEMultiplier, 0, 2)} ➜ ${formatX(AntimatterDimensions.buyTenBASEMultiplier.times(1.1), 0, 2)}`,
   effectTarget: "buy10Mult",
   isDisabled: () => NormalChallenge(7).isRunning,
 }, {
@@ -134,7 +134,7 @@ const columnThree = [{
   effect: 5,
   effectTarget: "dimBoostRequirement"
 }, {
-  cost: 2,
+  cost: 3,
   description: () =>
     `Decrease the number of Dimensions needed for Antimatter Galaxies by ${formatInt(10)}`,
   effect: 10,
@@ -146,17 +146,17 @@ const columnThree = [{
   effect: 1.25,
   effectTarget: "allGalaxyStrength"
 }, {
+  cost: 9,
+  description: () => `Multiply Infinity Point gain by ${formatX(2)}`,
+  effect: 2,
+  effectTarget: "ipMult"
+}, {
   cost: 25,
   description: "Increase Dimension Boost multiplier",
   effect: 2.5,
   formatEffect: () => `${formatX(2, 0, 1)} ➜ ${formatX(2.5, 0, 1)}`,
   effectTarget: "dimBoostBaseStrength",
   isDisabled: () => NormalChallenge(8).isRunning,
-}, {
-  cost: 50,
-  description: () => `Multiply Infinity Point gain by ${formatX(2)}`,
-  effect: 2,
-  effectTarget: "ipMult"
 }, {
   cost: 1000,
   description: () => `Multiply Infinity Point gain by ${formatX(2)}`,
@@ -169,8 +169,13 @@ const columnThree = [{
  * @type {InfinityUpgradeSpec[]}
  */
 const columnFour = [{
+  cost: 1,
+  description: () => `Multiply Infinity Point gain by ${formatX(2)}`,
+  effect: 2,
+  effectTarget: "ipMult"
+}, {
   cost: 3,
-  description: `Unlock Antimatter Challenges${NBSP}1-8`,
+  description: "Unlock Antimatter Challenges 1-8",
   unlockAntimatterChallenges: [1, 2, 3, 4, 5, 6, 7, 8]
 }, {
   cost: 4,
@@ -189,7 +194,10 @@ const columnFour = [{
     if (Player.isInAnyChallenge) {
       return 1;
     }
+    //Your best Infinity time must be under 4 minutes, 49 seconds, 646 milliseconds for this upgrade to grant >1
     var bestTimeInSeconds = new Decimal(player.records.bestInfinity.time / 1000);
+    //Effect is capped at 10^-250 seconds
+    bestTimeInSeconds = bestTimeInSeconds.clampMin(DC.EM250);
     return bestTimeInSeconds.pow(0.6).dividedBy(30).recip().max(1);
   },
   formatEffect: value => {
@@ -208,13 +216,8 @@ const columnFour = [{
   isDisabled: () => Player.isInAnyChallenge
 }, {
   cost: 9,
-  description: `Unlock Antimatter Challenges${NBSP}9-12`,
+  description: "Unlock Antimatter Challenges 9-12",
   unlockAntimatterChallenges: [9, 10, 11, 12]
-}, {
-  cost: 10,
-  description: () => `Multiply Infinity Point gain by ${formatX(2)}`,
-  effect: 2,
-  effectTarget: "ipMult"
 }, {
   cost: 1000,
   description: () => `Multiply Infinity Point gain by ${formatX(2)}`,

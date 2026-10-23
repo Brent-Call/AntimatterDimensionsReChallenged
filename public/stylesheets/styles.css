@@ -3751,7 +3751,7 @@ br {
 
 .o-infinity-upgrade-btn {
   width: 19rem;
-  height: 9rem;
+  height: 11rem;
   font-family: Typewriter, serif;
   font-size: 1rem;
   font-weight: bold;
@@ -3761,6 +3761,7 @@ br {
   border-radius: var(--var-border-radius, 0.4rem);
   transition-duration: 0.2s;
   cursor: pointer;
+  text-wrap: balance;
 }
 
 .t-s6 .o-infinity-upgrade-btn,
