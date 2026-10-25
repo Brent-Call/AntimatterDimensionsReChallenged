@@ -37,7 +37,9 @@ export function antimatterDimensionCommonMultiplier() {
     PelleUpgrade.antimatterDimensionMult
   );
 
-  multiplier = multiplier.times(Achievements.effectsCached.allADsMultiplier);
+  if (Achievements.effectsCached) {
+    multiplier = multiplier.times(Achievements.effectsCached.allADsMultiplier);
+  }
 
   InfinityUpgradesNew.all.forEach((upgrade) => {
     if (upgrade.config.effectTarget === "all") {
