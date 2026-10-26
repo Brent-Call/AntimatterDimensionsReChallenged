@@ -397,10 +397,20 @@ export const normalAchievements = [
     get description() { return `Reach Infinity ${formatInt(10)} times.`; },
     checkRequirement: () => Currency.infinities.gte(10),
     checkEvent: GAME_EVENT.BIG_CRUNCH_AFTER,
-    get reward() { return `All odd-numbered Antimatter Dimensions are ${formatPercents(0.45)} stronger.`; },
-    effect: 1.45,
+    //TODO: check balancing for this one in the late Eternity era & beyond.
+    get reward() {
+      var retVal = "All odd-numbered Antimatter Dimensions gain a multiplier ";
+      if (PlayerProgress.eternityUnlocked()) {
+        retVal += "based on Eternities.";
+      } else {
+        retVal += "which will increase later in the game.";
+      }
+      return retVal;
+    },
+    effect: () => Currency.eternities.value.plus(1.05).pow(4),
     effectTarget: "someADs",
-    affectedTiers: [1, 3, 5, 7]
+    affectedTiers: [1, 3, 5, 7],
+    formatEffect: value => `${formatX(value, 2, 2)}`
   },
   {
     id: 43,
@@ -447,9 +457,7 @@ export const normalAchievements = [
     get description() { return `Infinity in ${formatInt(1)} minute or less.`; },
     checkRequirement: () => Time.thisInfinity.totalMinutes <= 1,
     checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,
-    get reward() { return `Start with ${format(5e10)} antimatter.`; },
-    effect: 5e10,
-    effectTarget: "startingAntimatter"
+    autoGenerate: "tickspeedBasedOnRow"
   },
   {
     id: 48,
