@@ -52,7 +52,7 @@ export class DimBoost {
   }
 
   static get maxDimensionsUnlockable() {
-    return NormalChallenge(10).isRunning ? 6 : 8;
+    return AntimatterDimensions.getDimensionCount();
   }
 
   static get canUnlockNewDimension() {
@@ -110,8 +110,8 @@ export class DimBoost {
       TimeStudy(211),
       TimeStudy(222)
     );
-    if (tier === 6 && NormalChallenge(10).isRunning) {
-      amount += Math.round((targetResets - 3) * (20 - discount));
+    if (tier === 5 && NormalChallenge(10).isRunning) {
+      amount += Math.round((targetResets - 2) * (25 - discount));
     } else if (tier === 8) {
       amount += Math.round((targetResets - 5) * (15 - discount));
     }

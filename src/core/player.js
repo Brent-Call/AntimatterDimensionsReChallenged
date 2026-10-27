@@ -38,7 +38,7 @@ window.player = {
   challenge: {
     normal: {
       current: 0,
-      bestTimes: Array.repeat(Number.MAX_VALUE, 11),
+      bestTimes: Array.repeat(Number.MAX_VALUE, 12),
       completedBits: 0,
     },
     infinity: {

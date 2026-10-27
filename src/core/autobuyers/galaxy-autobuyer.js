@@ -15,7 +15,7 @@ export class GalaxyAutobuyerState extends UpgradeableAutobuyerState {
   }
 
   get canBeUpgraded() {
-    return NormalChallenge(11).isCompleted;
+    return NormalChallenge(9).isCompleted;
   }
 
   get baseInterval() {

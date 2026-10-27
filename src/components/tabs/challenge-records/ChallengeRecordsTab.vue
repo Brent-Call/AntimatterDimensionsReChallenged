@@ -27,9 +27,9 @@ export default {
 <template>
   <div class="l-challenge-records-tab c-stats-tab">
     <ChallengeRecordsList
-      :start="2"
+      :start="1"
       :times="normalChallenges"
-      name="Normal Challenge"
+      name="Antimatter Challenge"
     />
     <ChallengeRecordsList
       v-if="infinityChallengesUnlocked"

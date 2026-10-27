@@ -48,6 +48,10 @@ export function getTotalGalaxyPower() {
     PelleRifts.decay.milestones[1]
   );
 
+  if (NormalChallenge(10).isCompleted) {
+    effects *= 1.25;
+  }
+
   effects *= Achievements.effectsCached.allGalaxyStrength || 1;
 
   InfinityUpgradesNew.all.forEach((upgrade) => {
@@ -87,9 +91,6 @@ export function getTickSpeedMultiplier(ignoreNC5) {
 export function buyTickSpeed() {
   if (!Tickspeed.isAvailableForPurchase || !Tickspeed.isAffordable) return false;
 
-  if (NormalChallenge(9).isRunning) {
-    Tickspeed.multiplySameCosts();
-  }
   Tutorial.turnOffEffect(TUTORIAL_STATE.TICKSPEED);
   Currency.antimatter.subtract(Tickspeed.cost);
   player.totalTickBought++;
@@ -108,25 +109,13 @@ export function buyMaxTickSpeed() {
   let boughtTickspeed = false;
 
   Tutorial.turnOffEffect(TUTORIAL_STATE.TICKSPEED);
-  if (NormalChallenge(9).isRunning) {
-    const goal = Player.infinityGoal;
-    let cost = Tickspeed.cost;
-    while (Currency.antimatter.gt(cost) && cost.lt(goal)) {
-      Tickspeed.multiplySameCosts();
-      Currency.antimatter.subtract(cost);
-      player.totalTickBought++;
-      boughtTickspeed = true;
-      cost = Tickspeed.cost;
-    }
-  } else {
-    const purchases = Tickspeed.costScale.getMaxBought(player.totalTickBought, Currency.antimatter.value, 1);
-    if (purchases === null) {
-      return;
-    }
-    Currency.antimatter.subtract(Decimal.pow10(purchases.logPrice));
-    player.totalTickBought += purchases.quantity;
-    boughtTickspeed = true;
+  const purchases = Tickspeed.costScale.getMaxBought(player.totalTickBought, Currency.antimatter.value, 1);
+  if (purchases === null) {
+    return;
   }
+  Currency.antimatter.subtract(Decimal.pow10(purchases.logPrice));
+  player.totalTickBought += purchases.quantity;
+  boughtTickspeed = true;
 
   if (boughtTickspeed) {
     player.records.thisInfinity.lastBuyTime = player.records.thisInfinity.time;
@@ -180,9 +169,10 @@ export const Tickspeed = {
   },
 
   get costScale() {
+    var isChal9 = NormalChallenge(9).isRunning;
     return new ExponentialCostScaling({
-      baseCost: 1000,
-      baseIncrease: 10,
+      baseCost: isChal9 ? 1e30 : 1000,
+      baseIncrease: isChal9 ? 1e30 : 10,
       costScale: Player.tickSpeedMultDecrease,
       scalingCostThreshold: Number.MAX_VALUE
     });

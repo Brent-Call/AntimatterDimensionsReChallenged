@@ -15,7 +15,7 @@ export class DimBoostAutobuyerState extends UpgradeableAutobuyerState {
   }
 
   get canBeUpgraded() {
-    return NormalChallenge(10).isCompleted;
+    return NormalChallenge(9).isCompleted;
   }
 
   get baseInterval() {

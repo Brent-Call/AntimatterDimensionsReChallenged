@@ -628,7 +628,8 @@ export const normalAchievements = [
   },
   {
     id: 66,
-    name: "WIP",
+    name: "Execute Order",
+    get description() { return "WIP"; }
   },
   {
     id: 67,

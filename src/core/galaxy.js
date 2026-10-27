@@ -72,7 +72,8 @@ export class Galaxy {
   }
 
   static get costMult() {
-    return Effects.min(NormalChallenge(10).isRunning ? 90 : 60, TimeStudy(42));
+    var baseVal = Effects.min(60, TimeStudy(42));
+    return baseVal + (NormalChallenge(10).isRunning ? 40 : 0);
   }
 
   static get baseCost() {
@@ -80,7 +81,7 @@ export class Galaxy {
   }
 
   static get requiredTier() {
-    return NormalChallenge(10).isRunning ? 6 : 8;
+    return NormalChallenge(10).isRunning ? 5 : 8;
   }
 
   static get canBeBought() {

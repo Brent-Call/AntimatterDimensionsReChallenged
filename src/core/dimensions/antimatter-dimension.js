@@ -62,7 +62,7 @@ export function antimatterDimensionCommonMultiplier() {
 
 export function getDimensionFinalMultiplierUncached(tier) {
   if (tier < 1 || tier > 8) throw new Error(`Invalid Antimatter Dimension tier ${tier}`);
-  if (NormalChallenge(10).isRunning && tier > 6) return DC.D1;
+  if (tier > AntimatterDimensions.getDimensionCount()) return DC.D1;
   if (EternityChallenge(11).isRunning) {
     return Currency.infinityPower.value.pow(
       InfinityDimensions.powerConversionRate
@@ -316,7 +316,7 @@ export function buyMaxDimension(tier, bulk = Infinity) {
   if (bulkLeft <= 0) return;
 
   // Buy in a while loop in order to properly trigger abnormal price increases
-  if (NormalChallenge(9).isRunning || InfinityChallenge(5).isRunning) {
+  if (InfinityChallenge(5).isRunning) {
     while (dimension.isAffordableUntil10 && dimension.cost.lt(goal) && bulkLeft > 0) {
       // We can use dimension.currencyAmount or Currency.antimatter here, they're the same,
       // but it seems safest to use dimension.currencyAmount for consistency.
@@ -453,7 +453,7 @@ class AntimatterDimensionState extends DimensionState {
   get isProducing() {
     const tier = this.tier;
     if ((EternityChallenge(3).isRunning && tier > 4) ||
-      (NormalChallenge(10).isRunning && tier > 6) ||
+      (tier > AntimatterDimensions.getDimensionCount()) ||
       (Laitela.isRunning && tier > Laitela.maxAllowedDimension)) {
       return false;
     }
@@ -538,7 +538,7 @@ class AntimatterDimensionState extends DimensionState {
     if (!EternityMilestone.unlockAllND.isReached && this.tier > DimBoost.purchasedBoosts + 4) return false;
     const hasPrevTier = this.tier === 1 || AntimatterDimension(this.tier - 1).totalAmount.gt(0);
     if (!EternityMilestone.unlockAllND.isReached && !hasPrevTier) return false;
-    return this.tier < 7 || !NormalChallenge(10).isRunning;
+    return this.tier <= AntimatterDimensions.getDimensionCount();
   }
 
   reset() {
@@ -552,8 +552,9 @@ class AntimatterDimensionState extends DimensionState {
   }
 
   challengeCostBump() {
-    if (InfinityChallenge(5).isRunning) this.multiplyIC5Costs();
-    else if (NormalChallenge(9).isRunning) this.multiplySameCosts();
+    if (InfinityChallenge(5).isRunning) {
+      this.multiplyIC5Costs();
+    }
   }
 
   multiplySameCosts() {
@@ -634,6 +635,17 @@ export const AntimatterDimensions = {
     for (const dimension of AntimatterDimensions.all.slice(0, maxTier)) {
       dimension.resetAmount();
     }
+  },
+
+  /**
+   * This is the number of dimensions which will be shown onsceen & purchasable in the UI.
+   */
+  getDimensionCount() {
+    if (NormalChallenge(10).isRunning) {
+      return 5;
+    }
+    //Else, outside of Challenges:
+    return 8;
   },
 
   /**

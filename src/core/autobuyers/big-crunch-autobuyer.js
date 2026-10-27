@@ -16,7 +16,7 @@ export class BigCrunchAutobuyerState extends UpgradeableAutobuyerState {
   }
 
   get canBeUpgraded() {
-    return NormalChallenge(12).isCompleted;
+    return NormalChallenge(9).isCompleted;
   }
 
   get baseInterval() {
