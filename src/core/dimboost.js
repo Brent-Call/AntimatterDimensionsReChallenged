@@ -189,6 +189,9 @@ export class DimBoost {
 
   static get startingDimensionBoosts() {
     var sum = 0;
+    if (NormalChallenge(11).isCompleted) {
+      sum += 3;
+    }
     InfinityUpgradesNew.all.forEach((upgrade) => {
       if (upgrade.config.effectTarget === "startingDimBoosts") {
         sum += upgrade.effectOrDefault(0);
@@ -248,7 +251,7 @@ export function requestDimensionBoost(bulk) {
   if (Currency.antimatter.gt(Player.infinityLimit) || !DimBoost.requirement.isSatisfied) return;
   if (!DimBoost.canBeBought) return;
   Tutorial.turnOffEffect(TUTORIAL_STATE.DIMBOOST);
-  if (BreakInfinityUpgrade.autobuyMaxDimboosts.isBought && bulk) maxBuyDimBoosts();
+  if (NormalChallenge(12).isCompleted && bulk) maxBuyDimBoosts();
   else softReset(1);
 }
 

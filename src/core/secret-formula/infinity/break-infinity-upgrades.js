@@ -90,11 +90,11 @@ export const breakInfinityUpgrades = {
       return `${quantify("Infinity", infinities)} every ${timeStr}`;
     }
   },
-  autobuyMaxDimboosts: {
+  /*autobuyMaxDimboosts: {
     id: "autobuyMaxDimboosts",
     cost: 5e9,
     description: "Unlock the buy max Dimension Boost Autobuyer mode"
-  },
+  },*/
   autobuyerSpeed: {
     id: "autoBuyerUpgrade",
     cost: 1e15,

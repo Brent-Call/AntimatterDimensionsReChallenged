@@ -93,7 +93,7 @@ export const normalChallenges = [
     id: 9,
     legacyId: 5,
     isQuickResettable: false,
-    //TODO: Test the balancing on this one.  I want it to be completable once most of the other Challenges have been completed.
+    //Compared to vanilla AD, this is completely reworked to be compatible with other Challenges for IC1.
     description: "Tickspeed upgrades are much more expensive.",
     reward: "Upgradeable Tickspeed Autobuyers; also unlock the Dimension Boost, Antimatter Galaxy, and Big Crunch Autobuyers"
   },
@@ -101,7 +101,8 @@ export const normalChallenges = [
     id: 10,
     legacyId: 4,
     isQuickResettable: false,
-    //TODO: change this one to be "there are only 5 Antimatter Dimensions" since the player's character was originally a 5-dimensional being
+    //TODO: Test balance of the difficulty of this Challenge in a variety of situations.
+    //Compared to vanilla AD, this one has one fewer dimension, & some of the numbers are increased slightly to compensate.
     description: () => `there are only ${formatInt(5)} Antimatter Dimensions. Dimension Boost ` +
       "and Antimatter Galaxy costs are modified.",
     reward: () => `All Galaxies are ${formatPercents(0.25)} stronger.`
@@ -109,11 +110,10 @@ export const normalChallenges = [
   {
     id: 11,
     legacyId: 12,
-    isQuickResettable: true,
-    //This one is way too easy.  Simply waaaaay too easy.  I'll have to take a look at it.
-    description: () => `there is normal matter which rises once you have at least ${formatInt(1)} 2nd Antimatter ` +
-      "Dimension. If it exceeds your antimatter, it will Dimension Boost without giving the bonus.",
-    reward: "WIP - something cool"
+    isQuickResettable: false,
+    //Compared to vanilla AD, this is completely reworked to be a lot more interesting.
+    description: () => "all Infinity Upgrades in the left two columns are disabled.",
+    reward: "Only outside Challenges, start each reset with three Dimension Boosts"
   },
   {
     id: 12,
@@ -122,10 +122,6 @@ export const normalChallenges = [
     description: () => `each Antimatter Dimension produces the Dimension ${formatInt(2)} tiers below it
       instead of ${formatInt(1)}. Both 1st and 2nd Dimensions produce antimatter.
       The 2nd, 4th, and 6th Dimensions are made stronger to compensate.`,
-    reward: "WIP - something cool"
+    reward: "All purchases of Dimension Boosts will now buy max"
   }
 ];
-
-//PLANNED: Challenge 13.  Reward: "Unlock the buy max Dimension Boost Autobuyer mode"
-//PLANNED: Challenge 14.  Reward: "Autobuyers unlocked or improved by Normal Challenges work twice as fast"
-//PLANNED: Challenge 15.  Reward: Probably a boost to Antimatter Galaxy strength, or something?  IDK.

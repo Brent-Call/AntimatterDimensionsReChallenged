@@ -90,8 +90,7 @@ export default {
       // like after eternity, it can be bought but have value 0, but not showing the effect
       // in this case doesn't feel too bad. Other upgrades, including the cost scaling
       // rebuyables, should never hide their effect.
-      this.isDisabled = upgrade.config.isDisabled && upgrade.config.isDisabled(
-        (typeof(upgrade.config.effect) === "function") ? upgrade.config.effect() : upgrade.config.effect);
+      this.isDisabled = upgrade.isDisabled();
       if (Pelle.uselessInfinityUpgrades.includes(upgrade.id) && Pelle.isDoomed) {
         this.isDisabled = true;
       }

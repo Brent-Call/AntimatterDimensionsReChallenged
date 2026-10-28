@@ -33,6 +33,9 @@ export class InfinityUpgradeState extends SetPurchasableMechanicState {
   }
 
   get isEffectActive() {
+    if (this.isDisabled()) {
+      return false;
+    }
     return this.isBought && !this.isCharged;
   }
 
@@ -77,6 +80,23 @@ export class InfinityUpgradeState extends SetPurchasableMechanicState {
 
   disCharge() {
     player.celestials.ra.charged.delete(this.id);
+  }
+
+  isDisabled() {
+    if (NormalChallenge(7).isRunning && this.config.effectTarget == "buy10Mult") {
+      return true;
+    }
+    if (NormalChallenge(8).isRunning && this.config.effectTarget == "dimBoostBaseStrength") {
+      return true;
+    }
+    if (NormalChallenge(11).isRunning && (this.id % 10 == 1 || this.id % 10 == 2)) {
+      return true;
+    }
+    if (typeof(this.config.isDisabled) === "function") {
+      return this.config.isDisabled();
+    }
+    //Else, there is no isDisabled defined
+    return false;
   }
 }
 

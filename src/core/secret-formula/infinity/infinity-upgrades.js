@@ -85,7 +85,7 @@ const columnTwo = [{
   effect: 1.1,
   formatEffect: () => `${formatX(AntimatterDimensions.buyTenBASEMultiplier, 0, 2)} ➜ ${formatX(AntimatterDimensions.buyTenBASEMultiplier.times(1.1), 0, 2)}`,
   effectTarget: "buy10Mult",
-  isDisabled: () => NormalChallenge(7).isRunning,
+  //isDisabled: Will be auto-generated.
 }, {
   cost: 3,
   description: "Antimatter Dimensions gain a multiplier based on time spent in current Infinity",
@@ -156,7 +156,7 @@ const columnThree = [{
   effect: 2.5,
   formatEffect: () => `${formatX(2, 0, 1)} ➜ ${formatX(2.5, 0, 1)}`,
   effectTarget: "dimBoostBaseStrength",
-  isDisabled: () => NormalChallenge(8).isRunning,
+  //isDisabled: Will be auto-generated.
 }, {
   cost: 1000,
   description: () => `Multiply Infinity Point gain by ${formatX(2)}`,

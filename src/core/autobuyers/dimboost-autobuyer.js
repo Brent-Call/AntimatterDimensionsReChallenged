@@ -71,7 +71,7 @@ export class DimBoostAutobuyerState extends UpgradeableAutobuyerState {
   }
 
   get isBuyMaxUnlocked() {
-    return BreakInfinityUpgrade.autobuyMaxDimboosts.isBought;
+    return NormalChallenge(12).isCompleted;
   }
 
   get interval() {

@@ -172,7 +172,7 @@ export const Tickspeed = {
     var isChal9 = NormalChallenge(9).isRunning;
     return new ExponentialCostScaling({
       baseCost: isChal9 ? 1e30 : 1000,
-      baseIncrease: isChal9 ? 1e30 : 10,
+      baseIncrease: isChal9 ? 1e8 : 10, //Divine inspiration suggested this value
       costScale: Player.tickSpeedMultDecrease,
       scalingCostThreshold: Number.MAX_VALUE
     });

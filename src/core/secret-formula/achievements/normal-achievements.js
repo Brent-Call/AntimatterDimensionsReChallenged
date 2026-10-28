@@ -481,7 +481,16 @@ export const normalAchievements = [
     description: "Break Infinity.",
     checkRequirement: () => player.break, //i.e. Complete Antimatter Challenge 1
     checkEvent: [GAME_EVENT.BREAK_INFINITY, GAME_EVENT.REALITY_RESET_AFTER, GAME_EVENT.REALITY_UPGRADE_TEN_BOUGHT],
-    reward: "WIP - multiplier to base Tickspeed based on fastest completion time for Antimatter Challenge 1"
+    reward: "Tickspeed gains a multiplier based on your fastest completion time for Antimatter Challenge 1.",
+    effect: () => {
+      var bestTimeInSeconds = new Decimal(player.challenge.normal.bestTimes[0] / 1000);
+      //Effect is capped at 10^-250 seconds
+      bestTimeInSeconds = bestTimeInSeconds.clampMin(DC.EM250);
+      //Multiplier is 1+1/x, but Tickspeed effects are reciprocals, for some reason...
+      return bestTimeInSeconds.div(bestTimeInSeconds.plus(1));
+    },
+    effectTarget: "baseTickspeed",
+    formatEffect: value => `${formatX(value.recip(), 2, 2)}`
   },
   {
     id: 52,
@@ -489,9 +498,16 @@ export const normalAchievements = [
     get description() { return `Complete Antimatter Challenge 2 in ${formatInt(3)} minutes or less.`; },
     checkRequirement: () => NormalChallenge(2).isOnlyActiveChallenge && Time.thisInfinity.totalMinutes <= 3,
     checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,
-    get reward() {
-      return `WIP - multiplier to the 2nd Antimatter Dimension based on fastest completion time for Antimatter Challenge 2`;
-    }
+    reward: "The 2nd Antimatter Dimension gains a multiplier based on your fastest completion time for Antimatter Challenge 2.",
+    effect: () => {
+      var bestTimeInSeconds = new Decimal(player.challenge.normal.bestTimes[1] / 1000);
+      //Effect is capped at 10^-250 seconds
+      bestTimeInSeconds = bestTimeInSeconds.clampMin(DC.EM250);
+      return bestTimeInSeconds.pow(-2).plus(Decimal.pow(0.7, bestTimeInSeconds)).times(100).plus(1);
+    },
+    effectTarget: "someADs",
+    affectedTiers: [2],
+    formatEffect: value => `${formatX(value, 2, 2)}`
   },
   {
     id: 53,
