@@ -955,10 +955,11 @@ export const Player = {
     return challenge === undefined ? Decimal.NUMBER_MAX_VALUE : challenge.goal;
   },
 
-  get infinityLimit() {
+  /*get infinityLimit() {
     const challenge = NormalChallenge.current || InfinityChallenge.current;
     return challenge === undefined ? Decimal.MAX_VALUE : challenge.goal;
-  },
+  },*/
+  infinityLimit: Decimal.MAX_VALUE,
 
   get eternityGoal() {
     return EternityChallenge.isRunning

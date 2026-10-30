@@ -116,7 +116,9 @@ function applyNDMultipliers(mult, tier) {
   infinitiedMult = infinitiedMult.pow(TimeStudy(31).effectOrDefault(1));
   multiplier = multiplier.times(infinitiedMult);
   
-  multiplier = multiplier.times(Achievements.effectsCached.specificADMultipliers[tier]);
+  if (Achievements.effectsCached) {
+    multiplier = multiplier.times(Achievements.effectsCached.specificADMultipliers[tier]);
+  }
 
   if (tier === 1) {
     multiplier = multiplier
@@ -299,7 +301,6 @@ export function buyMaxDimension(tier, bulk = Infinity) {
   const cost = dimension.costUntil10;
   let bulkLeft = bulk;
   const goal = Player.infinityGoal;
-  if (dimension.cost.gt(goal) && Player.isInAntimatterChallenge) return;
 
   if (tier === 8 && Enslaved.isRunning) {
     buyOneDimension(8);
@@ -581,7 +582,7 @@ class AntimatterDimensionState extends DimensionState {
   }
 
   get cappedProductionInNormalChallenges() {
-    const postBreak = (player.break && !NormalChallenge.isRunning) ||
+    const postBreak = player.break ||
       InfinityChallenge.isRunning ||
       Enslaved.isRunning;
     return postBreak ? Decimal.MAX_VALUE : DC.E315;
@@ -684,7 +685,9 @@ export const AntimatterDimensions = {
         mult = mult.timesEffectOf(upgrade);
       }
     });
-    mult = mult.times(Achievements.effectsCached.buy10Multi);
+    if (Achievements.effectsCached) {
+      mult = mult.times(Achievements.effectsCached.buy10Multi);
+    }
     mult = mult.times(getAdjustedGlyphEffect("powerbuy10"));
 
     mult = mult.pow(getAdjustedGlyphEffect("effarigforgotten")).powEffectOf(InfinityUpgrade.buy10Mult.chargedEffect);
@@ -696,7 +699,7 @@ export const AntimatterDimensions = {
   tick(diff) {
     // Stop producing antimatter at Big Crunch goal because all the game elements
     // are hidden when pre-break Big Crunch button is on screen.
-    const hasBigCrunchGoal = !player.break || Player.isInAntimatterChallenge;
+    const hasBigCrunchGoal = !player.break;
     if (hasBigCrunchGoal && Currency.antimatter.gte(Player.infinityGoal)) return;
 
     let maxTierProduced = EternityChallenge(3).isRunning ? 3 : 7;
