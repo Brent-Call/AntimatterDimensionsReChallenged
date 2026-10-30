@@ -68,6 +68,12 @@ const columnOne = [{
   description: () => `Multiply Infinity Point gain by ${formatX(2)}`,
   effect: 2,
   effectTarget: "ipMult"
+}, {
+  cost: 15000,
+  description: "Multiplier to 1st Antimatter Dimension based on unspent Infinity Points",
+  effect: () => Currency.infinityPoints.value.dividedBy(2).pow(1.5).plus(1),
+  effectTarget: [1],
+  formatEffect: value => formatX(value, 2, 2),
 }];
 /**
  * Column 2--Production multipliers on all Antimatter Dimensions.
@@ -123,6 +129,12 @@ const columnTwo = [{
   description: () => `Multiply Infinity Point gain by ${formatX(2)}`,
   effect: 2,
   effectTarget: "ipMult"
+}, {
+  cost: 15000,
+  description: "Antimatter Dimensions gain a multiplier based on current antimatter",
+  effect: () => Math.pow(Currency.antimatter.exponent + 1, 0.5),
+  effectTarget: "all",
+  formatEffect: value => formatX(value, 2, 2)
 }];
 /**
  * Column 3--Upgrades dealing with Galaxies or Dimension Boosts.
@@ -162,6 +174,12 @@ const columnThree = [{
   description: () => `Multiply Infinity Point gain by ${formatX(2)}`,
   effect: 2,
   effectTarget: "ipMult"
+}, {
+  cost: 300000,
+  description: () =>
+    `Decrease the number of Dimensions needed for Antimatter Galaxies by ${formatInt(10)}`,
+  effect: 10,
+  effectTarget: "antimatterGalaxyRequirement"
 }];
 /**
  * Column 4--Quality-of-life improvements, major progression milestones, etc.
@@ -223,6 +241,18 @@ const columnFour = [{
   description: () => `Multiply Infinity Point gain by ${formatX(2)}`,
   effect: 2,
   effectTarget: "ipMult"
+}, {
+  cost: 1e6,
+  description: () => `Only outside Challenges, increase the Dimension Boost multiplier to ${formatX(2.75, 2, 2)}`,
+  effect: () => {
+    if (Player.isInAnyChallenge) {
+      return 1;
+    }
+    //Else, outside a Challenge:
+    return 2.75;
+  },
+  effectTarget: "dimBoostBaseStrength",
+  isDisabled: () => Player.isInAnyChallenge
 }];
 
 export const infinityUpgradesNew = {

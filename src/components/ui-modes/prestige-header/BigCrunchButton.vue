@@ -77,7 +77,8 @@ export default {
       if (!this.isVisible) return;
       this.canCrunch = Player.canCrunch;
       this.infinityGoal.copyFrom(Player.infinityGoal);
-      this.inAntimatterChallenge = Player.isInAntimatterChallenge;
+      this.inAntimatterChallenge = (NormalChallenge.current && !NormalChallenge.current.isCompleted) ||
+        (InfinityChallenge.current && !InfinityChallenge.current.isCompleted);
       this.headerTextColored = player.options.headerTextColored;
       this.creditsClosed = GameEnd.creditsEverClosed;
 
