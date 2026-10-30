@@ -124,7 +124,15 @@ export const normalAchievements = [
         :
           "which will increase later in the game.");
     },
-    effect: () => Currency.infinitiesTotal.value.times(0.1).plus(1.5).powEffectOf(TimeStudy(31)),
+    effect: () => {
+      var infinities = Currency.infinitiesTotal.value;
+      //Adjust the count of Infinities if it gets really high, because this makes Antimatter Challenge 11 a little too easy:
+      if (infinities.gte(100)) {
+        infinities = infinities.sqrt().times(20).minus(100);
+      }
+      var baseEffect = infinities.times(0.1).plus(1.5);
+      return baseEffect.powEffectOf(TimeStudy(31));
+    },
     effectTarget: "allADs",
     formatEffect: value => {
       // Since TS31 is already accounted for in the effect prop, we need to "undo" it to display the base value here
@@ -658,7 +666,15 @@ export const normalAchievements = [
   },
   {
     id: 68,
-    name: "WIP",
+    name: "Bulked Up",
+    get description() {
+      return `Get all of your Antimatter Dimension Autobuyer bulk amounts to
+        ${formatInt(Autobuyer.antimatterDimension.bulkCap)}.`;
+    },
+    checkRequirement: () => Autobuyer.antimatterDimension.zeroIndexed.every(x => x.hasMaxedBulk),
+    checkEvent: [GAME_EVENT.REALITY_RESET_AFTER, GAME_EVENT.REALITY_UPGRADE_TEN_BOUGHT,
+      GAME_EVENT.SAVE_CONVERTED_FROM_PREVIOUS_VERSION],
+    reward: "Dimension Autobuyer bulks are unlimited."
   },
   // ================================================ //
   // the rest of them //
@@ -693,18 +709,6 @@ export const normalAchievements = [
     checkRequirement: () => Tickspeed.current.exponent <= -26,
     checkEvent: GAME_EVENT.GAME_TICK_AFTER,
     autoGenerate: "tickspeedBasedOnRow"
-  },
-  {
-    id: 61,
-    name: "Bulked Up",
-    get description() {
-      return `Get all of your Antimatter Dimension Autobuyer bulk amounts to
-        ${formatInt(Autobuyer.antimatterDimension.bulkCap)}.`;
-    },
-    checkRequirement: () => Autobuyer.antimatterDimension.zeroIndexed.every(x => x.hasMaxedBulk),
-    checkEvent: [GAME_EVENT.REALITY_RESET_AFTER, GAME_EVENT.REALITY_UPGRADE_TEN_BOUGHT,
-      GAME_EVENT.SAVE_CONVERTED_FROM_PREVIOUS_VERSION],
-    reward: "Dimension Autobuyer bulks are unlimited."
   },
   {
     id: 62,
