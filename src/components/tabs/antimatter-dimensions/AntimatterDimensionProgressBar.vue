@@ -34,10 +34,10 @@ export default {
       // than normal and therefore default filling won't be meaningful. Since challenges get completed or abandoned from
       // the inside outwards, we show the goals in that priority as well. It only makes sense to check cel6 and not the
       // others because pre-cel3 completion it'll default to e4000 and cel4/5 don't have meaningful single goals
-      const inSpecialRun = Player.isInAntimatterChallenge || EternityChallenge.isRunning || player.dilation.active ||
+      const inSpecialRun = (Player.isInAntimatterChallenge && !Player.antimatterChallenge.isCompleted) || EternityChallenge.isRunning || player.dilation.active ||
         Laitela.isRunning;
       if (inSpecialRun) {
-        if (Player.isInAntimatterChallenge) {
+        if (Player.isInAntimatterChallenge && !Player.antimatterChallenge.isCompleted) {
           setProgress(Currency.antimatter.value, Player.antimatterChallenge.goal, "Percentage to Challenge goal");
         } else if (EternityChallenge.isRunning) {
           if (Perk.studyECBulk.isBought) {
