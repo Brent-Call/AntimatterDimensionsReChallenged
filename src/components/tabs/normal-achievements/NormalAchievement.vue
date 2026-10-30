@@ -45,6 +45,7 @@ export default {
     },
     styleObject() {
       return {
+        "background-image": `url("../images/Normal_Achievements_0${this.achievement.row}.png")`,
         "background-position": `-${(this.achievement.column - 1) * 104}px -${(this.achievement.row - 1) * 104}px`
       };
     },
