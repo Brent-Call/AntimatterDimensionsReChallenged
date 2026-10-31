@@ -24,7 +24,7 @@ export class AutobuyerState {
   }
 
   get isActive() {
-    return this.data.isActive;
+    return this.data.isActive && this.isUnlocked;
   }
 
   set isActive(value) {

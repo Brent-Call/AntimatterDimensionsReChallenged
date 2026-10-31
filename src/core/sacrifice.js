@@ -71,16 +71,17 @@ export class Sacrifice {
 
   static get nextBoost() {
     const nd1Amount = AntimatterDimension(1).amount;
-    if (nd1Amount.eq(0)) return DC.D1;
+    if (nd1Amount.lt(10)) return DC.D1;
     const sacrificed = player.sacrificed.clampMin(1);
+    //nd1Amount  - Guaranteed ≥ 10
+    //sacrificed - Guaranteed ≥ 1
     let prePowerSacrificeMult;
-    // Pre-reality update C8 works really weirdly - every sacrifice, the current sacrifice multiplier gets applied to
-    // ND8, then sacrificed amount is updated, and then the updated sacrifice multiplier then gets applied to a
-    // different variable that is only applied during C8. However since sacrifice only depends on sacrificed ND1, this
-    // can actually be done in a single calculation in order to handle C8 in a less hacky way.
+    //Compared to vanilla Antimatter Dimensions, we're going to completely rework Antimatter Challenge 8's formula.
+    //Normal Challenge 8 was fine in vanilla AD, but in this mod, Antimatter Challenge 8 needs to be more tightly balanced.
     if (NormalChallenge(8).isRunning) {
-      prePowerSacrificeMult = nd1Amount.pow(0.05).dividedBy(sacrificed.pow(0.04)).clampMin(1)
-        .times(nd1Amount.pow(0.05).dividedBy(sacrificed.plus(nd1Amount).pow(0.04)));
+      //0.25 is a nice spot, but it's a little on the weaker side.
+      //0.3 is better, so we'll leave it as-is for now & revisit it if we need to.
+      prePowerSacrificeMult = nd1Amount.dividedBy(sacrificed).dividedBy(DC.E30).pow(0.3);
     } else if (InfinityChallenge(2).isCompleted) {
       prePowerSacrificeMult = nd1Amount.dividedBy(sacrificed);
     } else {
@@ -112,14 +113,7 @@ export class Sacrifice {
 
 export function sacrificeReset() {
   if (!Sacrifice.canSacrifice) return false;
-  /*if ((!player.break || (!InfinityChallenge.isRunning && NormalChallenge.isRunning)) &&
-    Currency.antimatter.gt(Decimal.NUMBER_MAX_VALUE)) return false;
-  if (
-    NormalChallenge(8).isRunning &&
-    (Sacrifice.totalBoost.gte(Decimal.NUMBER_MAX_VALUE))
-  ) {
-    return false;
-  }*/
+  if (!player.break && Currency.antimatter.gt(Decimal.NUMBER_MAX_VALUE)) return false;
   EventHub.dispatch(GAME_EVENT.SACRIFICE_RESET_BEFORE);
   const nextBoost = Sacrifice.nextBoost;
   player.chall8TotalSacrifice = player.chall8TotalSacrifice.times(nextBoost);
