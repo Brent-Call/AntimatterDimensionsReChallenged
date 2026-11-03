@@ -519,7 +519,7 @@ export const normalAchievements = [
   },
   {
     id: 53,
-    name: "WIP - some reference to galaxies",
+    name: "Galaxy Brain",
     description: "Complete Antimatter Challenge 4.",
     checkRequirement: () => NormalChallenge(4).isOnlyActiveChallenge,
     checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,

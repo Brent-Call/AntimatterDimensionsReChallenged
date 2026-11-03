@@ -105,7 +105,7 @@ export const normalChallenges = [
     //Compared to vanilla AD, this one has one fewer dimension, & some of the numbers are increased slightly to compensate.
     description: () => `there are only ${formatInt(5)} Antimatter Dimensions. Dimension Boost ` +
       "and Antimatter Galaxy costs are modified.",
-    reward: () => `All Galaxies are ${formatPercents(0.25)} stronger.`
+    reward: () => `All Galaxies are ${formatPercents(0.25)} stronger`
   },
   {
     id: 11,
