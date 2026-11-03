@@ -2,6 +2,7 @@
 /* eslint-disable camelcase */
 import { MultiplierTabHelper } from "./helper-functions";
 import { multiplierTabValues } from "./values";
+import { normalAchievements } from "../achievements/normal-achievements";
 
 const dynamicGenProps = ["TP", "DT", "infinities", "eternities", "gamespeed", "replicanti"];
 const propList = {
@@ -118,7 +119,7 @@ const singleRes = ["IP", "EP", "DT", "infinities", "replicanti"];
 const targetedEffects = {
   achievement: {
     checkFn: MultiplierTabHelper.achievementDimCheck,
-    AD: [15, 22, 23, 24, 25, 26, 28, 31, 32, 36, 37, 44, 47, 48, 56, 64, 65, 68, 71, 72, 73, 74, 76, 84, 91, 92, 183],
+    AD: [], //Will be auto-populated later
     TD: [105, 128],
     IP: [85, 93, 116, 125, 141],
     DT: [132, 137],
@@ -236,4 +237,31 @@ multiplierTabTree.TD_eternityUpgrade = [[`TD_eu1`, `TD_eu2`]];
 for (let dim = 1; dim <= 8; dim++) {
   multiplierTabTree[`ID_eternityUpgrade_${dim}`] = [[`ID_eu1_${dim}`, `ID_eu2_${dim}`, `ID_eu3_${dim}`]];
   multiplierTabTree[`TD_eternityUpgrade_${dim}`] = [[`TD_eu1_${dim}`, `TD_eu2_${dim}`]];
+}
+
+//Dynamically generate multiplier breakdown entries for all Achievement rewards.
+// Must be called after game loads in order to work properly.
+export const initialize_multi_breakdown_achievements = function() {
+  //Make sure all the properties we need actually ... y'know ... EXIST
+  for(var tier = 1; tier <= 8; tier += 1) {
+    //I have no idea why we're using nested arrays, but that's apparently what we need...
+    multiplierTabTree["AD_achievement_" + tier] = [[]];
+  }
+
+  normalAchievements.forEach( function(achConfig) {
+    switch(achConfig.effectTarget) {
+    case "someADs":
+      multiplierTabTree["AD_achievement"][0].push("general_achievement_" + achConfig.id + "_AD");
+      achConfig.affectedTiers.forEach( function(tier) {
+        multiplierTabTree["AD_achievement_" + tier][0].push("general_achievement_" + achConfig.id + "_AD" + tier);
+      });
+      break;
+    case "allADs":
+      multiplierTabTree["AD_achievement"][0].push("general_achievement_" + achConfig.id + "_AD");
+      for(var tier = 1; tier <= 8; tier += 1) {
+        multiplierTabTree["AD_achievement_" + tier][0].push("general_achievement_" + achConfig.id + "_AD" + tier);
+      }
+      break;
+    }
+  });
 }

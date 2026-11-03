@@ -1,5 +1,6 @@
 import { DC } from "../../constants";
 import { getTickSpeedMultiplier, Tickspeed } from "../../tickspeed";
+import { normalAchievements } from "../achievements/normal-achievements";
 
 export const MultiplierTabHelper = {
   // Helper method for counting enabled dimensions
@@ -107,33 +108,24 @@ TOTAL = ${formatFloat(baseFrac + tickFrac + galFrac + redFrac, 8)} (if it's not 
     };
   },
 
-  // Helper method to check for whether an achievement affects a particular dimension or not. Format of dimStr is
-  // expected to be a three-character string "XXN", eg. "AD3" or "TD2"
+  /**
+   * Helper method to check for whether an achievement affects a particular dimension or not.
+   * @param {number} ach The Achievement ID
+   * @param {string} dimStr Format of dimStr is expected to be a three-character string "XXN", eg. "AD3" or "TD2"
+   * @returns {boolean}
+   */
   achievementDimCheck(ach, dimStr) {
+    var achConfig = normalAchievements.find( function(config) { return config.id === ach; });
+    if (achConfig.effectTarget === "allADs") {
+      return dimStr.substr(0, 2) === "AD";
+    }
+    if (achConfig.effectTarget === "someADs") {
+      return dimStr.substr(0, 2) === "AD" && achConfig.affectedTiers.includes(Number(dimStr.charAt(2)));
+    }
+
     switch (ach) {
-      case 24:
-        return dimStr === "AD3";
-      case 25:
-      case 26:
-      case 36:
-      case 68:
-      case 71:
-        return dimStr === "AD1";
-      case 28:
-        return dimStr === "AD6";
-      case 31:
-        return dimStr === "AD4";
-      case 32:
-        return dimStr === "AD8";
-      case 37:
-        return dimStr === "AD7";
       case 94:
         return dimStr === "ID1";
-      case 44:
-        return dimStr.substr(0, 2) === "AD" && Number(dimStr.charAt(2)) !== 8;
-      case 15:
-      case 64:
-        return dimStr.substr(0, 2) === "AD" && Number(dimStr.charAt(2)) <= 4;
       default:
         return true;
     }

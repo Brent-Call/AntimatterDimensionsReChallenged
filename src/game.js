@@ -8,6 +8,7 @@ import { DEV } from "@/env";
 import { SpeedrunMilestones } from "./core/speedrun";
 import { Cloud } from "./core/storage";
 import { supportedBrowsers } from "./supported-browsers";
+import { initialize_multi_breakdown_achievements } from "./core/secret-formula/multiplier-tab/tree.js";
 
 import Payments from "./core/payments";
 
@@ -1095,6 +1096,7 @@ export function init() {
   GameStorage.load();
   Tabs.all.find(t => t.config.id === player.options.lastOpenTab).show(true);
   Payments.init();
+  initialize_multi_breakdown_achievements();
 }
 
 window.tweenTime = 0;

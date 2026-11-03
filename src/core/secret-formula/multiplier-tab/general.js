@@ -21,16 +21,12 @@ export const general = {
       if (dim?.length === 2) {
         let totalEffect = DC.D1;
         for (let tier = 1; tier <= MultiplierTabHelper.activeDimCount(dim); tier++) {
-          let singleEffect;
-          if (ach === 43) singleEffect = Achievement(43).canBeApplied ? (1 + tier / 100) : 1;
-          else singleEffect = (MultiplierTabHelper.achievementDimCheck(ach, `${dim}${tier}`) &&
+          let singleEffect = (MultiplierTabHelper.achievementDimCheck(ach, `${dim}${tier}`) &&
               Achievement(ach).canBeApplied) ? Achievement(ach).effectOrDefault(1) : 1;
           totalEffect = totalEffect.times(singleEffect);
         }
         return totalEffect;
       }
-
-      if (ach === 43) return Achievement(43).canBeApplied ? (1 + Number(dim.charAt(2)) / 100) : 1;
       return (MultiplierTabHelper.achievementDimCheck(ach, dim) && Achievement(ach).canBeApplied)
         ? Achievement(ach).effectOrDefault(1) : 1;
     },
