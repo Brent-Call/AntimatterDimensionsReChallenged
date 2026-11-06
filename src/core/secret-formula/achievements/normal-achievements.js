@@ -613,10 +613,11 @@ export const normalAchievements = [
   {
     id: 62,
     name: "Boosting to the max II",
-    get description() { return `Buy ${formatInt(25)} Dimension Boosts while in Antimatter Challenge 3.`; },
-    //TODO: actually implement the unlock condition for this Achievement
-    get reward() { return `Antimatter Challenge 3's reward generates ${formatX(2)} Infinities.` },
-    //TODO: actually implement this reward
+    get description() { return `Buy ${formatInt(30)} Dimension Boosts while in Antimatter Challenge 3.`; },
+    checkRequirement: () => NormalChallenge(3).isOnlyActiveChallenge && DimBoost.purchasedBoosts >= 30,
+    checkEvent: GAME_EVENT.DIMBOOST_AFTER,
+    get reward() { return `Antimatter Challenge 3's reward generates a base of ${formatInt(3)} Infinities ` +
+      `per second (instead of the default ${formatInt(1)}).` },
   },
   {
     id: 63,

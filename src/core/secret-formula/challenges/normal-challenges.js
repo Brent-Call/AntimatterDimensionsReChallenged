@@ -35,7 +35,10 @@ export const normalChallenges = [
     //Compared to vanilla Antimatter Dimensions, the penalty only ever gets harsher.
     //I'm happy with the balancing on this one :D
       `the 1st Antimatter Dimension is heavily weakened. Each Dimension Boost further weakens it.`,
-    reward: () => `Passively generate ${formatInt(1)} Infinity per second`
+    reward: function() {
+      var baseInfinities = Achievement(62).isUnlocked ? 3 : 1;
+      return `Passively generate ${quantifyInt("Infinity", baseInfinities)} per second`
+    }
   },
   {
     id: 4,
