@@ -132,19 +132,18 @@ export class UpgradeableAutobuyerState extends IntervaledAutobuyerState {
   }
 
   get interval() {
-    const interval = this.data.interval;
-    return BreakInfinityUpgrade.autobuyerSpeed.isBought ? interval / 2 : interval;
+    return this.data.interval;
   }
 
   get hasMaxedInterval() {
-    return this.data.interval <= 100;
+    return this.data.interval <= 50;
   }
 
   upgradeInterval(free) {
     if (this.hasMaxedInterval) return;
     if (!free && !Currency.infinityPoints.purchase(this.cost)) return;
     this.data.cost *= 2;
-    this.data.interval = Math.clampMin(this.data.interval * 0.6, 100);
+    this.data.interval = Math.clampMin(this.data.interval * 0.6, 50);
     Achievement(52).tryUnlock();
     Achievement(53).tryUnlock();
     GameUI.update();

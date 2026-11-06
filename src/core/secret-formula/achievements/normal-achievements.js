@@ -643,6 +643,7 @@ export const normalAchievements = [
   {
     id: 65,
     name: "Not-so-challenging",
+    //TODO: see if we want to keep this one or if we want to keep #73 (not a second lost).  We can't keep both, though, & I'd rather keep the one which is more original.
     get description() { return `Complete Antimatter Challenge 5 in under ${formatInt(5)} seconds.`; },
     checkRequirement: () => NormalChallenge(5).isOnlyActiveChallenge && Time.thisInfinity.totalSeconds <= 5,
     checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,

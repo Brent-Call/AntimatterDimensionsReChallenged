@@ -83,8 +83,8 @@ export const normalChallenges = [
     id: 8,
     legacyId: 11,
     isQuickResettable: false,
-    //This challenge is deliberately left easy.  It'll be used later to help the player get Dimensional-Sacrifice-related Achievements.
-    //Its reward is quite strong to help the player complete the other Challenges easily.
+    //Compared to vanilla AD, the formula is completely reworked.
+    //I'm satisfied with the balancing on this one.
     description: `Dimension Boosts provide no multiplier and Antimatter Galaxies cannot be bought. Dimensional
       Sacrifice resets antimatter and all Antimatter Dimensions, but also gives a significantly stronger multiplier.`,
     reward: () => `${formatX(8)} on all Antimatter Dimensions`
@@ -101,8 +101,8 @@ export const normalChallenges = [
     id: 10,
     legacyId: 4,
     isQuickResettable: false,
-    //TODO: Test balance of the difficulty of this Challenge in a variety of situations.
     //Compared to vanilla AD, this one has one fewer dimension, & some of the numbers are increased slightly to compensate.
+    //I'm satisfied with the balancing on this one.
     description: () => `there are only ${formatInt(5)} Antimatter Dimensions. Dimension Boost ` +
       "and Antimatter Galaxy costs are modified.",
     reward: () => `All Galaxies are ${formatPercents(0.25)} stronger`
@@ -111,7 +111,8 @@ export const normalChallenges = [
     id: 11,
     legacyId: 12,
     isQuickResettable: false,
-    //Compared to vanilla AD, this is completely reworked to be a lot more interesting.
+    //Compared to vanilla AD, this is completely reworked.  This new version is slightly more difficult.
+    //This one is arguably pretty easy, but it exists mostly for the sake of keeping Infinity Challenge 1 interesting.
     description: () => "all Infinity Upgrades in the left two columns are disabled.",
     reward: "Only outside Challenges, start each reset with three Dimension Boosts"
   },
@@ -119,6 +120,7 @@ export const normalChallenges = [
     id: 12,
     legacyId: 7,
     isQuickResettable: false,
+    //This one is unchanged compared to vanilla AD.
     description: () => `each Antimatter Dimension produces the Dimension ${formatInt(2)} tiers below it
       instead of ${formatInt(1)}. Both 1st and 2nd Dimensions produce antimatter.
       The 2nd, 4th, and 6th Dimensions are made stronger to compensate.`,

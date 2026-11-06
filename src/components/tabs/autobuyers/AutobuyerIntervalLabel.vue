@@ -29,10 +29,9 @@ export default {
   },
   computed: {
     intervalText() {
-      // We want to special-case auto-crunch because break infinity relies on getting its interval below 0.1s, which
-      // may otherwise render as "Instant" with slow update rates
-      if (this.interval < player.options.updateRate && this.autobuyer.name !== "Infinity") return "Instant";
-      return `${format(TimeSpan.fromMilliseconds(this.interval).totalSeconds, 2, 2)} seconds`;
+      if (this.interval < player.options.updateRate) return "Instant";
+      var decimalPlaces = this.interval < 100 ? 3 : 2;
+      return `${format(TimeSpan.fromMilliseconds(this.interval).totalSeconds, decimalPlaces, decimalPlaces)} seconds`;
     },
     bulkText() {
       return `Current bulk: ${Number.isFinite(this.bulk) ? formatX(this.bulk, 2) : "Unlimited"}`;

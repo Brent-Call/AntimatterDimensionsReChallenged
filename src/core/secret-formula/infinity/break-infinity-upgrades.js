@@ -94,12 +94,12 @@ export const breakInfinityUpgrades = {
     id: "autobuyMaxDimboosts",
     cost: 5e9,
     description: "Unlock the buy max Dimension Boost Autobuyer mode"
-  },*/
+  },
   autobuyerSpeed: {
     id: "autoBuyerUpgrade",
     cost: 1e15,
     description: "Autobuyers unlocked or improved by Normal Challenges work twice as fast"
-  },
+  },*/
   tickspeedCostMult: rebuyable({
     id: 0,
     initialCost: 1e6,
