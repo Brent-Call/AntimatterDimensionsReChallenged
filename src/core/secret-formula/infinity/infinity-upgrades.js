@@ -308,14 +308,29 @@ const columnFour = [{
   effectTarget: "dimBoostBaseStrength",
   isDisabled: () => Player.isInAnyChallenge
 }, {
-  cost: 7.5e6,
+  cost: 1e6,
   description: "Multiply Infinity Point gain based on Infinities",
   effect: () => 1.75 * Currency.infinitiesTotal.value.plus(1).log10() + 1,
   effectTarget: "ipMult",
   formatEffect: value => formatX(value, 2, 2)
 }, {
-  cost: 1e10,
-  description: "WIP"
+  cost: 2e7,
+  description: "Multiply Infinity Point gain based on time spent in this Infinity (required minimum: half a minute)",
+  effect: () => {
+    var seconds = Time.thisInfinity.totalSeconds;
+    if (seconds < 30) { return DC.D1; }
+    //Else:
+    return Decimal.cbrt(seconds - 60).times(3).plus(10.4);
+  },
+  effectTarget: "ipMult",
+  /**@param {Decimal} value*/
+  formatEffect: function(value) {
+    if (value.eq(1)) {
+      return "Inactive";
+    }
+    //Else, multiplier is not 1, i.e. it actually does something.
+    return formatX(value, 2, 2);
+  }
 }];
 
 export const infinityUpgradesNew = {
