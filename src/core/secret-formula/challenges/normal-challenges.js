@@ -8,11 +8,14 @@ export const normalChallenges = [
     id: 1,
     legacyId: 1,
     isQuickResettable: false,
-    //It'll be intended that you use a "start with Antimatter already" type of effect to make this one feasible.
     //I'm satisfied with the balancing on this one :D
     description() {
-      return `all Antimatter Dimensions gain a divisor of /${format(1e10)}. ` +
+      var retVal = `all Antimatter Dimensions gain a divisor of /${format(1e10)}. ` +
         `You gain ${format(1/5, 1, 1)} free Tickspeed upgrades for every purchased 5th Antimatter Dimension.`;
+      if (player.break) {
+        retVal += " Base Infinity Point gain is reduced."
+      }
+      return retVal;
     },
     reward: "Break Infinity"
   },

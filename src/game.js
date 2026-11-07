@@ -95,6 +95,9 @@ export function gainedInfinityPoints() {
   let ip = player.break
     ? Decimal.pow10(player.records.thisInfinity.maxAM.log10() / div - 0.75)
     : new Decimal(308 / div);
+  if (NormalChallenge(1).isRunning) {
+    ip = ip.sqrt();
+  }
   if (Effarig.isRunning && Effarig.currentStage === EFFARIG_STAGES.ETERNITY) {
     ip = ip.min(DC.E200);
   }
