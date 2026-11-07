@@ -422,11 +422,11 @@ export const normalAchievements = [
   },
   {
     id: 43,
-    name: "I hate Lyme borreliosis.",
-    get description() { return "Infinity without having any Tickspeed Upgrades."; },
-    //TODO: new achievement art
-    //TODO: actually, y'know, make the achievement unlock condition & reward
-    reward: "WIP - Not implemented yet."
+    name: "TODO--Gotta come up with a better name for this",
+    get description() { return "Infinity without purchasing any Tickspeed Upgrades."; },
+    checkRequirement: () => player.requirementChecks.infinity.noTickspeed,
+    checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,
+    autoGenerate: "tickspeedBasedOnRow"
   },
   {
     id: 44,

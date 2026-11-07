@@ -233,6 +233,7 @@ window.player = {
       maxAll: false,
       noSacrifice: true,
       noAD8: true,
+      noTickspeed: true
     },
     eternity: {
       onlyAD1: true,
@@ -1007,6 +1008,7 @@ export const Player = {
           maxAll: false,
           noSacrifice: true,
           noAD8: true,
+          noTickspeed: true
         };
         break;
       default:

@@ -96,6 +96,7 @@ export function buyTickSpeed() {
   player.totalTickBought++;
   player.records.thisInfinity.lastBuyTime = player.records.thisInfinity.time;
   player.requirementChecks.permanent.singleTickspeed++;
+  player.requirementChecks.infinity.noTickspeed = false;
   if (NormalChallenge(2).isRunning) {
     player.chall2Timer = 0;
     player.chall2Pow = 0;
@@ -119,6 +120,7 @@ export function buyMaxTickSpeed() {
 
   if (boughtTickspeed) {
     player.records.thisInfinity.lastBuyTime = player.records.thisInfinity.time;
+    player.requirementChecks.infinity.noTickspeed = false;
     if (NormalChallenge(2).isRunning) {
       player.chall2Timer = 0;
       player.chall2Pow = 0;
