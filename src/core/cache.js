@@ -57,15 +57,32 @@ export const GameCache = {
     .map(run => run[1])
     .reduce(Number.sumReducer) / (1000 * player.records.recentEternities.length)),
 
-  tickSpeedMultDecrease: new Lazy(() => 10 - Effects.sum(
-    BreakInfinityUpgrade.tickspeedCostMult,
-    EternityChallenge(11).reward
-  )),
+  tickSpeedMultDecrease: new Lazy(() => {
+    var retVal = 10 - Effects.sum(
+      BreakInfinityUpgrade.tickspeedCostMult,
+      EternityChallenge(11).reward
+    );
+    InfinityUpgradesNew.all.forEach((upgrade) => {
+      if (upgrade.config.effectTarget === "postInfinityAll") {
+        retVal -= upgrade.effectOrDefault(0);
+      }
+    });
+    return retVal;
+  }),
 
-  dimensionMultDecrease: new Lazy(() => 10 - Effects.sum(
-    BreakInfinityUpgrade.dimCostMult,
-    EternityChallenge(6).reward
-  )),
+  dimensionMultDecrease: new Lazy(() => {
+    var retVal = 10 - Effects.sum(
+      BreakInfinityUpgrade.dimCostMult,
+      EternityChallenge(6).reward
+    );
+    InfinityUpgradesNew.all.forEach((upgrade) => {
+      if (upgrade.config.effectTarget === "postInfinityAll" ||
+          upgrade.config.effectTarget === "postInfinityAD") {
+        retVal -= upgrade.effectOrDefault(0);
+      }
+    });
+    return retVal;
+  }),
 
   timeStudies: new Lazy(() => NormalTimeStudyState.studies
     .map(s => player.timestudy.studies.includes(s.id))),

@@ -35,8 +35,14 @@ function chargedDimInfinityMult() {
  */
 const columnOne = [{
   cost: 1,
-  description: () => `The 6th Antimatter Dimension gains a ${formatX(3)} multiplier for each Antimatter Galaxy`,
-  effect: () => Math.pow(3, player.galaxies),
+  description: function() {
+    var base = InfinityUpgradesNew.columns[0][8].isBought ? 5 : 3;
+    return `The 6th Antimatter Dimension gains a ${formatX(base)} multiplier for each Antimatter Galaxy`
+  },
+  effect: function() {
+    var base = InfinityUpgradesNew.columns[0][8].isBought ? 5 : 3;
+    return Math.pow(base, player.galaxies);
+  },
   effectTarget: [6],
   formatEffect: value => formatX(value),
 }, {
@@ -74,6 +80,15 @@ const columnOne = [{
   effect: () => Currency.infinityPoints.value.dividedBy(2).pow(1.5).plus(1),
   effectTarget: [1],
   formatEffect: value => formatX(value, 2, 2),
+}, {
+  cost: 3162278, //ceiling(10^6.5)
+  description: "Multiplier to 4th and 8th Antimatter Dimensions based on Dimension Boosts",
+  effect: () => Decimal.pow(DimBoost.totalBoosts, 2).plus(1),
+  effectTarget: [4, 8],
+  formatEffect: value => formatX(value, 2, 2),
+}, {
+  cost: 1e12,
+  description: "Infinity Upgrade 11 is stronger"
 }];
 /**
  * Column 2--Production multipliers on all Antimatter Dimensions.
@@ -135,6 +150,17 @@ const columnTwo = [{
   effect: () => Math.pow(Currency.antimatter.exponent + 1, 0.5),
   effectTarget: "all",
   formatEffect: value => formatX(value, 2, 2)
+}, {
+  cost: 1e6,
+  description: () => `${formatX(5)} on all Antimatter Dimensions`,
+  effect: 5,
+  effectTarget: "all",
+}, {
+  cost: 2e6,
+  description: "Antimatter Dimensions gain a multiplier based on total antimatter produced, across all of time",
+  effect: () => Math.pow(player.records.totalAntimatter.exponent + 1, 0.5),
+  effectTarget: "all",
+  formatEffect: value => formatX(value, 2, 2)
 }];
 /**
  * Column 3--Upgrades dealing with Galaxies or Dimension Boosts.
@@ -159,9 +185,18 @@ const columnThree = [{
   effectTarget: "allGalaxyStrength"
 }, {
   cost: 9,
-  description: () => `Multiply Infinity Point gain by ${formatX(2)}`,
-  effect: 2,
-  effectTarget: "ipMult"
+  description: () => {
+    var retVal = "Multiply Infinity Point gain";
+    if (PlayerProgress.eternityUnlocked()) {
+      retVal += " based on Eternities.";
+    } else {
+      retVal += ". This will increase later in the game.";
+    }
+    return retVal;
+  },
+  effect: () => Currency.eternities.value.pow(0.2).plus(2),
+  effectTarget: "ipMult",
+  formatEffect: value => formatX(value, 2, 2)
 }, {
   cost: 25,
   description: "Increase Dimension Boost multiplier",
@@ -180,6 +215,25 @@ const columnThree = [{
     `Decrease the number of Dimensions needed for Antimatter Galaxies by ${formatInt(10)}`,
   effect: 10,
   effectTarget: "antimatterGalaxyRequirement"
+}, {
+  cost: 5e6,
+  description: "Reduce post-infinity Antimatter Dimension and Tickspeed Upgrade cost multiplier scaling",
+  effect: 1,
+  effectTarget: "postInfinityAll",
+  formatEffect: value => `${formatX(10)} ➜ ${formatX(9)}`,
+  onPurchased: function() {
+    GameCache.dimensionMultDecrease.invalidate();
+    GameCache.tickSpeedMultDecrease.invalidate()
+  }
+}, {
+  cost: 5e8,
+  description: "Reduce post-infinity Antimatter Dimension cost multiplier scaling",
+  effect: 1,
+  effectTarget: "postInfinityAD",
+  formatEffect: value => `${formatX(9)} ➜ ${formatX(8)}`,
+  onPurchased: function() {
+    GameCache.dimensionMultDecrease.invalidate();
+  }
 }];
 /**
  * Column 4--Quality-of-life improvements, major progression milestones, etc.
@@ -187,9 +241,9 @@ const columnThree = [{
  * @type {InfinityUpgradeSpec[]}
  */
 const columnFour = [{
-  cost: 1,
+  cost: 1,   // TODO: Change this upgrade so it's based on the highest amount of Replicanti reached in this Reality.
   description: () => `Multiply Infinity Point gain by ${formatX(2)}`,
-  effect: 2,
+  effect: 2, //Have it be based on player.records.thisReality.maxReplicanti
   effectTarget: "ipMult"
 }, {
   cost: 3,
@@ -243,16 +297,25 @@ const columnFour = [{
   effectTarget: "ipMult"
 }, {
   cost: 1e6,
-  description: () => `Only outside Challenges, increase the Dimension Boost multiplier to ${formatX(2.75, 2, 2)}`,
+  description: () => `Only outside Challenges, increase the Dimension Boost multiplier to ${formatX(3, 1, 1)}`,
   effect: () => {
     if (Player.isInAnyChallenge) {
       return 1;
     }
     //Else, outside a Challenge:
-    return 2.75;
+    return 3;
   },
   effectTarget: "dimBoostBaseStrength",
   isDisabled: () => Player.isInAnyChallenge
+}, {
+  cost: 7.5e6,
+  description: "Multiply Infinity Point gain based on Infinities",
+  effect: () => 1.75 * Currency.infinitiesTotal.value.plus(1).log10() + 1,
+  effectTarget: "ipMult",
+  formatEffect: value => formatX(value, 2, 2)
+}, {
+  cost: 1e10,
+  description: "WIP"
 }];
 
 export const infinityUpgradesNew = {
